@@ -1,0 +1,9 @@
+Push 20
+Push 80
+Add
+Push 12
+Push 2
+Sub
+Div
+Out
+Hlt
