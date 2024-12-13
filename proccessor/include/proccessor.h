@@ -1,6 +1,14 @@
 #ifndef _HPROCCESSOR
 #define _HPROCCESSOR
 
+#define ONDBG
+
+#ifdef ONDBG
+    #define DBG_PRINTF(...) printf(__VA_ARGS__)
+#else
+    #define DBG_PRINTF(...) ((void)0)
+#endif
+
 enum command
 {
     CMD_PUSH = 1,

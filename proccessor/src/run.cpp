@@ -2,6 +2,7 @@
 #include <string.h>
 #include <assert.h>
 #include <stdbool.h>
+#include "color.h"
 #include "proccessor.h"
 #include "assembler.h"
 #include "stack.h"
@@ -37,27 +38,27 @@ void Run()
     while(true)
     {
         int cmd = 0;
-        printf("Enter command: ");
+        DBG_PRINTF(COLOR_CYAN "Enter command: " COLOR_RESET);
         if (fscanf(file_code, "%d\n", &cmd) != 1)
         {
             printf("%d\n", cmd);
             printf("the command incorrectly\n");
             assert(0);
         }
-        printf("%s\n", CommandToString(cmd));
+        DBG_PRINTF(COLOR_MAGENTA "%s\n" COLOR_RESET, CommandToString(cmd));
 
         switch (cmd)
         {
             case CMD_PUSH:
             {
                 int value = 0;
-                printf("Enter value: ");
+                DBG_PRINTF(COLOR_CYAN "Enter value: " COLOR_RESET);
                 if (fscanf(file_code, "%d\n", &value) != 1)
                 {
                     printf("the number incorrectly\n");
                     assert(0);
                 }
-                printf("%d\n", value);
+                DBG_PRINTF(COLOR_MAGENTA "%d\n" COLOR_RESET, value);
                 stackPush(&stk, value);
                 break;
             }
@@ -69,7 +70,7 @@ void Run()
                 stackPop(&stk, &val_2);
 
                 stackPush(&stk, val_1 + val_2);
-                printf("Add: %d\n", val_1 + val_2);
+                DBG_PRINTF(COLOR_MAGENTA "Add: %d\n" COLOR_RESET, val_1 + val_2);
                 break;
             }
 
@@ -80,7 +81,7 @@ void Run()
                 stackPop(&stk, &val_2);
 
                 stackPush(&stk, val_2 - val_1);
-                printf("Sub: %d\n", val_2 - val_1);
+                DBG_PRINTF(COLOR_MAGENTA "Sub: %d\n" COLOR_RESET, val_2 - val_1);
                 break;
             }
 
@@ -91,7 +92,7 @@ void Run()
                 stackPop(&stk, &val_2);
 
                 stackPush(&stk, val_1 * val_2);
-                printf("Mul: %d\n", val_1 * val_2);
+                DBG_PRINTF(COLOR_MAGENTA "Mul: %d\n" COLOR_RESET, val_1 * val_2);
                 break;
             }
 
@@ -102,14 +103,14 @@ void Run()
                 stackPop(&stk, &val_2);
 
                 stackPush(&stk, val_2 / val_1);
-                printf("Div: %d\n", val_2 / val_1);
+                DBG_PRINTF(COLOR_MAGENTA "Div: %d\n" COLOR_RESET, val_2 / val_1);
                 break;
             }
             case CMD_OUT:
             {
                 int val = 0;
                 stackPop(&stk, &val);
-                printf("Elem from stack: %d\n", val);
+                DBG_PRINTF(COLOR_MAGENTA "Elem from stack: %d\n" COLOR_RESET, val);
                 break;
             }
 

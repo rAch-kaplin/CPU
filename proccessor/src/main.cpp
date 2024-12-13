@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "color.h"
 #include "proccessor.h"
 #include "stack.h"
 #include "logger.h"
@@ -8,12 +9,12 @@
 int main()
 {
     loggerInit(LOGL_DEBUG, "stack.log");
-    printf("Start CPU\n");
+    DBG_PRINTF(COLOR_GREEN "Start CPU\n" COLOR_RESET);
 
     Compilator();
     Run();
 
     loggerDeinit();
-    printf("End of main!\n");
+    DBG_PRINTF(COLOR_GREEN "End of main!\n" COLOR_RESET);
     return 0;
 }
