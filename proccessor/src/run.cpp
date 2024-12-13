@@ -6,6 +6,21 @@
 #include "assembler.h"
 #include "stack.h"
 
+const char* CommandToString(int cmd)
+{
+    switch (cmd)
+    {
+        case CMD_PUSH: return "Push";
+        case CMD_ADD: return "Add";
+        case CMD_SUB: return "Sub";
+        case CMD_OUT: return "Out";
+        case CMD_DIV: return "Div";
+        case CMD_MUL: return "Mul";
+        case CMD_HLT: return "Hlt";
+        default: return "Unknown";
+    }
+}
+
 void Run()
 {
     struct stack stk = {NULL, 0, 0};
@@ -29,76 +44,92 @@ void Run()
             printf("the command incorrectly\n");
             assert(0);
         }
-        printf("%d\n", cmd);
+        printf("%s\n", CommandToString(cmd));
 
-        if (cmd == Push)
+        switch (cmd)
         {
-            int value = 0;
-            printf("Enter value: ");
-            if (fscanf(file_code, "%d\n", &value) != 1)
+            case CMD_PUSH:
             {
-                printf("the number incorrectly\n");
-                assert(0);
+                int value = 0;
+                printf("Enter value: ");
+                if (fscanf(file_code, "%d\n", &value) != 1)
+                {
+                    printf("the number incorrectly\n");
+                    assert(0);
+                }
+                printf("%d\n", value);
+                stackPush(&stk, value);
+                break;
             }
-            printf("%d\n", value);
-            stackPush(&stk, value);
+
+            case CMD_ADD:
+            {
+                int val_1 = 0, val_2 = 0;
+                stackPop(&stk, &val_1);
+                stackPop(&stk, &val_2);
+
+                stackPush(&stk, val_1 + val_2);
+                printf("Add: %d\n", val_1 + val_2);
+                break;
+            }
+
+            case CMD_SUB:
+            {
+                int val_1 = 0, val_2 = 0;
+                stackPop(&stk, &val_1);
+                stackPop(&stk, &val_2);
+
+                stackPush(&stk, val_2 - val_1);
+                printf("Sub: %d\n", val_2 - val_1);
+                break;
+            }
+
+            case CMD_MUL:
+            {
+                int val_1 = 0, val_2 = 0;
+                stackPop(&stk, &val_1);
+                stackPop(&stk, &val_2);
+
+                stackPush(&stk, val_1 * val_2);
+                printf("Mul: %d\n", val_1 * val_2);
+                break;
+            }
+
+            case CMD_DIV:
+            {
+                int val_1 = 0, val_2 = 0;
+                stackPop(&stk, &val_1);
+                stackPop(&stk, &val_2);
+
+                stackPush(&stk, val_2 / val_1);
+                printf("Div: %d\n", val_2 / val_1);
+                break;
+            }
+            case CMD_OUT:
+            {
+                int val = 0;
+                stackPop(&stk, &val);
+                printf("Elem from stack: %d\n", val);
+                break;
+            }
+
+            case CMD_HLT:
+            {
+                break;
+            }
+
+            default:
+            {
+                printf("Unknow command:(\n");
+                break;
+            }
         }
 
-        else if (cmd == Add)
-        {
-            int val_1 = 0, val_2 = 0;
-            stackPop(&stk, &val_1);
-            stackPop(&stk, &val_2);
-
-            stackPush(&stk, val_1 + val_2);
-            printf("Add: %d\n", val_1 + val_2);
-        }
-
-        else if (cmd == Sub)
-        {
-            int val_1 = 0, val_2 = 0;
-            stackPop(&stk, &val_1);
-            stackPop(&stk, &val_2);
-
-            stackPush(&stk, val_2 - val_1);
-            printf("Sub: %d\n", val_2 - val_1);
-        }
-
-        else if (cmd == Mul)
-        {
-            int val_1 = 0, val_2 = 0;
-            stackPop(&stk, &val_1);
-            stackPop(&stk, &val_2);
-
-            stackPush(&stk, val_1 * val_2);
-            printf("Mul: %d\n", val_1 * val_2);
-        }
-
-        else if (cmd == Div)
-        {
-            int val_1 = 0, val_2 = 0;
-            stackPop(&stk, &val_1);
-            stackPop(&stk, &val_2);
-
-            stackPush(&stk, val_2 / val_1);
-            printf("Div: %d\n", val_2 / val_1);
-        }
-
-        else if (cmd == Out)
-        {
-            int val = 0;
-            stackPop(&stk, &val);
-            printf("Elem from stack: %d\n", val);
-        }
-
-        else if (cmd == Hlt)
+        if (cmd == CMD_HLT)
         {
             fclose(file_code);
             break;
         }
-
-        else
-            printf("Unknow command:(\n");
     }
     stackDtor(&stk);
 }

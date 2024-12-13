@@ -8,18 +8,19 @@ CFLAGS = -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ -Waggressive-loo
          -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code -Wunused -Wuseless-cast -Wvariadic-macros -Wno-literal-suffix -Wno-missing-field-initializers \
          -Wno-narrowing -Wno-old-style-cast -Wno-varargs -Wstack-protector -fcheck-new -fsized-deallocation -fstack-protector -fstrict-overflow \
          -flto-odr-type-merging -fno-omit-frame-pointer -Wlarger-than=10496 -Wstack-usage=8192 -pie -fPIE -Werror=vla \
-         -fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,integer-divide-by-zero,leak,nonnull-attribute,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr -I./stack/include -I./proccessor/include
+         -fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,integer-divide-by-zero,leak,nonnull-attribute,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr
 
 SOURCES = proccessor/src/main.cpp proccessor/src/compilator.cpp proccessor/src/run.cpp stack/src/stack.cpp stack/src/debug.cpp stack/src/logger.cpp
 OBJECTS = $(SOURCES:src/%.cpp=%.o)
+INCLUDES = -I./stack/include -I./proccessor/include
 
 all: do.exe
 
 do.exe: $(OBJECTS)
-	$(CC) $(CFLAGS) $^ -o do
+	$(CC) $(CFLAGS) $(INCLUDES) $^ -o do
 
 %.o: src/%.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	rm -rf do.exe *.o

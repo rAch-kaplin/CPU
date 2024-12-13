@@ -98,7 +98,7 @@ void getStackState(stack* stk)
 
     for (size_t i = 0; i < stk->capacity + 2; i++)
     {
-        current_len += sprintf(GetLogger()->stack_state + current_len, "\t" STACK_ELEM_FORMAT, stk->data[i]);
+        current_len += sprintf(GetLogger()->stack_state + current_len, " " STACK_ELEM_FORMAT, stk->data[i]);
     }
 }
 

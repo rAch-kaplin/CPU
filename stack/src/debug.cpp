@@ -31,7 +31,7 @@ uint64_t Hash(const void *ptr, size_t size)
     }
     for(size_t i = 0; i < size; ++i)
     {
-        hash = hash * 33 ^ data[i];
+        hash = hash * 33 ^ (uint64_t)data[i];
     }
     return hash;
 }
@@ -81,7 +81,7 @@ void stackAssert(stack *stk)
     int error = verify(stk);
     if (error)
     {
-        LOG(LOGL_ERROR, "Stack verification failed: %s\n", stk, decoderError(error));
+        LOG(LOGL_ERROR, "Stack verification failed: %s", stk, decoderError(error));
         loggerDeinit();
         assert(0);
     }

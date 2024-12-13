@@ -4,6 +4,19 @@
 #include <assert.h>
 #include "proccessor.h"
 
+int GetCommandCode(const char *cmd)
+{
+    if (strcmp(cmd, "Push") == 0) return CMD_PUSH;
+    if (strcmp(cmd, "Add") == 0) return CMD_ADD;
+    if (strcmp(cmd, "Sub") == 0) return CMD_SUB;
+    if (strcmp(cmd, "Out") == 0) return CMD_OUT;
+    if (strcmp(cmd, "Div") == 0) return CMD_DIV;
+    if (strcmp(cmd, "Mul") == 0) return CMD_MUL;
+    if (strcmp(cmd, "Hlt") == 0) return CMD_HLT;
+    return 0;
+}
+
+
 void Compilator()
 {
     FILE *file_asm = fopen("Programm_asm.txt", "r");
@@ -25,47 +38,61 @@ void Compilator()
         char cmd[20] = "";
         if (fscanf(file_asm, "%s", cmd) != 1)
         {
+            printf("!!!!!!%s\n", cmd);
             printf("the string incorrectly\n");
             break;
         }
-        printf("cmd = <%s>\n", cmd);
+        //printf("<----%s\n", cmd);
+        int cmd_code = GetCommandCode(cmd);
 
-        if (strcmp(cmd, "Push") == 0)
+        switch (cmd_code)
         {
-            fprintf(file_code, "1 ");
-            int value = 0;
-            fscanf(file_asm, "%d", &value);
-            fprintf(file_code, "%d\n", value);
+            case CMD_PUSH:
+            {
+                fprintf(file_code, "%d ", cmd_code);
+                int value = 0;
+                fscanf(file_asm, "%d", &value);
+                fprintf(file_code, "%d\n", value);
+                break;
+            }
+
+            case CMD_ADD:
+            {
+                fprintf(file_code, "%d\n", cmd_code);
+                break;
+            }
+
+            case CMD_SUB:
+            {
+                fprintf(file_code, "%d\n", cmd_code);
+                break;
+            }
+
+            case CMD_OUT:
+            {
+                fprintf(file_code, "%d\n", cmd_code);
+                break;
+            }
+
+            case CMD_DIV:
+            {
+                fprintf(file_code, "%d\n", cmd_code);
+                break;
+            }
+
+            case CMD_MUL:
+            {
+                fprintf(file_code, "%d\n", cmd_code);
+                break;
+            }
+
+            default:
+                break;
         }
 
-        else if (strcmp(cmd, "Add") == 0)
+        if (cmd_code == CMD_HLT)
         {
-            fprintf(file_code, "2\n");
-        }
-
-        else if (strcmp(cmd, "Sub") == 0)
-        {
-            fprintf(file_code, "3\n");
-        }
-
-        else if (strcmp(cmd, "Out") == 0)
-        {
-            fprintf(file_code, "4\n");
-        }
-
-        else if (strcmp(cmd, "Div") == 0)
-        {
-            fprintf(file_code, "5\n");
-        }
-
-        else if (strcmp(cmd, "Mul") == 0)
-        {
-            fprintf(file_code, "6\n");
-        }
-
-        else if (strcmp(cmd, "Hlt") == 0)
-        {
-            fprintf(file_code, "-1\n");
+            fprintf(file_code, "%d\n", cmd_code);
             break;
         }
     }

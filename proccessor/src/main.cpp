@@ -3,6 +3,8 @@
 #include "stack.h"
 #include "logger.h"
 
+//показать логгер, мейкфайл, хеш, процессор
+
 int main()
 {
     loggerInit(LOGL_DEBUG, "stack.log");
