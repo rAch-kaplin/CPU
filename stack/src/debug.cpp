@@ -20,16 +20,16 @@ int putHash(stack *stk)
     return 0;
 }
 
-uint64_t Hash(const void *ptr, size_t size)
+uint64_t Hash(const void *ptr, size_t size, uint64_t seed)
 {
-    uint64_t hash = 5381;
+    uint64_t hash = seed;
     const char *data = (const char*)ptr;
     if (data == nullptr)
     {
         printf("data == nullptr in Hash()\n");
         assert(0);
     }
-    for(size_t i = 0; i < size; ++i)
+    for (size_t i = 0; i < size; ++i)
     {
         hash = hash * 33 ^ (uint64_t)data[i];
     }

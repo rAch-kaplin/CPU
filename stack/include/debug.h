@@ -32,7 +32,7 @@ const stackElem CANARY = (stackElem)0xDEADBABE;
 
 int putCanary(stack *stk);
 int putHash(stack *stk);
-uint64_t Hash(const void *ptr, size_t size);
+uint64_t Hash(const void *ptr, size_t size, uint64_t seed = 5381);
 void stkNullCheck(const stack *stk);
 int verify(stack *stk);
 void stackAssert(stack *stk);

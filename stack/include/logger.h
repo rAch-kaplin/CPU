@@ -19,7 +19,7 @@ typedef struct Logger {
     LogLevel levelLogger;
     FILE *logFile;
     char stack_state[4096];
-}Logger;
+} Logger;
 
 // typedef struct Logger Logger;
 Logger* GetLogger();

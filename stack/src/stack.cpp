@@ -131,7 +131,7 @@ errorCode capacityOptimization(stack *stk)
 {
     if (stk->size == 0)
     {
-        stackElem *stk_tmptr = (stackElem*)realloc(stk->data, 18 * sizeof(stackElem));
+        stackElem *stk_tmptr = (stackElem*)realloc(stk->data, min_capacity + 2 * sizeof(stackElem));
         if (stk_tmptr == NULL)
         {
             fprintf(stderr, "Realloc allocate failed\n");
