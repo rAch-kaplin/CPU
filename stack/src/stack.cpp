@@ -116,14 +116,14 @@ errorCode stackPop(stack *stk, stackElem *elem_from_stack)
 
     stk->size--;
     *elem_from_stack = stk->data[stk->size + 1];
-    stk->data[stk->size + 1] = POISON;
 
     if ((stk->size >= (ssize_t)(min_capacity)) && ((size_t)stk->size <= stk->capacity / 4))
         stackReallocDown(stk);
 
+    LOG(LOGL_DEBUG, "STACK POP: %d", stk->data[stk->size + 1]);
+    stk->data[stk->size + 1] = POISON;
     putHash(stk);
     stackAssert(stk);
-    LOG(LOGL_DEBUG, "STACK POP: %d", elem_from_stack);
     return STK_OK;
 }
 

@@ -29,7 +29,7 @@ const stackElem CANARY = (stackElem)0xDEADBABE;
 #endif
 
 
-void getStackState(stack* stk);
+void getStackState(LogLevel DepthMsg, stack* stk);
 int putCanary(stack *stk);
 int putHash(stack *stk);
 uint64_t Hash(const void *ptr, size_t size, uint64_t seed = 5381);

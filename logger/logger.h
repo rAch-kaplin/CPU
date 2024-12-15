@@ -11,9 +11,9 @@ const int SIZE_BUFFER = 4096;
 
 enum LogLevel
 {
-    LOGL_DEBUG = 0,
-    LOGL_INFO  = 1,
-    LOGL_ERROR = 2
+    LOGL_DEBUG = 70,
+    LOGL_INFO  = 100,
+    LOGL_ERROR = 200
 };
 
 

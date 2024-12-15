@@ -1,90 +1,90 @@
-[2024-12-15 17:55:21][DEBUG][stack/src/stack.cpp][44:stackCtor]: STACK Ctor:
-	stack pointer = 0x7ffc270eada0
+[2024-12-15 20:32:54][DEBUG][stack/src/stack.cpp][44:stackCtor]: STACK Ctor:
+	stack pointer = 0x7ffe6e7df120
 	Capacity: 16
 	Size: 0
 	Data pointer: 0x607000000100
 	Data:  -559039810 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
-[2024-12-15 17:55:21][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 20
-	stack pointer = 0x7ffc270eada0
+[2024-12-15 20:32:54][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 20
+	stack pointer = 0x7ffe6e7df120
 	Capacity: 16
 	Size: 1
 	Data pointer: 0x607000000100
 	Data:  -559039810 20 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
-[2024-12-15 17:55:21][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 80
-	stack pointer = 0x7ffc270eada0
+[2024-12-15 20:32:54][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 80
+	stack pointer = 0x7ffe6e7df120
 	Capacity: 16
 	Size: 2
 	Data pointer: 0x607000000100
 	Data:  -559039810 20 80 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
-[2024-12-15 17:55:21][DEBUG][stack/src/stack.cpp][126:stackPop]: STACK POP: 655273232
-	stack pointer = 0x7ffc270eada0
+[2024-12-15 20:32:54][DEBUG][stack/src/stack.cpp][123:stackPop]: STACK POP: 80
+	stack pointer = 0x7ffe6e7df120
+	Capacity: 16
+	Size: 2
+	Data pointer: 0x607000000100
+	Data:  -559039810 20 80 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2024-12-15 20:32:54][DEBUG][stack/src/stack.cpp][123:stackPop]: STACK POP: 20
+	stack pointer = 0x7ffe6e7df120
 	Capacity: 16
 	Size: 1
 	Data pointer: 0x607000000100
 	Data:  -559039810 20 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
-[2024-12-15 17:55:21][DEBUG][stack/src/stack.cpp][126:stackPop]: STACK POP: 655273248
-	stack pointer = 0x7ffc270eada0
-	Capacity: 16
-	Size: 0
-	Data pointer: 0x607000000100
-	Data:  -559039810 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
-[2024-12-15 17:55:21][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 100
-	stack pointer = 0x7ffc270eada0
+[2024-12-15 20:32:54][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 100
+	stack pointer = 0x7ffe6e7df120
 	Capacity: 16
 	Size: 1
 	Data pointer: 0x607000000100
 	Data:  -559039810 100 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
-[2024-12-15 17:55:21][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 12
-	stack pointer = 0x7ffc270eada0
+[2024-12-15 20:32:54][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 12
+	stack pointer = 0x7ffe6e7df120
 	Capacity: 16
 	Size: 2
 	Data pointer: 0x607000000100
 	Data:  -559039810 100 12 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
-[2024-12-15 17:55:21][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 2
-	stack pointer = 0x7ffc270eada0
+[2024-12-15 20:32:54][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 2
+	stack pointer = 0x7ffe6e7df120
 	Capacity: 16
 	Size: 3
 	Data pointer: 0x607000000100
 	Data:  -559039810 100 12 2 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
-[2024-12-15 17:55:21][DEBUG][stack/src/stack.cpp][126:stackPop]: STACK POP: 655273264
-	stack pointer = 0x7ffc270eada0
+[2024-12-15 20:32:54][DEBUG][stack/src/stack.cpp][123:stackPop]: STACK POP: 2
+	stack pointer = 0x7ffe6e7df120
+	Capacity: 16
+	Size: 3
+	Data pointer: 0x607000000100
+	Data:  -559039810 100 12 2 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2024-12-15 20:32:54][DEBUG][stack/src/stack.cpp][123:stackPop]: STACK POP: 12
+	stack pointer = 0x7ffe6e7df120
 	Capacity: 16
 	Size: 2
 	Data pointer: 0x607000000100
 	Data:  -559039810 100 12 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
-[2024-12-15 17:55:21][DEBUG][stack/src/stack.cpp][126:stackPop]: STACK POP: 655273280
-	stack pointer = 0x7ffc270eada0
-	Capacity: 16
-	Size: 1
-	Data pointer: 0x607000000100
-	Data:  -559039810 100 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
-[2024-12-15 17:55:21][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 10
-	stack pointer = 0x7ffc270eada0
+[2024-12-15 20:32:54][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 10
+	stack pointer = 0x7ffe6e7df120
 	Capacity: 16
 	Size: 2
 	Data pointer: 0x607000000100
 	Data:  -559039810 100 10 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
-[2024-12-15 17:55:21][DEBUG][stack/src/stack.cpp][126:stackPop]: STACK POP: 655273328
-	stack pointer = 0x7ffc270eada0
+[2024-12-15 20:32:54][DEBUG][stack/src/stack.cpp][123:stackPop]: STACK POP: 10
+	stack pointer = 0x7ffe6e7df120
+	Capacity: 16
+	Size: 2
+	Data pointer: 0x607000000100
+	Data:  -559039810 100 10 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2024-12-15 20:32:54][DEBUG][stack/src/stack.cpp][123:stackPop]: STACK POP: 100
+	stack pointer = 0x7ffe6e7df120
 	Capacity: 16
 	Size: 1
 	Data pointer: 0x607000000100
 	Data:  -559039810 100 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
-[2024-12-15 17:55:21][DEBUG][stack/src/stack.cpp][126:stackPop]: STACK POP: 655273344
-	stack pointer = 0x7ffc270eada0
-	Capacity: 16
-	Size: 0
-	Data pointer: 0x607000000100
-	Data:  -559039810 195893946 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
-[2024-12-15 17:55:21][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 10
-	stack pointer = 0x7ffc270eada0
+[2024-12-15 20:32:54][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 10
+	stack pointer = 0x7ffe6e7df120
 	Capacity: 16
 	Size: 1
 	Data pointer: 0x607000000100
 	Data:  -559039810 10 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
-[2024-12-15 17:55:21][DEBUG][stack/src/stack.cpp][126:stackPop]: STACK POP: 655273360
-	stack pointer = 0x7ffc270eada0
+[2024-12-15 20:32:54][DEBUG][stack/src/stack.cpp][123:stackPop]: STACK POP: 10
+	stack pointer = 0x7ffe6e7df120
 	Capacity: 16
-	Size: 0
+	Size: 1
 	Data pointer: 0x607000000100
-	Data:  -559039810 195893946 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+	Data:  -559039810 10 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810

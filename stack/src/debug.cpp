@@ -78,7 +78,7 @@ int verify(stack *stk)
 
 void stackAssert(stack *stk)
 {
-    getStackState(stk);
+    getStackState(LOGL_DEBUG, stk);
     int error = verify(stk);
     if (error)
     {
@@ -133,20 +133,32 @@ const char* decoderError(int error)
     return "Unknow Error :(";
 }
 
-void getStackState(stack* stk)
+void getStackState(LogLevel DepthMsg, stack* stk)
 {
     stkNullCheck(stk);
 
-    int current_len = sprintf(GetLogger()->stack_state,
-                 "\tstack pointer = %p\n"
-                 "\tCapacity: %zu\n"
-                 "\tSize: %zd\n"
-                 "\tData pointer: %p\n"
-                 "\tData: ",
-                 stk, stk->capacity, stk->size, stk->data);
-
-    for (size_t i = 0; i < stk->capacity + 2; i++)
+    if (DepthMsg >= 50)
     {
-        current_len += sprintf(GetLogger()->stack_state + current_len, " " STACK_ELEM_FORMAT, stk->data[i]);
+        int current_len = sprintf(GetLogger()->stack_state,
+                    "\tstack pointer = %p\n"
+                    "\tCapacity: %zu\n"
+                    "\tSize: %zd\n"
+                    "\tData pointer: %p\n"
+                    "\tData: ",
+                    stk, stk->capacity, stk->size, stk->data);
+
+        for (size_t i = 0; i < stk->capacity + 2; i++)
+        {
+            current_len += sprintf(GetLogger()->stack_state + current_len, " " STACK_ELEM_FORMAT, stk->data[i]);
+        }
+    }
+
+    else
+    {
+        int current_len = sprintf(GetLogger()->stack_state, "\tData: ");
+        for (size_t i = 0; i < stk->capacity + 2; i++)
+        {
+            current_len += sprintf(GetLogger()->stack_state + current_len, " " STACK_ELEM_FORMAT, stk->data[i]);
+        }
     }
 }
