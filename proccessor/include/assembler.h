@@ -20,7 +20,7 @@ enum command
     CMD_HLT = -1
 };
 
-void Compilator();
+void Assembler();
 int GetCommandCode(const char *cmd);
 const char* CommandToString(int cmd);
 void Run();

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "color.h"
-#include "proccessor.h"
+#include "assembler.h"
 #include "stack.h"
 #include "logger.h"
 
@@ -10,7 +10,7 @@ int main()
     loggerInit(LOGL_DEBUG, "stack.log");
     DBG_PRINTF(COLOR_GREEN "Start CPU\n" COLOR_RESET);
 
-    Compilator();
+    Assembler();
     Run();
 
     loggerDeinit();

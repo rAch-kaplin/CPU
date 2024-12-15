@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <assert.h>
-#include "proccessor.h"
+#include "assembler.h"
 
 int GetCommandCode(const char *cmd)
 {
@@ -17,7 +17,7 @@ int GetCommandCode(const char *cmd)
 }
 
 
-void Compilator()
+void Assembler()
 {
     FILE *file_asm = fopen("Programm_asm.txt", "r");
     if (file_asm == nullptr)

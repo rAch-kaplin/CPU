@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <stdbool.h>
 #include "color.h"
-#include "proccessor.h"
+#include "assembler.h"
 #include "stack.h"
 
 const char* CommandToString(int cmd)
