@@ -4,7 +4,6 @@
 #include "stack.h"
 #include "logger.h"
 
-//показать логгер, мейкфайл, хеш, процессор
 
 int main()
 {

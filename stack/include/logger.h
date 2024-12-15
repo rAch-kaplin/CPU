@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include "stack.h"
 
+const int SIZE_BUFFER = 4096;
+
 enum LogLevel
 {
     LOGL_DEBUG = 0,
@@ -18,14 +20,12 @@ enum LogLevel
 typedef struct Logger {
     LogLevel levelLogger;
     FILE *logFile;
-    char stack_state[4096];
+    char stack_state[SIZE_BUFFER];
 } Logger;
 
-// typedef struct Logger Logger;
 Logger* GetLogger();
 bool shouldLog(LogLevel levelMsg);
 int loggerInit(LogLevel levelLogger, const char *log_file_name);
-void getStackState(stack* stk);
 void loggerDeinit();
 const char* ColorLogMsg(const enum LogLevel levelMsg);
 void log(LogLevel levelMsg, const char *file, size_t line, const char *func,  const char *fmt, ...);
@@ -47,7 +47,6 @@ void log(LogLevel levelMsg, const char *file, size_t line, const char *func,  co
 
 #define LOG_MSG(fmt, ...)                                                     \
     do {                                                                      \
-        getStackState(stk);                                                   \
         fprintf(GetLogger()->logFile, "\n%s", GetLogger()->stack_state);      \
     } while(0)
 

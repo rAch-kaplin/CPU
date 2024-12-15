@@ -84,22 +84,6 @@ void loggerDeinit()
     GetLogger()->logFile = NULL;
 }
 
-void getStackState(stack* stk)
-{
-    stkNullCheck(stk);
 
-    int current_len = sprintf(GetLogger()->stack_state,
-                 "\tstack pointer = %p\n"
-                 "\tCapacity: %zu\n"
-                 "\tSize: %zd\n"
-                 "\tData pointer: %p\n"
-                 "\tData: ",
-                 stk, stk->capacity, stk->size, stk->data);
-
-    for (size_t i = 0; i < stk->capacity + 2; i++)
-    {
-        current_len += sprintf(GetLogger()->stack_state + current_len, " " STACK_ELEM_FORMAT, stk->data[i]);
-    }
-}
 
 
