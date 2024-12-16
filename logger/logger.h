@@ -11,11 +11,10 @@ const int SIZE_BUFFER = 4096;
 
 enum LogLevel
 {
-    LOGL_DEBUG = 70,
+    LOGL_DEBUG = 30,
     LOGL_INFO  = 100,
     LOGL_ERROR = 200
 };
-
 
 typedef struct Logger {
     LogLevel levelLogger;

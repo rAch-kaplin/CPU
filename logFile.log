@@ -1,0 +1,30 @@
+[2024-12-16 22:52:37][DEBUG][stack/src/stack.cpp][44:stackCtor]: STACK Ctor:
+	Data:  -559039810 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2024-12-16 22:52:37][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 20
+	Data:  -559039810 20 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2024-12-16 22:52:37][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 80
+	Data:  -559039810 20 80 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2024-12-16 22:52:37][DEBUG][stack/src/stack.cpp][123:stackPop]: STACK POP: 80
+	Data:  -559039810 20 80 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2024-12-16 22:52:37][DEBUG][stack/src/stack.cpp][123:stackPop]: STACK POP: 20
+	Data:  -559039810 20 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2024-12-16 22:52:37][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 100
+	Data:  -559039810 100 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2024-12-16 22:52:37][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 12
+	Data:  -559039810 100 12 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2024-12-16 22:52:37][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 2
+	Data:  -559039810 100 12 2 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2024-12-16 22:52:37][DEBUG][stack/src/stack.cpp][123:stackPop]: STACK POP: 2
+	Data:  -559039810 100 12 2 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2024-12-16 22:52:37][DEBUG][stack/src/stack.cpp][123:stackPop]: STACK POP: 12
+	Data:  -559039810 100 12 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2024-12-16 22:52:37][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 10
+	Data:  -559039810 100 10 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2024-12-16 22:52:37][DEBUG][stack/src/stack.cpp][123:stackPop]: STACK POP: 10
+	Data:  -559039810 100 10 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2024-12-16 22:52:37][DEBUG][stack/src/stack.cpp][123:stackPop]: STACK POP: 100
+	Data:  -559039810 100 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2024-12-16 22:52:37][DEBUG][stack/src/stack.cpp][88:stackPush]: STACK PUSH: 10
+	Data:  -559039810 10 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2024-12-16 22:52:37][DEBUG][stack/src/stack.cpp][123:stackPop]: STACK POP: 10
+	Data:  -559039810 10 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810

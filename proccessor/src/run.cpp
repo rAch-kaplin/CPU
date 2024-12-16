@@ -5,6 +5,8 @@
 #include "color.h"
 #include "assembler.h"
 #include "stack.h"
+#include "debug_proc.h"
+#include "logger.h"
 
 const char* CommandToString(int cmd)
 {
@@ -58,6 +60,7 @@ void Run()
                     assert(0);
                 }
                 DBG_PRINTF(COLOR_MAGENTA "%d\n" COLOR_RESET, value);
+                //LOG(LOGL_DEBUG, "Push\n");
                 stackPush(&stk, value);
                 break;
             }
