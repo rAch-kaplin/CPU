@@ -1,9 +1,9 @@
 #ifndef _HPROCCESSOR
 #define _HPROCCESSOR
 
-#define ONDBG
+#define DBG
 
-#ifdef ONDBG
+#ifdef DBG
     #define DBG_PRINTF(...) printf(__VA_ARGS__)
 #else
     #define DBG_PRINTF(...) ((void)0)

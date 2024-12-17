@@ -32,22 +32,30 @@ bool shouldLog(LogLevel levelMsg)
 {
     return GetLogger()->levelLogger <= levelMsg;
 }
-
+//#define COLOR_MSG
+#ifdef COLOR_MSG
+    #define COLOR_MSG(COLOR, str) return COLOR str COLOR_RESET;
+#else
+    #define COLOR_MSG(COLOR, str) return str;
+#endif
 
 const char* ColorLogMsg(const enum LogLevel levelMsg)
 {
     switch (levelMsg)
     {
         case LOGL_DEBUG:
-            return "[DEBUG]";
+            COLOR_MSG(COLOR_GREEN, "[DEBUG]");
+            //return "[DEBUG]";
             break;
 
         case LOGL_INFO:
-            return "[INFO]";
+            COLOR_MSG(COLOR_YELLOW, "[INFO]");
+            //return "[INFO]";
             break;
 
         case LOGL_ERROR:
-            return "[ERROR]";
+            COLOR_MSG(COLOR_RED, "[ERROR]");
+            //return "[ERROR]";
             break;
 
         default:
