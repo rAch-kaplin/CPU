@@ -133,12 +133,19 @@ const char* decoderError(int error)
     return "Unknow Error :(";
 }
 
+//#define COLOR_STK
+#ifdef COLOR_STK
+    #define SPRINTF(buffer, COLOR, fmt, ...) sprintf(buffer, COLOR fmt COLOR_RESET, ##__VA_ARGS__)
+#else
+    #define SPRINTF(buffer, COLOR, fmt, ...) sprintf(buffer, fmt, ##__VA_ARGS__)
+#endif
+
 void getStackState(LogLevel DepthMsg, stack* stk)
 {
     stkNullCheck(stk);
 
     if (DepthMsg >= 50)
-    {
+    { //GetLogger()->stack_state ---> buffer + current_len
         int current_len = sprintf(GetLogger()->stack_state,
                     "\tstack pointer = %p\n"
                     "\tCapacity: %zu\n"
@@ -149,16 +156,16 @@ void getStackState(LogLevel DepthMsg, stack* stk)
 
         for (size_t i = 0; i < stk->capacity + 2; i++)
         {
-            current_len += sprintf(GetLogger()->stack_state + current_len, " " STACK_ELEM_FORMAT, stk->data[i]);
+            current_len += SPRINTF(GetLogger()->stack_state + current_len, COLOR_MAGENTA, " " STACK_ELEM_FORMAT, stk->data[i]);
         }
     }
 
     else
     {
-        int current_len = sprintf(GetLogger()->stack_state, "\tData: ");
+        int current_len = SPRINTF(GetLogger()->stack_state, COLOR_MAGENTA,"\tData: ");
         for (size_t i = 0; i < stk->capacity + 2; i++)
         {
-            current_len += sprintf(GetLogger()->stack_state + current_len, " " STACK_ELEM_FORMAT, stk->data[i]);
+            current_len += SPRINTF(GetLogger()->stack_state + current_len, COLOR_MAGENTA, " " STACK_ELEM_FORMAT, stk->data[i]);
         }
     }
 }

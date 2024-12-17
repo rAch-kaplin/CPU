@@ -32,6 +32,7 @@ bool shouldLog(LogLevel levelMsg)
 {
     return GetLogger()->levelLogger <= levelMsg;
 }
+
 //#define COLOR_MSG
 #ifdef COLOR_MSG
     #define COLOR_MSG(COLOR, str) return COLOR str COLOR_RESET;

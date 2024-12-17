@@ -56,4 +56,4 @@ void log(LogLevel levelMsg, const char *file, size_t line, const char *func,  co
         fflush(GetLogger()->logFile);                                           \
     } while(0)
 
-#endif
+#endif //_HLOGGER
