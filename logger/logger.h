@@ -20,6 +20,7 @@ typedef struct Logger {
     LogLevel levelLogger;
     FILE *logFile;
     char stack_state[SIZE_BUFFER];
+    char proc_instruction[SIZE_BUFFER];
 } Logger;
 
 Logger* GetLogger();
@@ -47,6 +48,7 @@ void log(LogLevel levelMsg, const char *file, size_t line, const char *func,  co
 #define LOG_MSG(fmt, ...)                                                     \
     do {                                                                      \
         fprintf(GetLogger()->logFile, "\n%s", GetLogger()->stack_state);      \
+        fprintf(GetLogger()->logFile, "\n%s", GetLogger()->proc_instruction); \
     } while(0)
 
 #define LOG_END()                                                               \

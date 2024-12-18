@@ -8,20 +8,6 @@
 #include "debug_proc.h"
 #include "logger.h"
 
-const char* CommandToString(int cmd)
-{
-    switch (cmd)
-    {
-        case CMD_PUSH: return "Push";
-        case CMD_ADD: return "Add";
-        case CMD_SUB: return "Sub";
-        case CMD_OUT: return "Out";
-        case CMD_DIV: return "Div";
-        case CMD_MUL: return "Mul";
-        case CMD_HLT: return "Hlt";
-        default: return "Unknown";
-    }
-}
 
 void Run()
 {
@@ -46,6 +32,9 @@ void Run()
             printf("the command incorrectly\n");
             assert(0);
         }
+        //printf("!!!!!!!!!!\n%s\n", GetLogger()->stack_state);
+        GetProcInstruction(cmd);
+        //LOG(LOGL_DEBUG, "\tEnter command: %s", CommandToString(cmd));
         DBG_PRINTF(COLOR_MAGENTA "%s\n" COLOR_RESET, CommandToString(cmd));
 
         switch (cmd)
