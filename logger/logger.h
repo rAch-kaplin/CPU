@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include "stack.h"
 
-const int SIZE_BUFFER = 4096;
+const size_t SIZE_BUFFER = 4096;
 
 enum LogLevel
 {
@@ -47,13 +47,13 @@ void log(LogLevel levelMsg, const char *file, size_t line, const char *func,  co
 
 #define LOG_MSG(fmt, ...)                                                     \
     do {                                                                      \
+        fprintf(GetLogger()->logFile, "%s", GetLogger()->proc_instruction); \
         fprintf(GetLogger()->logFile, "\n%s", GetLogger()->stack_state);      \
-        fprintf(GetLogger()->logFile, "\n%s", GetLogger()->proc_instruction); \
     } while(0)
 
 #define LOG_END()                                                                         \
     do {                                                                                  \
-        fprintf(GetLogger()->logFile, "\n");                                              \
+        /*fprintf(GetLogger()->logFile, "\n");*/                                              \
         memset(GetLogger()->stack_state, 0, sizeof(GetLogger()->stack_state));            \
         memset(GetLogger()->proc_instruction, 0, sizeof(GetLogger()->proc_instruction));  \
         fflush(GetLogger()->logFile);                                                     \

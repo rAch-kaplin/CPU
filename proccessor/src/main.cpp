@@ -7,7 +7,7 @@
 
 int main()
 {
-    loggerInit(LOGL_DEBUG, "logFile.log");
+    loggerInit(LOGL_DEBUG, "logfile.log");
     DBG_PRINTF(COLOR_GREEN "Start CPU\n" COLOR_RESET);
 
     Assembler();

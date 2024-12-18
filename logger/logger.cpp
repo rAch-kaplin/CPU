@@ -33,11 +33,15 @@ bool shouldLog(LogLevel levelMsg)
     return GetLogger()->levelLogger <= levelMsg;
 }
 
-//#define COLOR_MSG
-#ifdef COLOR_MSG
+//#define COLOR
+#ifdef COLOR
+    //#define ADD_COLOR_FPRINTF(FILE, COLOR, str, ...) fprintf(FILE, COLOR str COLOR_RESET, __VA_ARGS__)
+    #define ADD_COLOR_VFPRINTF(FILE, COLOR, fmt, ...) vfprintf(FILE, COLOR fmt COLOR_RESET, __VA_ARGS__)
     #define COLOR_MSG(COLOR, str) return COLOR str COLOR_RESET;
 #else
     #define COLOR_MSG(COLOR, str) return str;
+    //#define ADD_COLOR_FPRINTF(FILE, COLOR, str, ...) fprintf(FILE, str, __VA_ARGS__)
+    #define ADD_COLOR_VFPRINTF(FILE, COLOR, fmt, ...) vfprintf(FILE, fmt, __VA_ARGS__)
 #endif
 
 const char* ColorLogMsg(const enum LogLevel levelMsg)
@@ -46,17 +50,14 @@ const char* ColorLogMsg(const enum LogLevel levelMsg)
     {
         case LOGL_DEBUG:
             COLOR_MSG(COLOR_GREEN, "[DEBUG]");
-            //return "[DEBUG]";
             break;
 
         case LOGL_INFO:
             COLOR_MSG(COLOR_YELLOW, "[INFO]");
-            //return "[INFO]";
             break;
 
         case LOGL_ERROR:
             COLOR_MSG(COLOR_RED, "[ERROR]");
-            //return "[ERROR]";
             break;
 
         default:
@@ -64,7 +65,6 @@ const char* ColorLogMsg(const enum LogLevel levelMsg)
     }
     return "UNKNOW";
 }
-
 
 void log(LogLevel levelMsg, const char *file, size_t line, const char *func,  const char *fmt, ...)
 {
@@ -82,8 +82,13 @@ void log(LogLevel levelMsg, const char *file, size_t line, const char *func,  co
 
     va_list args;
     va_start(args, fmt);
-    fprintf(log->logFile, "[%s]%s[%s][%zu:%s]: ", time_info, ColorLogMsg(levelMsg), file , line, func);
-    vfprintf(log->logFile, fmt, args);
+    #ifdef COLOR
+        fprintf(log->logFile, COLOR_YELLOW "[%s]%s" COLOR_CYAN "[%s][%zu:%s]: " COLOR_RESET, time_info, ColorLogMsg(levelMsg), file , line, func);
+    #else
+        fprintf(log->logFile, "[%s]%s[%s][%zu:%s]: ", time_info, ColorLogMsg(levelMsg), file , line, func);
+    #endif
+
+    vfprintf(log->logFile,  fmt, args);
     va_end(args);
 }
 

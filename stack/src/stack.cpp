@@ -40,6 +40,7 @@ errorCode stackCtor(stack *stk, size_t capacity)
 
     putCanary(stk);
     putHash(stk);
+    getStackState(LOGL_DEBUG, stk);
     stackAssert(stk);
     LOG(LOGL_DEBUG, "STACK Ctor:");
 
@@ -67,6 +68,7 @@ errorCode stackReallocUp(stack *stk)
     putCanary(stk);
     putHash(stk);
 
+    getStackState(LOGL_DEBUG, stk);
     stackAssert(stk);
     return STK_OK;
 }
@@ -84,6 +86,7 @@ errorCode stackPush(stack *stk, stackElem elem)
     stk->size++;
 
     putHash(stk);
+    getStackState(LOGL_DEBUG, stk);
     stackAssert(stk);
     LOG(LOGL_DEBUG, "STACK PUSH: %d", elem);
     return STK_OK;
@@ -104,12 +107,14 @@ errorCode stackReallocDown(stack *stk)
     putCanary(stk);
     putHash(stk);
     //stk->data[0] = 1;
+    getStackState(LOGL_DEBUG, stk);
     stackAssert(stk);
     return STK_OK;
 }
 
 errorCode stackPop(stack *stk, stackElem *elem_from_stack)
 {
+    getStackState(LOGL_DEBUG, stk);
     stackAssert(stk);
     if (stk->size == 0)
         return STK_EMPTY_STACK;
@@ -123,6 +128,8 @@ errorCode stackPop(stack *stk, stackElem *elem_from_stack)
     LOG(LOGL_DEBUG, "STACK POP: %d", stk->data[stk->size + 1]);
     stk->data[stk->size + 1] = POISON;
     putHash(stk);
+
+
     stackAssert(stk);
     return STK_OK;
 }
@@ -142,6 +149,8 @@ errorCode capacityOptimization(stack *stk)
 
         putCanary(stk);
         putHash(stk);
+
+        getStackState(LOGL_DEBUG, stk);
         stackAssert(stk);
         LOG(LOGL_DEBUG, "Optimization capacity:");
         return STK_OK;
