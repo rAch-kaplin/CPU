@@ -33,8 +33,8 @@ void Run()
             assert(0);
         }
         //printf("!!!!!!!!!!\n%s\n", GetLogger()->stack_state);
-        GetProcInstruction(cmd);
-        //LOG(LOGL_DEBUG, "\tEnter command: %s", CommandToString(cmd));
+        //GetProcInstruction(cmd);
+        LOG(LOGL_DEBUG, "\tEnter command: %s", CommandToString(cmd));
         DBG_PRINTF(COLOR_MAGENTA "%s\n" COLOR_RESET, CommandToString(cmd));
 
         switch (cmd)

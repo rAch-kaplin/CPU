@@ -51,11 +51,12 @@ void log(LogLevel levelMsg, const char *file, size_t line, const char *func,  co
         fprintf(GetLogger()->logFile, "\n%s", GetLogger()->proc_instruction); \
     } while(0)
 
-#define LOG_END()                                                               \
-    do {                                                                        \
-        fprintf(GetLogger()->logFile, "\n");                                    \
-        memset(GetLogger()->stack_state, 0, sizeof(GetLogger()->stack_state));  \
-        fflush(GetLogger()->logFile);                                           \
+#define LOG_END()                                                                         \
+    do {                                                                                  \
+        fprintf(GetLogger()->logFile, "\n");                                              \
+        memset(GetLogger()->stack_state, 0, sizeof(GetLogger()->stack_state));            \
+        memset(GetLogger()->proc_instruction, 0, sizeof(GetLogger()->proc_instruction));  \
+        fflush(GetLogger()->logFile);                                                     \
     } while(0)
 
 #endif //_HLOGGER
