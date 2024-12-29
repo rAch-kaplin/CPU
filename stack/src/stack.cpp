@@ -129,7 +129,6 @@ errorCode stackPop(stack *stk, stackElem *elem_from_stack)
     stk->data[stk->size + 1] = POISON;
     putHash(stk);
 
-
     stackAssert(stk);
     return STK_OK;
 }

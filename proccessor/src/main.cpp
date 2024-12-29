@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include "color.h"
-#include "assembler.h"
 #include "stack.h"
 #include "logger.h"
 
+#define DBG
+#include "assembler.h"
 
 int main()
 {

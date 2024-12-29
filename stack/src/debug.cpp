@@ -2,6 +2,7 @@
 #include "debug.h"
 #include "color.h"
 #include "logger.h"
+#include "common.h"
 
 int putCanary(stack *stk)
 {
@@ -132,7 +133,7 @@ const char* decoderError(int error)
     return "Unknow Error :(";
 }
 
-//#define COLOR
+#define COLOR
 #ifdef COLOR
     #define SNPRINTF(buffer, SIZE_BUFFER, COLOR, fmt, ...) snprintf(buffer, SIZE_BUFFER, COLOR fmt COLOR_RESET, ##__VA_ARGS__)
 #else

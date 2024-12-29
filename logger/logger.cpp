@@ -33,7 +33,7 @@ bool shouldLog(LogLevel levelMsg)
     return GetLogger()->levelLogger <= levelMsg;
 }
 
-//#define COLOR
+#define COLOR
 #ifdef COLOR
     //#define ADD_COLOR_FPRINTF(FILE, COLOR, str, ...) fprintf(FILE, COLOR str COLOR_RESET, __VA_ARGS__)
     #define ADD_COLOR_VFPRINTF(FILE, COLOR, fmt, ...) vfprintf(FILE, COLOR fmt COLOR_RESET, __VA_ARGS__)

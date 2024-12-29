@@ -1,7 +1,7 @@
 #ifndef _HPROCCESSOR
 #define _HPROCCESSOR
 
-#define DBG
+//#define DBG
 
 #ifdef DBG
     #define DBG_PRINTF(...) printf(__VA_ARGS__)

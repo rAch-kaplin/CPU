@@ -3,6 +3,6 @@
 
 #include "logger.h"
 
-void GetProcInstruction(int cmd);
+void GetProcInstruction(int cmd, ...);
 
 #endif

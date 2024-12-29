@@ -1,54 +1,54 @@
-[2024-12-19 01:31:04][DEBUG][stack/src/stack.cpp][45:stackCtor]: STACK Ctor:
-	Data:  -559039810 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[stack/src/stack.cpp][45:stackCtor]: [0mSTACK Ctor:
+[35m	Data: [0m[35m -559039810[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m -559039810[0m
 
-[2024-12-19 01:31:04][DEBUG][proccessor/src/run.cpp][37:Run]:  Enter command: Push
-[2024-12-19 01:31:04][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 20
-	Data:  -559039810 20 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[proccessor/src/run.cpp][51:Run]: [0m[34mEnter command: Push[0m[31m 20[0m
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[stack/src/stack.cpp][91:stackPush]: [0mSTACK PUSH: 20
+[35m	Data: [0m[35m -559039810[0m[35m 20[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m -559039810[0m
 
-[2024-12-19 01:31:04][DEBUG][proccessor/src/run.cpp][37:Run]:  Enter command: Push
-[2024-12-19 01:31:04][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 80
-	Data:  -559039810 20 80 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[proccessor/src/run.cpp][51:Run]: [0m[34mEnter command: Push[0m[31m 80[0m
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[stack/src/stack.cpp][91:stackPush]: [0mSTACK PUSH: 80
+[35m	Data: [0m[35m -559039810[0m[35m 20[0m[35m 80[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m -559039810[0m
 
-[2024-12-19 01:31:04][DEBUG][proccessor/src/run.cpp][37:Run]:  Enter command: Add
-[2024-12-19 01:31:04][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 80
-	Data:  -559039810 20 80 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[stack/src/stack.cpp][128:stackPop]: [0mSTACK POP: 80
+[35m	Data: [0m[35m -559039810[0m[35m 20[0m[35m 80[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m -559039810[0m
 
-[2024-12-19 01:31:04][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 20
-	Data:  -559039810 20 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[stack/src/stack.cpp][128:stackPop]: [0mSTACK POP: 20
+[35m	Data: [0m[35m -559039810[0m[35m 20[0m[35m 195893946[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m -559039810[0m
 
-[2024-12-19 01:31:04][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 100
-	Data:  -559039810 100 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[stack/src/stack.cpp][91:stackPush]: [0mSTACK PUSH: 100
+[35m	Data: [0m[35m -559039810[0m[35m 100[0m[35m 195893946[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m -559039810[0m
 
-[2024-12-19 01:31:04][DEBUG][proccessor/src/run.cpp][37:Run]:  Enter command: Push
-[2024-12-19 01:31:04][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 12
-	Data:  -559039810 100 12 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[proccessor/src/run.cpp][65:Run]: [0m[34mEnter command: Add[0m[31m (80 + 20)[0m
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[proccessor/src/run.cpp][51:Run]: [0m[34mEnter command: Push[0m[31m 12[0m
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[stack/src/stack.cpp][91:stackPush]: [0mSTACK PUSH: 12
+[35m	Data: [0m[35m -559039810[0m[35m 100[0m[35m 12[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m -559039810[0m
 
-[2024-12-19 01:31:04][DEBUG][proccessor/src/run.cpp][37:Run]:  Enter command: Push
-[2024-12-19 01:31:04][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 2
-	Data:  -559039810 100 12 2 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[proccessor/src/run.cpp][51:Run]: [0m[34mEnter command: Push[0m[31m 2[0m
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[stack/src/stack.cpp][91:stackPush]: [0mSTACK PUSH: 2
+[35m	Data: [0m[35m -559039810[0m[35m 100[0m[35m 12[0m[35m 2[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m -559039810[0m
 
-[2024-12-19 01:31:04][DEBUG][proccessor/src/run.cpp][37:Run]:  Enter command: Sub
-[2024-12-19 01:31:04][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 2
-	Data:  -559039810 100 12 2 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[stack/src/stack.cpp][128:stackPop]: [0mSTACK POP: 2
+[35m	Data: [0m[35m -559039810[0m[35m 100[0m[35m 12[0m[35m 2[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m -559039810[0m
 
-[2024-12-19 01:31:04][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 12
-	Data:  -559039810 100 12 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[stack/src/stack.cpp][128:stackPop]: [0mSTACK POP: 12
+[35m	Data: [0m[35m -559039810[0m[35m 100[0m[35m 12[0m[35m 195893946[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m -559039810[0m
 
-[2024-12-19 01:31:04][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 10
-	Data:  -559039810 100 10 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[stack/src/stack.cpp][91:stackPush]: [0mSTACK PUSH: 10
+[35m	Data: [0m[35m -559039810[0m[35m 100[0m[35m 10[0m[35m 195893946[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m -559039810[0m
 
-[2024-12-19 01:31:04][DEBUG][proccessor/src/run.cpp][37:Run]:  Enter command: Div
-[2024-12-19 01:31:04][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 10
-	Data:  -559039810 100 10 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[proccessor/src/run.cpp][78:Run]: [0m[34mEnter command: Sub[0m[31m (12 - 2)[0m
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[stack/src/stack.cpp][128:stackPop]: [0mSTACK POP: 10
+[35m	Data: [0m[35m -559039810[0m[35m 100[0m[35m 10[0m[35m 195893946[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m -559039810[0m
 
-[2024-12-19 01:31:04][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 100
-	Data:  -559039810 100 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[stack/src/stack.cpp][128:stackPop]: [0mSTACK POP: 100
+[35m	Data: [0m[35m -559039810[0m[35m 100[0m[35m 195893946[0m[35m 195893946[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m -559039810[0m
 
-[2024-12-19 01:31:04][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 10
-	Data:  -559039810 10 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[stack/src/stack.cpp][91:stackPush]: [0mSTACK PUSH: 10
+[35m	Data: [0m[35m -559039810[0m[35m 10[0m[35m 195893946[0m[35m 195893946[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m -559039810[0m
 
-[2024-12-19 01:31:04][DEBUG][proccessor/src/run.cpp][37:Run]:  Enter command: Out
-[2024-12-19 01:31:04][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 10
-	Data:  -559039810 10 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[proccessor/src/run.cpp][104:Run]: [0m[34mEnter command: Div[0m[31m (100 / 10)[0m
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[stack/src/stack.cpp][128:stackPop]: [0mSTACK POP: 10
+[35m	Data: [0m[35m -559039810[0m[35m 10[0m[35m 195893946[0m[35m 195893946[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m 0[0m[35m -559039810[0m
 
-[2024-12-19 01:31:04][DEBUG][proccessor/src/run.cpp][37:Run]:  Enter command: Hlt
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[proccessor/src/run.cpp][113:Run]: [0m[34mEnter command: Out[0m[31m 10[0m
+[33m[2024-12-29 14:28:33][32m[DEBUG][0m[36m[proccessor/src/run.cpp][132:Run]: [0m[34mEnter command: Hlt[0m

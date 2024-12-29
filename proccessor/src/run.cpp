@@ -32,9 +32,7 @@ void Run()
             printf("the command incorrectly\n");
             assert(0);
         }
-        //printf("!!!!!!!!!!\n%s\n", GetLogger()->stack_state);
-        //GetProcInstruction(cmd);
-        LOG(LOGL_DEBUG, " Enter command: %s", CommandToString(cmd));
+
         DBG_PRINTF(COLOR_MAGENTA "%s\n" COLOR_RESET, CommandToString(cmd));
 
         switch (cmd)
@@ -49,7 +47,8 @@ void Run()
                     assert(0);
                 }
                 DBG_PRINTF(COLOR_MAGENTA "%d\n" COLOR_RESET, value);
-                //LOG(LOGL_DEBUG, "Push\n");
+                GetProcInstruction(cmd, value);
+                LOG(LOGL_DEBUG, "");
                 stackPush(&stk, value);
                 break;
             }
@@ -62,6 +61,8 @@ void Run()
 
                 stackPush(&stk, val_1 + val_2);
                 DBG_PRINTF(COLOR_MAGENTA "Add: %d\n" COLOR_RESET, val_1 + val_2);
+                GetProcInstruction(cmd, val_1, val_2);
+                LOG(LOGL_DEBUG, "");
                 break;
             }
 
@@ -73,6 +74,8 @@ void Run()
 
                 stackPush(&stk, val_2 - val_1);
                 DBG_PRINTF(COLOR_MAGENTA "Sub: %d\n" COLOR_RESET, val_2 - val_1);
+                GetProcInstruction(cmd, val_2, val_1);
+                LOG(LOGL_DEBUG, "");
                 break;
             }
 
@@ -84,6 +87,8 @@ void Run()
 
                 stackPush(&stk, val_1 * val_2);
                 DBG_PRINTF(COLOR_MAGENTA "Mul: %d\n" COLOR_RESET, val_1 * val_2);
+                GetProcInstruction(cmd, val_1, val_2);
+                LOG(LOGL_DEBUG, "");
                 break;
             }
 
@@ -95,6 +100,8 @@ void Run()
 
                 stackPush(&stk, val_2 / val_1);
                 DBG_PRINTF(COLOR_MAGENTA "Div: %d\n" COLOR_RESET, val_2 / val_1);
+                GetProcInstruction(cmd, val_2, val_1);
+                LOG(LOGL_DEBUG, "");
                 break;
             }
             case CMD_OUT:
@@ -102,6 +109,8 @@ void Run()
                 int val = 0;
                 stackPop(&stk, &val);
                 DBG_PRINTF(COLOR_MAGENTA "Elem from stack: %d\n" COLOR_RESET, val);
+                GetProcInstruction(cmd, val);
+                LOG(LOGL_DEBUG, "");
                 break;
             }
 
@@ -119,6 +128,8 @@ void Run()
 
         if (cmd == CMD_HLT)
         {
+            GetProcInstruction(cmd);
+            LOG(LOGL_DEBUG, "");
             fclose(file_code);
             break;
         }
