@@ -6,18 +6,68 @@
 #include "color.h"
 #include "debug.h"
 
-
 Logger* GetLogger()
 {
-    static Logger logger = {LOGL_DEBUG, NULL, {0}};
+    static Logger logger = {LOGL_DEBUG, NULL, {0}, {0}, DEFAULT_MODE};
     return &logger;
+}
+#if 0
+int CheckOutputMode(const char *log_file_name)
+{
+    Logger *log = GetLogger();
+
+    const char *output_mode = getenv("OUTPUT_MODE");
+
+    if (output_mode != NULL)
+    {
+        if(strcmp(output_mode, "file") == 0)
+        {
+            log->logFile = fopen(log_file_name, "w+");
+
+            if (log->logFile == NULL)
+            {
+                fprintf(stderr, "logFile failed open\n");
+                return -100;
+            }
+            return DEFAULT_MODE;
+        }
+        else if (strcmp(output_mode, "terminal") == 0)
+        {
+            CheckOutputMode();
+            log->logFile = stdout;
+            return COLOR_MODE;
+            #define COLOR
+        }
+    else
+    {
+        log->logFile = fopen(log_file_name, "w+");
+
+        if (log->logFile == NULL)
+        {
+            fprintf(stderr, "logFile failed open\n");
+            return -100;
+        }
+    }
+    return DEFAULT_MODE;
 }
 
 int loggerInit(LogLevel levelLogger, const char *log_file_name)
 {
     Logger *log = GetLogger();
     log->levelLogger = levelLogger;
-    log->logFile = fopen(log_file_name, "w+");
+
+    CheckOutputMode(log_file_name);
+
+    return 0;
+}
+#endif
+
+int loggerInit(LogLevel levelLogger, const char *log_file_name)
+{
+    Logger *log = GetLogger();
+    log->levelLogger = levelLogger;
+    log->logFile = stdout;
+    //log->logFile = fopen(log_file_name, "w+");
 
     if (log->logFile == NULL)
     {
@@ -33,19 +83,21 @@ bool shouldLog(LogLevel levelMsg)
     return GetLogger()->levelLogger <= levelMsg;
 }
 
-#define COLOR
-#ifdef COLOR
-    //#define ADD_COLOR_FPRINTF(FILE, COLOR, str, ...) fprintf(FILE, COLOR str COLOR_RESET, __VA_ARGS__)
-    #define ADD_COLOR_VFPRINTF(FILE, COLOR, fmt, ...) vfprintf(FILE, COLOR fmt COLOR_RESET, __VA_ARGS__)
-    #define COLOR_MSG(COLOR, str) return COLOR str COLOR_RESET;
-#else
-    #define COLOR_MSG(COLOR, str) return str;
-    //#define ADD_COLOR_FPRINTF(FILE, COLOR, str, ...) fprintf(FILE, str, __VA_ARGS__)
-    #define ADD_COLOR_VFPRINTF(FILE, COLOR, fmt, ...) vfprintf(FILE, fmt, __VA_ARGS__)
-#endif
-
 const char* ColorLogMsg(const enum LogLevel levelMsg)
 {
+    if (GetLogger()->color_mode == COLOR_MODE)
+    {
+        #define COLOR
+    }
+
+    #ifdef COLOR
+        #define ADD_COLOR_VFPRINTF(FILE, COLOR, fmt, ...) vfprintf(FILE, COLOR fmt COLOR_RESET, __VA_ARGS__)
+        #define COLOR_MSG(COLOR, str) return COLOR str COLOR_RESET;
+    #else
+        #define COLOR_MSG(COLOR, str) return str;
+        #define ADD_COLOR_VFPRINTF(FILE, COLOR, fmt, ...) vfprintf(FILE, fmt, __VA_ARGS__)
+    #endif
+
     switch (levelMsg)
     {
         case LOGL_DEBUG:
@@ -97,7 +149,4 @@ void loggerDeinit()
     fclose(GetLogger()->logFile);
     GetLogger()->logFile = NULL;
 }
-
-
-
 

@@ -6,24 +6,26 @@
 #include "color.h"
 #include "common.h"
 
-#define COLOR
-
-#ifdef COLOR
-    #define SNPRINTF(buffer, SIZE_BUFFER, COLOR, fmt, ...) snprintf(buffer, SIZE_BUFFER, COLOR fmt COLOR_RESET, ##__VA_ARGS__)
-#else
-    #define SNPRINTF(buffer, SIZE_BUFFER, COLOR, fmt, ...) snprintf(buffer, SIZE_BUFFER,  fmt, ##__VA_ARGS__)
-#endif
-
 void GetProcInstruction(int cmd, ...)
 {
+    if (GetLogger()->color_mode == COLOR_MODE)
+    {
+        #define COLOR
+    }
+
+    #ifdef COLOR
+        #define SNPRINTF(buffer, SIZE_BUFFER, COLOR, fmt, ...) snprintf(buffer, SIZE_BUFFER, COLOR fmt COLOR_RESET, ##__VA_ARGS__)
+    #else
+        #define SNPRINTF(buffer, SIZE_BUFFER, COLOR, fmt, ...) snprintf(buffer, SIZE_BUFFER,  fmt, ##__VA_ARGS__)
+    #endif
+
     va_list args;
     va_start(args, cmd);
 
     Logger * log = GetLogger();
 
-
-    int current_len = snprintf(GetLogger()->proc_instruction, SIZE_BUFFER,
-                COLOR_BLUE "Enter command: %s" COLOR_RESET, CommandToString(cmd));
+    int current_len = SNPRINTF(GetLogger()->proc_instruction, SIZE_BUFFER,
+                COLOR_BLUE, "Enter command: %s", CommandToString(cmd));
 
     switch (cmd)
     {
@@ -73,6 +75,6 @@ void GetProcInstruction(int cmd, ...)
         default:
             break;
     }
-
+    #undef COLOR
     va_end(args);
 }

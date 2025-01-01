@@ -16,14 +16,22 @@ enum LogLevel
     LOGL_ERROR = 200
 };
 
+enum OutputMode
+{
+    COLOR_MODE = 10,
+    DEFAULT_MODE = 1
+};
+
 typedef struct Logger {
     LogLevel levelLogger;
     FILE *logFile;
     char stack_state[SIZE_BUFFER];
     char proc_instruction[SIZE_BUFFER];
+    OutputMode color_mode;
 } Logger;
 
 Logger* GetLogger();
+int CheckOutputMode(const char *log_file_name);
 bool shouldLog(LogLevel levelMsg);
 int loggerInit(LogLevel levelLogger, const char *log_file_name);
 void loggerDeinit();

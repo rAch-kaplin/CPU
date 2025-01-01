@@ -4,6 +4,8 @@
 #include "logger.h"
 #include "common.h"
 
+OutputMode CheckArgs(int argc, char *argv[]);
+
 int putCanary(stack *stk)
 {
     stkNullCheck(stk);
@@ -133,19 +135,23 @@ const char* decoderError(int error)
     return "Unknow Error :(";
 }
 
-#define COLOR
-#ifdef COLOR
-    #define SNPRINTF(buffer, SIZE_BUFFER, COLOR, fmt, ...) snprintf(buffer, SIZE_BUFFER, COLOR fmt COLOR_RESET, ##__VA_ARGS__)
-#else
-    #define SNPRINTF(buffer, SIZE_BUFFER, COLOR, fmt, ...) snprintf(buffer, SIZE_BUFFER,  fmt, ##__VA_ARGS__)
-#endif
-
 void getStackState(LogLevel DepthMsg, stack* stk)
 {
     stkNullCheck(stk);
 
+    if (GetLogger()->color_mode == COLOR_MODE)
+    {
+        #define COLOR
+    }
+
+    #ifdef COLOR
+        #define SNPRINTF(buffer, SIZE_BUFFER, COLOR, fmt, ...) snprintf(buffer, SIZE_BUFFER, COLOR fmt COLOR_RESET, ##__VA_ARGS__)
+    #else
+        #define SNPRINTF(buffer, SIZE_BUFFER, COLOR, fmt, ...) snprintf(buffer, SIZE_BUFFER,  fmt, ##__VA_ARGS__)
+    #endif
+
     if (DepthMsg >= 50)
-    { //GetLogger()->stack_state ---> buffer + current_len
+    {
         int current_len = snprintf(GetLogger()->stack_state, SIZE_BUFFER,
                     "\tstack pointer = %p\n"
                     "\tCapacity: %zu\n"
@@ -169,4 +175,5 @@ void getStackState(LogLevel DepthMsg, stack* stk)
         }
         snprintf(GetLogger()->stack_state + current_len, SIZE_BUFFER - (size_t)current_len, "\n\n");
     }
+    #undef COLOR
 }
