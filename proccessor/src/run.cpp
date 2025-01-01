@@ -59,11 +59,11 @@ void Run()
                 int val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
                 stackPop(&stk, &val_2);
-
-                stackPush(&stk, val_1 + val_2);
-                DBG_PRINTF(COLOR_MAGENTA "Add: %d\n" COLOR_RESET, val_1 + val_2);
                 GetProcInstruction(cmd, val_1, val_2);
                 LOG(LOGL_DEBUG, "");
+                stackPush(&stk, val_1 + val_2);
+
+                DBG_PRINTF(COLOR_MAGENTA "Add: %d\n" COLOR_RESET, val_1 + val_2);
                 break;
             }
 
@@ -72,11 +72,11 @@ void Run()
                 int val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
                 stackPop(&stk, &val_2);
-
-                stackPush(&stk, val_2 - val_1);
-                DBG_PRINTF(COLOR_MAGENTA "Sub: %d\n" COLOR_RESET, val_2 - val_1);
                 GetProcInstruction(cmd, val_2, val_1);
                 LOG(LOGL_DEBUG, "");
+                stackPush(&stk, val_2 - val_1);
+                DBG_PRINTF(COLOR_MAGENTA "Sub: %d\n" COLOR_RESET, val_2 - val_1);
+
                 break;
             }
 
@@ -85,11 +85,10 @@ void Run()
                 int val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
                 stackPop(&stk, &val_2);
-
-                stackPush(&stk, val_1 * val_2);
-                DBG_PRINTF(COLOR_MAGENTA "Mul: %d\n" COLOR_RESET, val_1 * val_2);
                 GetProcInstruction(cmd, val_1, val_2);
                 LOG(LOGL_DEBUG, "");
+                stackPush(&stk, val_1 * val_2);
+                DBG_PRINTF(COLOR_MAGENTA "Mul: %d\n" COLOR_RESET, val_1 * val_2);
                 break;
             }
 
@@ -98,11 +97,11 @@ void Run()
                 int val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
                 stackPop(&stk, &val_2);
-
-                stackPush(&stk, val_2 / val_1);
-                DBG_PRINTF(COLOR_MAGENTA "Div: %d\n" COLOR_RESET, val_2 / val_1);
                 GetProcInstruction(cmd, val_2, val_1);
                 LOG(LOGL_DEBUG, "");
+                stackPush(&stk, val_2 / val_1);
+                DBG_PRINTF(COLOR_MAGENTA "Div: %d\n" COLOR_RESET, val_2 / val_1);
+
                 break;
             }
             case CMD_OUT:

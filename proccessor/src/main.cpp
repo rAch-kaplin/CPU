@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
         printf(COLOR_MAGENTA "COLOR_MODE ON\n" COLOR_RESET);
         GetLogger()->color_mode = COLOR_MODE;
     }
-    printf("%d\n", GetLogger()->color_mode);
+    
     loggerInit(LOGL_DEBUG, "logfile.log");
     DBG_PRINTF(COLOR_GREEN "Start CPU\n" COLOR_RESET);
 
