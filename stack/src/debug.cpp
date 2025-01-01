@@ -139,17 +139,6 @@ void getStackState(LogLevel DepthMsg, stack* stk)
 {
     stkNullCheck(stk);
 
-    if (GetLogger()->color_mode == COLOR_MODE)
-    {
-        #define COLOR
-    }
-
-    #ifdef COLOR
-        #define SNPRINTF(buffer, SIZE_BUFFER, COLOR, fmt, ...) snprintf(buffer, SIZE_BUFFER, COLOR fmt COLOR_RESET, ##__VA_ARGS__)
-    #else
-        #define SNPRINTF(buffer, SIZE_BUFFER, COLOR, fmt, ...) snprintf(buffer, SIZE_BUFFER,  fmt, ##__VA_ARGS__)
-    #endif
-
     if (DepthMsg >= 50)
     {
         int current_len = snprintf(GetLogger()->stack_state, SIZE_BUFFER,
@@ -162,18 +151,36 @@ void getStackState(LogLevel DepthMsg, stack* stk)
 
         for (size_t i = 0; i < stk->capacity + 2; i++)
         {
-            current_len += SNPRINTF(GetLogger()->stack_state + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_MAGENTA, " " STACK_ELEM_FORMAT, stk->data[i]);
-        }
+            current_len += snprintf(GetLogger()->stack_state + current_len, SIZE_BUFFER - (size_t)current_len,
+                                    COLOR_MAGENTA, " " STACK_ELEM_FORMAT, stk->data[i]);
+        } // update here!
     }
 
     else
     {
-        int current_len = SNPRINTF(GetLogger()->stack_state, SIZE_BUFFER, COLOR_MAGENTA,"\tData: ");
+        int current_len = 0;
+        if (GetLogger()->color_mode == COLOR_MODE)
+        {
+            current_len += snprintf(GetLogger()->stack_state, SIZE_BUFFER, COLOR_MAGENTA "\tData: " COLOR_RESET);
+        }
+        else
+        {
+            current_len += snprintf(GetLogger()->stack_state, SIZE_BUFFER, "\tData: ");
+        }
+
         for (size_t i = 0; i < stk->capacity + 2; i++)
         {
-            current_len += SNPRINTF(GetLogger()->stack_state + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_MAGENTA, " " STACK_ELEM_FORMAT, stk->data[i]);
+            if (GetLogger()->color_mode == COLOR_MODE)
+            {
+                current_len += snprintf(GetLogger()->stack_state + current_len, SIZE_BUFFER - (size_t)current_len,
+                                        COLOR_MAGENTA " " STACK_ELEM_FORMAT COLOR_RESET, stk->data[i]);
+            }
+            else
+            {
+                current_len += snprintf(GetLogger()->stack_state + current_len, SIZE_BUFFER - (size_t)current_len,
+                                         " " STACK_ELEM_FORMAT, stk->data[i]);
+            }
         }
         snprintf(GetLogger()->stack_state + current_len, SIZE_BUFFER - (size_t)current_len, "\n\n");
     }
-    #undef COLOR
 }

@@ -8,31 +8,37 @@
 
 void GetProcInstruction(int cmd, ...)
 {
-    if (GetLogger()->color_mode == COLOR_MODE)
-    {
-        #define COLOR
-    }
-
-    #ifdef COLOR
-        #define SNPRINTF(buffer, SIZE_BUFFER, COLOR, fmt, ...) snprintf(buffer, SIZE_BUFFER, COLOR fmt COLOR_RESET, ##__VA_ARGS__)
-    #else
-        #define SNPRINTF(buffer, SIZE_BUFFER, COLOR, fmt, ...) snprintf(buffer, SIZE_BUFFER,  fmt, ##__VA_ARGS__)
-    #endif
-
     va_list args;
     va_start(args, cmd);
 
     Logger * log = GetLogger();
 
-    int current_len = SNPRINTF(GetLogger()->proc_instruction, SIZE_BUFFER,
-                COLOR_BLUE, "Enter command: %s", CommandToString(cmd));
+    int current_len = 0;
+
+    if (GetLogger()->color_mode == COLOR_MODE)
+    {
+        current_len += snprintf(GetLogger()->proc_instruction, SIZE_BUFFER,
+                COLOR_BLUE "Enter command: %s" COLOR_RESET, CommandToString(cmd));
+    }
+    else
+    {
+        current_len += snprintf(GetLogger()->proc_instruction, SIZE_BUFFER,
+                "Enter command: %s", CommandToString(cmd));
+    }
 
     switch (cmd)
     {
         case CMD_PUSH:
         {
             int value = va_arg(args, int);
-            SNPRINTF(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED, " %d", value);
+            if (GetLogger()->color_mode == COLOR_MODE)
+            {
+                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED " %d" COLOR_RESET, value);
+            }
+            else
+            {
+                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, " %d", value);
+            }
             break;
         }
 
@@ -40,41 +46,80 @@ void GetProcInstruction(int cmd, ...)
         {
             int val1 = va_arg(args, int);
             int val2 = va_arg(args, int);
-            SNPRINTF(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED, " (%d + %d)", val1, val2);
+
+            if (GetLogger()->color_mode == COLOR_MODE)
+            {
+                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED " (%d + %d)" COLOR_RESET, val1, val2);
+            }
+            else
+            {
+                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, " (%d + %d)", val1, val2);
+            }
+
             break;
         }
         case CMD_SUB:
         {
             int val1 = va_arg(args, int);
             int val2 = va_arg(args, int);
-            SNPRINTF(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED, " (%d - %d)", val1, val2);
+            if (GetLogger()->color_mode == COLOR_MODE)
+            {
+                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED " (%d - %d)" COLOR_RESET, val1, val2);
+            }
+            else
+            {
+                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, " (%d - %d)", val1, val2);
+            }
             break;
         }
         case CMD_MUL:
         {
             int val1 = va_arg(args, int);
             int val2 = va_arg(args, int);
-            SNPRINTF(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED, " (%d * %d)", val1, val2);
+
+            if (GetLogger()->color_mode == COLOR_MODE)
+            {
+                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED " (%d * %d)" COLOR_RESET, val1, val2);
+            }
+            else
+            {
+                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, " (%d * %d)", val1, val2);
+            }
             break;
         }
         case CMD_DIV:
         {
             int val1 = va_arg(args, int);
             int val2 = va_arg(args, int);
-            SNPRINTF(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED, " (%d / %d)", val1, val2);
+
+            if (GetLogger()->color_mode == COLOR_MODE)
+            {
+                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED " (%d / %d)" COLOR_RESET, val1, val2);
+            }
+            else
+            {
+                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, " (%d / %d)", val1, val2);
+            }
             break;
         }
 
         case CMD_OUT:
         {
             int value = va_arg(args, int);
-            SNPRINTF(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED, " %d", value);
+
+            if (GetLogger()->color_mode == COLOR_MODE)
+            {
+                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED " %d" COLOR_RESET, value);
+            }
+            else
+            {
+                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, " %d", value);
+            }
             break;
         }
 
         default:
             break;
     }
-    #undef COLOR
     va_end(args);
 }

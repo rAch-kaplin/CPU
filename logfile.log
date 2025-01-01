@@ -1,54 +1,54 @@
-[2024-12-31 21:17:53][DEBUG][stack/src/stack.cpp][45:stackCtor]: STACK Ctor:
+[2025-01-01 16:11:52][DEBUG][stack/src/stack.cpp][45:stackCtor]: STACK Ctor:
 	Data:  -559039810 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2024-12-31 21:17:53][DEBUG][proccessor/src/run.cpp][52:Run]: Enter command: Push 20
-[2024-12-31 21:17:53][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 20
+[2025-01-01 16:11:52][DEBUG][proccessor/src/run.cpp][52:Run]: Enter command: Push 20
+[2025-01-01 16:11:52][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 20
 	Data:  -559039810 20 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2024-12-31 21:17:53][DEBUG][proccessor/src/run.cpp][52:Run]: Enter command: Push 80
-[2024-12-31 21:17:53][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 80
+[2025-01-01 16:11:52][DEBUG][proccessor/src/run.cpp][52:Run]: Enter command: Push 80
+[2025-01-01 16:11:52][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 80
 	Data:  -559039810 20 80 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2024-12-31 21:17:53][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 80
+[2025-01-01 16:11:52][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 80
 	Data:  -559039810 20 80 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2024-12-31 21:17:53][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 20
+[2025-01-01 16:11:52][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 20
 	Data:  -559039810 20 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2024-12-31 21:17:53][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 100
+[2025-01-01 16:11:52][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 100
 	Data:  -559039810 100 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2024-12-31 21:17:53][DEBUG][proccessor/src/run.cpp][66:Run]: Enter command: Add (80 + 20)
-[2024-12-31 21:17:53][DEBUG][proccessor/src/run.cpp][52:Run]: Enter command: Push 12
-[2024-12-31 21:17:53][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 12
+[2025-01-01 16:11:52][DEBUG][proccessor/src/run.cpp][66:Run]: Enter command: Add (80 + 20)
+[2025-01-01 16:11:52][DEBUG][proccessor/src/run.cpp][52:Run]: Enter command: Push 12
+[2025-01-01 16:11:52][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 12
 	Data:  -559039810 100 12 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2024-12-31 21:17:53][DEBUG][proccessor/src/run.cpp][52:Run]: Enter command: Push 2
-[2024-12-31 21:17:53][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 2
+[2025-01-01 16:11:52][DEBUG][proccessor/src/run.cpp][52:Run]: Enter command: Push 2
+[2025-01-01 16:11:52][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 2
 	Data:  -559039810 100 12 2 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2024-12-31 21:17:53][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 2
+[2025-01-01 16:11:52][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 2
 	Data:  -559039810 100 12 2 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2024-12-31 21:17:53][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 12
+[2025-01-01 16:11:52][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 12
 	Data:  -559039810 100 12 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2024-12-31 21:17:53][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 10
+[2025-01-01 16:11:52][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 10
 	Data:  -559039810 100 10 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2024-12-31 21:17:53][DEBUG][proccessor/src/run.cpp][79:Run]: Enter command: Sub (12 - 2)
-[2024-12-31 21:17:53][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 10
+[2025-01-01 16:11:52][DEBUG][proccessor/src/run.cpp][79:Run]: Enter command: Sub (12 - 2)
+[2025-01-01 16:11:52][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 10
 	Data:  -559039810 100 10 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2024-12-31 21:17:53][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 100
+[2025-01-01 16:11:52][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 100
 	Data:  -559039810 100 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2024-12-31 21:17:53][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 10
+[2025-01-01 16:11:52][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 10
 	Data:  -559039810 10 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2024-12-31 21:17:53][DEBUG][proccessor/src/run.cpp][105:Run]: Enter command: Div (100 / 10)
-[2024-12-31 21:17:53][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 10
+[2025-01-01 16:11:52][DEBUG][proccessor/src/run.cpp][105:Run]: Enter command: Div (100 / 10)
+[2025-01-01 16:11:52][DEBUG][stack/src/stack.cpp][128:stackPop]: STACK POP: 10
 	Data:  -559039810 10 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2024-12-31 21:17:53][DEBUG][proccessor/src/run.cpp][114:Run]: Enter command: Out 10
-[2024-12-31 21:17:53][DEBUG][proccessor/src/run.cpp][133:Run]: Enter command: Hlt
+[2025-01-01 16:11:52][DEBUG][proccessor/src/run.cpp][114:Run]: Enter command: Out 10
+[2025-01-01 16:11:52][DEBUG][proccessor/src/run.cpp][133:Run]: Enter command: Hlt
