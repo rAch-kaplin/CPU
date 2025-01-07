@@ -5,5 +5,7 @@ Push 12
 Push 2
 Sub
 Div
+Push 10
+Mul
 Out
 Hlt

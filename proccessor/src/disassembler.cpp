@@ -1,5 +1,3 @@
-#ifndef _DISASSEMBLER
-#define _DISASSEMBLER
 #include "assembler.h"
 
 const char* CommandToString(int cmd)
@@ -17,4 +15,3 @@ const char* CommandToString(int cmd)
     }
 }
 
-#endif
