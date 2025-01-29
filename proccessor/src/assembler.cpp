@@ -16,7 +16,6 @@ int GetCommandCode(const char *cmd)
     return 0;
 }
 
-
 void Assembler()
 {
     FILE *file_asm = fopen("Programm_asm.txt", "r");
@@ -33,6 +32,8 @@ void Assembler()
         assert(0);
     }
 
+    int CODE_SIZE = 0;
+
     while(true)
     {
         char cmd[20] = "";
@@ -42,7 +43,7 @@ void Assembler()
             printf("the string incorrectly\n");
             break;
         }
-        //printf("<----%s\n", cmd);
+
         int cmd_code = GetCommandCode(cmd);
 
         switch (cmd_code)
@@ -53,36 +54,42 @@ void Assembler()
                 int value = 0;
                 fscanf(file_asm, "%d", &value);
                 fprintf(file_code, "%d\n", value);
+                CODE_SIZE += 2;
                 break;
             }
 
             case CMD_ADD:
             {
                 fprintf(file_code, "%d\n", cmd_code);
+                CODE_SIZE += 1;
                 break;
             }
 
             case CMD_SUB:
             {
                 fprintf(file_code, "%d\n", cmd_code);
+                CODE_SIZE += 1;
                 break;
             }
 
             case CMD_OUT:
             {
                 fprintf(file_code, "%d\n", cmd_code);
+                CODE_SIZE += 1;
                 break;
             }
 
             case CMD_DIV:
             {
                 fprintf(file_code, "%d\n", cmd_code);
+                CODE_SIZE += 1;
                 break;
             }
 
             case CMD_MUL:
             {
                 fprintf(file_code, "%d\n", cmd_code);
+                CODE_SIZE += 1;
                 break;
             }
 
@@ -93,9 +100,14 @@ void Assembler()
         if (cmd_code == CMD_HLT)
         {
             fprintf(file_code, "%d\n", cmd_code);
+            CODE_SIZE += 1;
             break;
         }
     }
+
+    // fseek(file_code, 0, SEEK_SET);
+    // fprintf(file_code, "%d", CODE_SIZE);
+
     fclose(file_asm);
     fclose(file_code);
 }

@@ -8,31 +8,30 @@
 #include "debug_proc.h"
 #include "logger.h"
 
+struct CPU
+{
+    int *code;
+    int IP;
+    int *registers;
+};
 
+const int SIZE_CODE_BUFFER = 20;
+
+void FillingCodeArray(CPU *proc);
 
 void Run()
 {
     struct stack stk = {NULL, 0, 0};
-
     stackCtor(&stk, 8);
 
-    FILE *file_code = fopen("Programm_code.txt", "r");
-    if (file_code == nullptr)
-    {
-        printf("Error: file_code == nullptr\n");
-        assert(0);
-    }
+    struct CPU proc = {};
 
-    while(true)
+    FillingCodeArray(&proc);
+    int next = 1;
+
+    while (next)
     {
-        int cmd = 0;
-        DBG_PRINTF(COLOR_CYAN "Enter command: " COLOR_RESET);
-        if (fscanf(file_code, "%d\n", &cmd) != 1)
-        {
-            printf("%d\n", cmd);
-            printf("the command incorrectly\n");
-            assert(0);
-        }
+        int cmd = proc.code[proc.IP];
 
         DBG_PRINTF(COLOR_MAGENTA "%s\n" COLOR_RESET, CommandToString(cmd));
 
@@ -40,17 +39,15 @@ void Run()
         {
             case CMD_PUSH:
             {
-                int value = 0;
+                int value = proc.code[proc.IP + 1];
+
                 DBG_PRINTF(COLOR_CYAN "Enter value: " COLOR_RESET);
-                if (fscanf(file_code, "%d\n", &value) != 1)
-                {
-                    printf("the number incorrectly\n");
-                    assert(0);
-                }
                 DBG_PRINTF(COLOR_MAGENTA "%d\n" COLOR_RESET, value);
+
                 GetProcInstruction(cmd, value);
                 LOG(LOGL_DEBUG, "");
                 stackPush(&stk, value);
+                proc.IP += 2;
                 break;
             }
 
@@ -62,8 +59,9 @@ void Run()
                 GetProcInstruction(cmd, val_1, val_2);
                 LOG(LOGL_DEBUG, "");
                 stackPush(&stk, val_1 + val_2);
-
+                proc.IP += 1;
                 DBG_PRINTF(COLOR_MAGENTA "Add: %d\n" COLOR_RESET, val_1 + val_2);
+
                 break;
             }
 
@@ -76,6 +74,7 @@ void Run()
                 LOG(LOGL_DEBUG, "");
                 stackPush(&stk, val_2 - val_1);
                 DBG_PRINTF(COLOR_MAGENTA "Sub: %d\n" COLOR_RESET, val_2 - val_1);
+                proc.IP += 1;
 
                 break;
             }
@@ -89,6 +88,8 @@ void Run()
                 LOG(LOGL_DEBUG, "");
                 stackPush(&stk, val_1 * val_2);
                 DBG_PRINTF(COLOR_MAGENTA "Mul: %d\n" COLOR_RESET, val_1 * val_2);
+                proc.IP += 1;
+
                 break;
             }
 
@@ -101,6 +102,7 @@ void Run()
                 LOG(LOGL_DEBUG, "");
                 stackPush(&stk, val_2 / val_1);
                 DBG_PRINTF(COLOR_MAGENTA "Div: %d\n" COLOR_RESET, val_2 / val_1);
+                proc.IP += 1;
 
                 break;
             }
@@ -111,6 +113,8 @@ void Run()
                 DBG_PRINTF(COLOR_MAGENTA "Elem from stack: %d\n" COLOR_RESET, val);
                 GetProcInstruction(cmd, val);
                 LOG(LOGL_DEBUG, "");
+                proc.IP += 1;
+
                 break;
             }
 
@@ -130,9 +134,30 @@ void Run()
         {
             GetProcInstruction(cmd);
             LOG(LOGL_DEBUG, "");
-            fclose(file_code);
+            proc.IP += 1;
+
             break;
         }
     }
+    free(proc.code);
     stackDtor(&stk);
+}
+
+void FillingCodeArray(CPU *proc)
+{
+    FILE *file_code = fopen("Programm_code.txt", "r");
+    if (file_code == nullptr)
+    {
+        printf("Error: file_code == nullptr\n");
+        assert(0);
+    }
+
+    proc->code = (int*)calloc(SIZE_CODE_BUFFER, sizeof(int));
+
+    for (int i = 0; i < 20; i++)
+    {
+        fscanf(file_code, "%d", &proc->code[i]);
+    }
+
+    fclose(file_code);
 }
