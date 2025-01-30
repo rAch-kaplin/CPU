@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include "logger.h"
-#include "assembler.h"
+#include "proccessor.h"
 #include "debug_proc.h"
 #include "color.h"
 #include "common.h"

@@ -4,7 +4,7 @@
 #include "stack.h"
 #include "logger.h"
 #define DBG
-#include "assembler.h"
+#include "proccessor.h"
 #include "common.h"
 
 OutputMode CheckArgs(int argc, char *argv[]);

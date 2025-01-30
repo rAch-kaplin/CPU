@@ -2,20 +2,22 @@
 #include <string.h>
 #include <assert.h>
 #include <stdbool.h>
+#include <math.h>
 #include "color.h"
-#include "assembler.h"
+#include "proccessor.h"
 #include "stack.h"
 #include "debug_proc.h"
 #include "logger.h"
 
+const int SIZE_CODE_BUFFER = 20;
+const int SIZE_REGISTERS = 4;
+
 struct CPU
 {
-    int *code;
+    stackElem *code;
     int IP;
-    int *registers;
+    stackElem registers[SIZE_REGISTERS] = {};
 };
-
-const int SIZE_CODE_BUFFER = 20;
 
 void FillingCodeArray(CPU *proc);
 
@@ -31,7 +33,7 @@ void Run()
 
     while (next)
     {
-        int cmd = proc.code[proc.IP];
+        stackElem cmd = proc.code[proc.IP];
 
         DBG_PRINTF(COLOR_MAGENTA "%s\n" COLOR_RESET, CommandToString(cmd));
 
@@ -39,7 +41,7 @@ void Run()
         {
             case CMD_PUSH:
             {
-                int value = proc.code[proc.IP + 1];
+                stackElem value = proc.code[proc.IP + 1];
 
                 DBG_PRINTF(COLOR_CYAN "Enter value: " COLOR_RESET);
                 DBG_PRINTF(COLOR_MAGENTA "%d\n" COLOR_RESET, value);
@@ -51,9 +53,31 @@ void Run()
                 break;
             }
 
+            case CMD_PUSHR:
+            {
+                stackElem value = proc.registers[RDX];
+
+                GetProcInstruction(cmd, value);
+                LOG(LOGL_DEBUG, "");
+                stackPush(&stk, value);
+
+                break;
+            }
+
+            case CMD_POPR:
+            {
+                stackElem value = 0;
+                stackPop(&stk, &value);
+                proc.registers[RDX] = value;
+                GetProcInstruction(cmd, value);
+                LOG(LOGL_DEBUG, "");
+
+                break;
+            }
+
             case CMD_ADD:
             {
-                int val_1 = 0, val_2 = 0;
+                stackElem val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
                 stackPop(&stk, &val_2);
                 GetProcInstruction(cmd, val_1, val_2);
@@ -67,7 +91,7 @@ void Run()
 
             case CMD_SUB:
             {
-                int val_1 = 0, val_2 = 0;
+                stackElem val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
                 stackPop(&stk, &val_2);
                 GetProcInstruction(cmd, val_2, val_1);
@@ -81,7 +105,7 @@ void Run()
 
             case CMD_MUL:
             {
-                int val_1 = 0, val_2 = 0;
+                stackElem val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
                 stackPop(&stk, &val_2);
                 GetProcInstruction(cmd, val_1, val_2);
@@ -95,7 +119,7 @@ void Run()
 
             case CMD_DIV:
             {
-                int val_1 = 0, val_2 = 0;
+                stackElem val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
                 stackPop(&stk, &val_2);
                 GetProcInstruction(cmd, val_2, val_1);
@@ -106,14 +130,36 @@ void Run()
 
                 break;
             }
+
+            case CMD_SQRT:
+            {
+                stackElem value = 0;
+                stackPop(&stk, &value);
+                GetProcInstruction(cmd, value);
+                LOG(LOGL_DEBUG, "");
+                stackPush(&stk, stackElem(sqrt(value)));
+                proc.IP += 1;
+
+                break;
+            }
+
             case CMD_OUT:
             {
-                int val = 0;
+                stackElem val = 0;
                 stackPop(&stk, &val);
                 DBG_PRINTF(COLOR_MAGENTA "Elem from stack: %d\n" COLOR_RESET, val);
                 GetProcInstruction(cmd, val);
                 LOG(LOGL_DEBUG, "");
                 proc.IP += 1;
+
+                break;
+            }
+
+            case CMD_JMP:
+            {
+                proc.IP = proc.code[proc.IP + 1];
+                GetProcInstruction(cmd, proc.IP);
+                LOG(LOGL_DEBUG, "JMP to ");
 
                 break;
             }

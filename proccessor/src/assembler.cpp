@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <assert.h>
-#include "assembler.h"
+#include "proccessor.h"
 
 int GetCommandCode(const char *cmd)
 {
