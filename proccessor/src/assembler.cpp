@@ -18,14 +18,14 @@ int GetCommandCode(const char *cmd)
 
 void Assembler()
 {
-    FILE *file_asm = fopen("Programm_asm.txt", "r");
+    FILE *file_asm = fopen("asm.txt", "r");
     if (file_asm == nullptr)
     {
         printf("file_asm == nullptr");
         assert(0);
     }
 
-    FILE *file_code = fopen("Programm_code.txt", "w");
+    FILE *file_code = fopen("code.txt", "w");
         if (file_code == nullptr)
     {
         printf("file_code == nullptr");

@@ -88,7 +88,7 @@ errorCode stackPush(stack *stk, stackElem elem)
     putHash(stk);
     getStackState(LOGL_DEBUG, stk);
     stackAssert(stk);
-    LOG(LOGL_DEBUG, "STACK PUSH: %d", elem);
+    LOG(LOGL_DEBUG, "STACK PUSH: " STACK_ELEM_FORMAT, elem);
     return STK_OK;
 }
 
@@ -114,7 +114,6 @@ errorCode stackReallocDown(stack *stk)
 
 errorCode stackPop(stack *stk, stackElem *elem_from_stack)
 {
-    getStackState(LOGL_DEBUG, stk);
     stackAssert(stk);
     if (stk->size == 0)
         return STK_EMPTY_STACK;
@@ -125,10 +124,12 @@ errorCode stackPop(stack *stk, stackElem *elem_from_stack)
     if ((stk->size >= (ssize_t)(min_capacity)) && ((size_t)stk->size <= stk->capacity / 4))
         stackReallocDown(stk);
 
-    LOG(LOGL_DEBUG, "STACK POP: %d", stk->data[stk->size + 1]);
+    stackElem tmp = stk->data[stk->size + 1];
     stk->data[stk->size + 1] = POISON;
-    putHash(stk);
+    getStackState(LOGL_DEBUG, stk);
+    LOG(LOGL_DEBUG, "STACK POP: " STACK_ELEM_FORMAT, tmp);
 
+    putHash(stk);
     stackAssert(stk);
     return STK_OK;
 }

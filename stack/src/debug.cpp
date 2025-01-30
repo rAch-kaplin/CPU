@@ -151,9 +151,17 @@ void getStackState(LogLevel DepthMsg, stack* stk)
 
         for (size_t i = 0; i < stk->capacity + 2; i++)
         {
-            current_len += snprintf(GetLogger()->stack_state + current_len, SIZE_BUFFER - (size_t)current_len,
-                                    COLOR_MAGENTA " " STACK_ELEM_FORMAT, stk->data[i]);
-        } // update here!
+            if (GetLogger()->color_mode == COLOR_MODE)
+            {
+                current_len += snprintf(GetLogger()->stack_state + current_len, SIZE_BUFFER - (size_t)current_len,
+                                        COLOR_MAGENTA " " STACK_ELEM_FORMAT COLOR_RESET, stk->data[i]);
+            }
+            else
+            {
+                current_len += snprintf(GetLogger()->stack_state + current_len, SIZE_BUFFER - (size_t)current_len,
+                                         " " STACK_ELEM_FORMAT, stk->data[i]);
+            }
+        }
     }
 
     else

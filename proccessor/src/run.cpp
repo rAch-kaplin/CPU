@@ -77,11 +77,13 @@ void Run()
 
             case CMD_ADD:
             {
+                GetProcInstruction(cmd);
+                LOG(LOGL_DEBUG, "");
                 stackElem val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
                 stackPop(&stk, &val_2);
-                GetProcInstruction(cmd, val_1, val_2);
-                LOG(LOGL_DEBUG, "");
+                //GetProcInstruction(cmd, val_1, val_2);
+                //LOG(LOGL_DEBUG, "");
                 stackPush(&stk, val_1 + val_2);
                 proc.IP += 1;
                 DBG_PRINTF(COLOR_MAGENTA "Add: %d\n" COLOR_RESET, val_1 + val_2);
@@ -91,11 +93,13 @@ void Run()
 
             case CMD_SUB:
             {
+                GetProcInstruction(cmd);
+                LOG(LOGL_DEBUG, "");
                 stackElem val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
                 stackPop(&stk, &val_2);
-                GetProcInstruction(cmd, val_2, val_1);
-                LOG(LOGL_DEBUG, "");
+                // GetProcInstruction(cmd, val_2, val_1);
+                // LOG(LOGL_DEBUG, "");
                 stackPush(&stk, val_2 - val_1);
                 DBG_PRINTF(COLOR_MAGENTA "Sub: %d\n" COLOR_RESET, val_2 - val_1);
                 proc.IP += 1;
@@ -105,11 +109,13 @@ void Run()
 
             case CMD_MUL:
             {
+                GetProcInstruction(cmd);
+                LOG(LOGL_DEBUG, "");
                 stackElem val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
                 stackPop(&stk, &val_2);
-                GetProcInstruction(cmd, val_1, val_2);
-                LOG(LOGL_DEBUG, "");
+                // GetProcInstruction(cmd, val_1, val_2);
+                // LOG(LOGL_DEBUG, "");
                 stackPush(&stk, val_1 * val_2);
                 DBG_PRINTF(COLOR_MAGENTA "Mul: %d\n" COLOR_RESET, val_1 * val_2);
                 proc.IP += 1;
@@ -119,11 +125,13 @@ void Run()
 
             case CMD_DIV:
             {
+                GetProcInstruction(cmd);
+                LOG(LOGL_DEBUG, "");
                 stackElem val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
                 stackPop(&stk, &val_2);
-                GetProcInstruction(cmd, val_2, val_1);
-                LOG(LOGL_DEBUG, "");
+                // GetProcInstruction(cmd, val_2, val_1);
+                // LOG(LOGL_DEBUG, "");
                 stackPush(&stk, val_2 / val_1);
                 DBG_PRINTF(COLOR_MAGENTA "Div: %d\n" COLOR_RESET, val_2 / val_1);
                 proc.IP += 1;
@@ -133,10 +141,12 @@ void Run()
 
             case CMD_SQRT:
             {
+                GetProcInstruction(cmd);
+                LOG(LOGL_DEBUG, "");
                 stackElem value = 0;
                 stackPop(&stk, &value);
-                GetProcInstruction(cmd, value);
-                LOG(LOGL_DEBUG, "");
+                // GetProcInstruction(cmd, value);
+                // LOG(LOGL_DEBUG, "");
                 stackPush(&stk, stackElem(sqrt(value)));
                 proc.IP += 1;
 
@@ -145,11 +155,13 @@ void Run()
 
             case CMD_OUT:
             {
+                GetProcInstruction(cmd);
+                LOG(LOGL_DEBUG, "");
                 stackElem val = 0;
                 stackPop(&stk, &val);
                 DBG_PRINTF(COLOR_MAGENTA "Elem from stack: %d\n" COLOR_RESET, val);
-                GetProcInstruction(cmd, val);
-                LOG(LOGL_DEBUG, "");
+                // GetProcInstruction(cmd, val);
+                // LOG(LOGL_DEBUG, "");
                 proc.IP += 1;
 
                 break;
@@ -191,7 +203,7 @@ void Run()
 
 void FillingCodeArray(CPU *proc)
 {
-    FILE *file_code = fopen("Programm_code.txt", "r");
+    FILE *file_code = fopen("code.txt", "r");
     if (file_code == nullptr)
     {
         printf("Error: file_code == nullptr\n");

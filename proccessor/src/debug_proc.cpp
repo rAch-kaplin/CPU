@@ -6,6 +6,24 @@
 #include "color.h"
 #include "common.h"
 
+void AddArgsToCommand(Logger *log, int *current_len, const char *fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+
+    if (log->color_mode == COLOR_MODE)
+    {
+        *current_len += snprintf(log->proc_instruction + *current_len, SIZE_BUFFER - (size_t)*current_len, COLOR_RED);
+        *current_len += vsnprintf(log->proc_instruction + *current_len, SIZE_BUFFER - (size_t)*current_len, fmt, args);
+        *current_len += snprintf(log->proc_instruction + *current_len, SIZE_BUFFER - (size_t)*current_len, COLOR_RESET);
+    }
+    else
+    {
+        *current_len += vsnprintf(log->proc_instruction + *current_len, SIZE_BUFFER - (size_t)*current_len, fmt, args);
+    }
+    va_end(args);
+}
+
 void GetProcInstruction(int cmd, ...)
 {
     va_list args;
@@ -30,96 +48,54 @@ void GetProcInstruction(int cmd, ...)
     {
         case CMD_PUSH:
         {
-            int value = va_arg(args, int);
-            if (GetLogger()->color_mode == COLOR_MODE)
-            {
-                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED " %d" COLOR_RESET, value);
-            }
-            else
-            {
-                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, " %d", value);
-            }
+            stackElem value = va_arg(args, stackElem);
+            AddArgsToCommand(log, &current_len, " %d", value);
             break;
         }
-
+#if 1
         case CMD_ADD:
         {
-            int val1 = va_arg(args, int);
-            int val2 = va_arg(args, int);
-
-            if (GetLogger()->color_mode == COLOR_MODE)
-            {
-                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED " (%d + %d)" COLOR_RESET, val1, val2);
-            }
-            else
-            {
-                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, " (%d + %d)", val1, val2);
-            }
-
+            stackElem val1 = va_arg(args, stackElem);
+            stackElem val2 = va_arg(args, stackElem);
+            AddArgsToCommand(log, &current_len, " (%d + %d)", val1, val2);
             break;
         }
         case CMD_SUB:
         {
-            int val1 = va_arg(args, int);
-            int val2 = va_arg(args, int);
-            if (GetLogger()->color_mode == COLOR_MODE)
-            {
-                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED " (%d - %d)" COLOR_RESET, val1, val2);
-            }
-            else
-            {
-                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, " (%d - %d)", val1, val2);
-            }
+            stackElem val1 = va_arg(args, stackElem);
+            stackElem val2 = va_arg(args, stackElem);
+            AddArgsToCommand(log, &current_len, " (%d - %d)", val1, val2);
             break;
         }
         case CMD_MUL:
         {
-            int val1 = va_arg(args, int);
-            int val2 = va_arg(args, int);
-
-            if (GetLogger()->color_mode == COLOR_MODE)
-            {
-                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED " (%d * %d)" COLOR_RESET, val1, val2);
-            }
-            else
-            {
-                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, " (%d * %d)", val1, val2);
-            }
+            stackElem val1 = va_arg(args, stackElem);
+            stackElem val2 = va_arg(args, stackElem);
+            AddArgsToCommand(log, &current_len, " (%d * %d)", val1, val2);
             break;
         }
         case CMD_DIV:
         {
-            int val1 = va_arg(args, int);
-            int val2 = va_arg(args, int);
-
-            if (GetLogger()->color_mode == COLOR_MODE)
-            {
-                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED " (%d / %d)" COLOR_RESET, val1, val2);
-            }
-            else
-            {
-                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, " (%d / %d)", val1, val2);
-            }
+            stackElem val1 = va_arg(args, stackElem);
+            stackElem val2 = va_arg(args, stackElem);
+            AddArgsToCommand(log, &current_len, " (%d / %d)", val1, val2);
             break;
         }
 
         case CMD_OUT:
         {
-            int value = va_arg(args, int);
-
-            if (GetLogger()->color_mode == COLOR_MODE)
-            {
-                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, COLOR_RED " %d" COLOR_RESET, value);
-            }
-            else
-            {
-                snprintf(log->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, " %d", value);
-            }
+            stackElem value = va_arg(args, stackElem);
+            AddArgsToCommand(log, &current_len, " %d", value);
             break;
         }
+#endif
 
         default:
             break;
     }
+
     va_end(args);
 }
+
+
+
