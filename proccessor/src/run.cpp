@@ -77,14 +77,15 @@ void Run()
 
             case CMD_ADD:
             {
+                stackElem val_1 = 0, val_2 = 0;
                 GetProcInstruction(cmd);
                 LOG(LOGL_DEBUG, "");
-                stackElem val_1 = 0, val_2 = 0;
+
                 stackPop(&stk, &val_1);
                 stackPop(&stk, &val_2);
-                //GetProcInstruction(cmd, val_1, val_2);
-                //LOG(LOGL_DEBUG, "");
+
                 stackPush(&stk, val_1 + val_2);
+
                 proc.IP += 1;
                 DBG_PRINTF(COLOR_MAGENTA "Add: %d\n" COLOR_RESET, val_1 + val_2);
 
@@ -98,8 +99,7 @@ void Run()
                 stackElem val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
                 stackPop(&stk, &val_2);
-                // GetProcInstruction(cmd, val_2, val_1);
-                // LOG(LOGL_DEBUG, "");
+
                 stackPush(&stk, val_2 - val_1);
                 DBG_PRINTF(COLOR_MAGENTA "Sub: %d\n" COLOR_RESET, val_2 - val_1);
                 proc.IP += 1;
@@ -114,8 +114,7 @@ void Run()
                 stackElem val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
                 stackPop(&stk, &val_2);
-                // GetProcInstruction(cmd, val_1, val_2);
-                // LOG(LOGL_DEBUG, "");
+
                 stackPush(&stk, val_1 * val_2);
                 DBG_PRINTF(COLOR_MAGENTA "Mul: %d\n" COLOR_RESET, val_1 * val_2);
                 proc.IP += 1;
@@ -130,8 +129,7 @@ void Run()
                 stackElem val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
                 stackPop(&stk, &val_2);
-                // GetProcInstruction(cmd, val_2, val_1);
-                // LOG(LOGL_DEBUG, "");
+
                 stackPush(&stk, val_2 / val_1);
                 DBG_PRINTF(COLOR_MAGENTA "Div: %d\n" COLOR_RESET, val_2 / val_1);
                 proc.IP += 1;
@@ -145,9 +143,34 @@ void Run()
                 LOG(LOGL_DEBUG, "");
                 stackElem value = 0;
                 stackPop(&stk, &value);
-                // GetProcInstruction(cmd, value);
-                // LOG(LOGL_DEBUG, "");
+
                 stackPush(&stk, stackElem(sqrt(value)));
+                proc.IP += 1;
+
+                break;
+            }
+
+            case CMD_SIN:
+            {
+                stackElem value = 0;
+                GetProcInstruction(cmd);
+                LOG(LOGL_DEBUG, "");
+
+                stackPop(&stk, &value);
+                stackPush(&stk, (stackElem)sin(value));
+                proc.IP += 1;
+
+                break;
+            }
+
+            case CMD_COS:
+            {
+                stackElem value = 0;
+                GetProcInstruction(cmd);
+                LOG(LOGL_DEBUG, "");
+
+                stackPop(&stk, &value);
+                stackPush(&stk, (stackElem)cos(value));
                 proc.IP += 1;
 
                 break;
@@ -160,8 +183,7 @@ void Run()
                 stackElem val = 0;
                 stackPop(&stk, &val);
                 DBG_PRINTF(COLOR_MAGENTA "Elem from stack: %d\n" COLOR_RESET, val);
-                // GetProcInstruction(cmd, val);
-                // LOG(LOGL_DEBUG, "");
+
                 proc.IP += 1;
 
                 break;
@@ -173,6 +195,126 @@ void Run()
                 GetProcInstruction(cmd, proc.IP);
                 LOG(LOGL_DEBUG, "JMP to ");
 
+                break;
+            }
+
+            case CMD_JB:
+            {
+                stackElem val_1 = 0, val_2 = 0;
+                GetProcInstruction(cmd);
+                LOG(LOGL_DEBUG, "");
+
+                stackPop(&stk, &val_1);
+                stackPop(&stk, &val_2);
+
+                if (val_1 < val_2)
+                {
+                    proc.IP = proc.code[proc.IP + 1];
+                }
+                else
+                {
+                    proc.IP = proc.code[proc.IP + 2];
+                }
+                break;
+            }
+
+            case CMD_JBE:
+            {
+                stackElem val_1 = 0, val_2 = 0;
+                GetProcInstruction(cmd);
+                LOG(LOGL_DEBUG, "");
+
+                stackPop(&stk, &val_1);
+                stackPop(&stk, &val_2);
+
+                if (val_1 <= val_2)
+                {
+                    proc.IP = proc.code[proc.IP + 1];
+                }
+                else
+                {
+                    proc.IP = proc.code[proc.IP + 2];
+                }
+                break;
+            }
+
+            case CMD_JA:
+            {
+                stackElem val_1 = 0, val_2 = 0;
+                GetProcInstruction(cmd);
+                LOG(LOGL_DEBUG, "");
+
+                stackPop(&stk, &val_1);
+                stackPop(&stk, &val_2);
+
+                if (val_1 > val_2)
+                {
+                    proc.IP = proc.code[proc.IP + 1];
+                }
+                else
+                {
+                    proc.IP = proc.code[proc.IP + 2];
+                }
+                break;
+            }
+
+            case CMD_JAE:
+            {
+                stackElem val_1 = 0, val_2 = 0;
+                GetProcInstruction(cmd);
+                LOG(LOGL_DEBUG, "");
+
+                stackPop(&stk, &val_1);
+                stackPop(&stk, &val_2);
+
+                if (val_1 >= val_2)
+                {
+                    proc.IP = proc.code[proc.IP + 1];
+                }
+                else
+                {
+                    proc.IP = proc.code[proc.IP + 2];
+                }
+                break;
+            }
+
+            case CMD_JE:
+            {
+                stackElem val_1 = 0, val_2 = 0;
+                GetProcInstruction(cmd);
+                LOG(LOGL_DEBUG, "");
+
+                stackPop(&stk, &val_1);
+                stackPop(&stk, &val_2);
+
+                if (val_1 == val_2)
+                {
+                    proc.IP = proc.code[proc.IP + 1];
+                }
+                else
+                {
+                    proc.IP = proc.code[proc.IP + 2];
+                }
+                break;
+            }
+
+            case CMD_JNE:
+            {
+                stackElem val_1 = 0, val_2 = 0;
+                GetProcInstruction(cmd);
+                LOG(LOGL_DEBUG, "");
+
+                stackPop(&stk, &val_1);
+                stackPop(&stk, &val_2);
+
+                if (val_1 != val_2)
+                {
+                    proc.IP = proc.code[proc.IP + 1];
+                }
+                else
+                {
+                    proc.IP = proc.code[proc.IP + 2];
+                }
                 break;
             }
 

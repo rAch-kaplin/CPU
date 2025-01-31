@@ -52,7 +52,7 @@ void GetProcInstruction(int cmd, ...)
             AddArgsToCommand(log, &current_len, " %d", value);
             break;
         }
-#if 1
+#if 0
         case CMD_ADD:
         {
             stackElem val1 = va_arg(args, stackElem);

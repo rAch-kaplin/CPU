@@ -58,7 +58,7 @@ const char* ColorLogMsg(const enum LogLevel levelMsg)
         case LOGL_INFO:
             if (GetLogger()->color_mode == COLOR_MODE)
             {
-                return COLOR_GREEN "[INFO]" COLOR_RESET;
+                return COLOR_YELLOW "[INFO]" COLOR_RESET;
             }
             else
             {
@@ -69,7 +69,7 @@ const char* ColorLogMsg(const enum LogLevel levelMsg)
         case LOGL_ERROR:
             if (GetLogger()->color_mode == COLOR_MODE)
             {
-                return COLOR_GREEN "[ERROR]" COLOR_RESET;
+                return COLOR_RED "[ERROR]" COLOR_RESET;
             }
             else
             {
