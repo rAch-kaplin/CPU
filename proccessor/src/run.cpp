@@ -12,12 +12,12 @@
 const int SIZE_CODE_BUFFER = 20;
 const int SIZE_REGISTERS = 4;
 
-struct CPU
+typedef struct CPU
 {
     stackElem *code;
     int IP;
     stackElem registers[SIZE_REGISTERS] = {};
-};
+} CPU;
 
 void FillingCodeArray(CPU *proc);
 
@@ -334,8 +334,6 @@ void Run()
         {
             GetProcInstruction(cmd);
             LOG(LOGL_DEBUG, "");
-            proc.IP += 1;
-
             break;
         }
     }
