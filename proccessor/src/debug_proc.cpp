@@ -52,6 +52,13 @@ void GetProcInstruction(int cmd, ...)
             AddArgsToCommand(log, &current_len, " %d", value);
             break;
         }
+
+        case CMD_PUSHR:
+        {
+            stackElem value = va_arg(args, stackElem);
+            AddArgsToCommand(log, &current_len, " %d", value);
+            break;
+        }
 #if 0
         case CMD_ADD:
         {

@@ -1,0 +1,19 @@
+push 1
+popr ax
+
+pushr ax
+pushr ax
+mul
+out
+
+pushr ax
+push 1
+add
+popr ax
+
+pushr ax
+push 5
+ja
+jmp 4
+
+hlt

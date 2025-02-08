@@ -38,10 +38,10 @@ enum command
 
 enum REG_T
 {
-    RAX = 0,
-    RBX = 1,
-    RCX = 2,
-    RDX = 3
+    ax = 0,
+    bx = 1,
+    cx = 2,
+    dx = 3
 };
 
 

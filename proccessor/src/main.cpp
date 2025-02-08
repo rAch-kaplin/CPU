@@ -9,6 +9,17 @@
 
 OutputMode CheckArgs(int argc, char *argv[]);
 
+// 1) make a size reading from a file
+// 2) create an array of comands in assembler
+// 3) fix the jumps
+// 4) add commands in disassembler
+// 5) make labels
+// 6) add registers to the logger
+// 7) make another logging depth
+// 8) select a file using command line agrs
+// 9) select the logging depth using command line agrs
+// 10) improve labels
+
 int main(int argc, char *argv[])
 {
     if (CheckArgs(argc, argv) == COLOR_MODE)

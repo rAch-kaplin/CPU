@@ -1,11 +1,11 @@
-Push 20
-Push 80
-Add
-Push 12
-Push 2
-Sub
-Div
-Push 10
-Mul
-Out
-Hlt
+push 20
+push 80
+add
+push 12
+push 2
+sub
+div
+push 10
+mul
+out
+hlt

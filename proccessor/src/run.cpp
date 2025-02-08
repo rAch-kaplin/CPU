@@ -9,14 +9,14 @@
 #include "debug_proc.h"
 #include "logger.h"
 
-const int SIZE_CODE_BUFFER = 20;
+const int SIZE_CODE_BUFFER = 50;
 const int SIZE_REGISTERS = 4;
 
 typedef struct CPU
 {
     stackElem *code;
     int IP;
-    stackElem registers[SIZE_REGISTERS] = {};
+    stackElem registers[SIZE_REGISTERS] = {0};
 } CPU;
 
 void FillingCodeArray(CPU *proc);
@@ -55,23 +55,23 @@ void Run()
 
             case CMD_PUSHR:
             {
-                stackElem value = proc.registers[RDX];
+                stackElem value = proc.registers[proc.code[proc.IP + 1]];
 
                 GetProcInstruction(cmd, value);
                 LOG(LOGL_DEBUG, "");
                 stackPush(&stk, value);
-
+                proc.IP += 2;
                 break;
             }
 
             case CMD_POPR:
             {
                 stackElem value = 0;
-                stackPop(&stk, &value);
-                proc.registers[RDX] = value;
                 GetProcInstruction(cmd, value);
                 LOG(LOGL_DEBUG, "");
-
+                stackPop(&stk, &value);
+                proc.registers[proc.code[proc.IP + 1]] = value;
+                proc.IP += 2;
                 break;
             }
 
@@ -183,7 +183,7 @@ void Run()
                 stackElem val = 0;
                 stackPop(&stk, &val);
                 DBG_PRINTF(COLOR_MAGENTA "Elem from stack: %d\n" COLOR_RESET, val);
-
+                //printf(COLOR_MAGENTA "Out: " STACK_ELEM_FORMAT " \n", val);
                 proc.IP += 1;
 
                 break;
@@ -193,7 +193,7 @@ void Run()
             {
                 proc.IP = proc.code[proc.IP + 1];
                 GetProcInstruction(cmd, proc.IP);
-                LOG(LOGL_DEBUG, "JMP to ");
+                LOG(LOGL_DEBUG, "JMP to %d ", proc.code[proc.IP + 1]);
 
                 break;
             }
@@ -249,11 +249,11 @@ void Run()
 
                 if (val_1 > val_2)
                 {
-                    proc.IP = proc.code[proc.IP + 1];
+                    proc.IP += 1; //брать значение из метки и переходить по нему
                 }
                 else
                 {
-                    proc.IP = proc.code[proc.IP + 2];
+                    proc.IP += 2;
                 }
                 break;
             }
@@ -352,10 +352,11 @@ void FillingCodeArray(CPU *proc)
 
     proc->code = (int*)calloc(SIZE_CODE_BUFFER, sizeof(int));
 
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 50; i++)
     {
         fscanf(file_code, "%d", &proc->code[i]);
+        //printf("%d ", proc->code[i]);
     }
-
+    printf("\n");
     fclose(file_code);
 }
