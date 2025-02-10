@@ -2,12 +2,34 @@
 #define _HPROCCESSOR
 
 //#define DBG
+#include <stdlib.h>
+#include <stdio.h>
+#include "stack.h"
 
 #ifdef DBG
     #define DBG_PRINTF(...) printf(__VA_ARGS__)
 #else
     #define DBG_PRINTF(...) ((void)0)
 #endif
+
+const int SIZE_REGISTERS = 10;
+
+typedef struct Assem
+{
+    char *file_name;
+} Assem;
+
+typedef struct CPU
+{
+    stackElem *code;
+    int IP;
+    stackElem registers[SIZE_REGISTERS] = {0};
+} CPU;
+
+void FillingCodeArray(CPU *proc);
+int CompileArg(const char *str);
+int NumberCommands(FILE *file_code);
+
 
 enum command
 {

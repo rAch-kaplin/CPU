@@ -9,18 +9,6 @@
 #include "debug_proc.h"
 #include "logger.h"
 
-const int SIZE_CODE_BUFFER = 50;
-const int SIZE_REGISTERS = 4;
-
-typedef struct CPU
-{
-    stackElem *code;
-    int IP;
-    stackElem registers[SIZE_REGISTERS] = {0};
-} CPU;
-
-void FillingCodeArray(CPU *proc);
-
 void Run()
 {
     struct stack stk = {NULL, 0, 0};
@@ -249,7 +237,7 @@ void Run()
 
                 if (val_1 > val_2)
                 {
-                    proc.IP += 1; //брать значение из метки и переходить по нему
+                    proc.IP += 1; //take value from label and go to next step
                 }
                 else
                 {
@@ -341,22 +329,4 @@ void Run()
     stackDtor(&stk);
 }
 
-void FillingCodeArray(CPU *proc)
-{
-    FILE *file_code = fopen("code.txt", "r");
-    if (file_code == nullptr)
-    {
-        printf("Error: file_code == nullptr\n");
-        assert(0);
-    }
 
-    proc->code = (int*)calloc(SIZE_CODE_BUFFER, sizeof(int));
-
-    for (int i = 0; i < 50; i++)
-    {
-        fscanf(file_code, "%d", &proc->code[i]);
-        //printf("%d ", proc->code[i]);
-    }
-    printf("\n");
-    fclose(file_code);
-}

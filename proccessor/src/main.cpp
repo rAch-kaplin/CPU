@@ -9,16 +9,15 @@
 
 OutputMode CheckArgs(int argc, char *argv[]);
 
-// 1) make a size reading from a file
-// 2) create an array of comands in assembler
-// 3) fix the jumps
-// 4) add commands in disassembler
-// 5) make labels
-// 6) add registers to the logger
-// 7) make another logging depth
-// 8) select a file using command line agrs
-// 9) select the logging depth using command line agrs
-// 10) improve labels
+//TODO:  3) fix the jumps (after labels)
+//TODO:  5) make labels
+//TODO:  6) add registers to the logger
+//TODO:  7) make another logging depth
+//TODO:  8) select a file using command line agrs ----
+//TODO:  9) select the logging depth using command line agrs ???? ----
+//TODO:  10) improve labels
+//TODO:  11) maybe to do advanced push
+
 
 int main(int argc, char *argv[])
 {
@@ -42,14 +41,31 @@ int main(int argc, char *argv[])
 
 OutputMode CheckArgs(int argc, char *argv[])
 {
+    OutputMode mode = DEFAULT_MODE;
     if (argc > 1 && strcmp(argv[1], "COLOR_MODE") == 0)
     {
+        mode = COLOR_MODE;
         return COLOR_MODE;
     }
-    else
+#if 0
+    OutputMode mode = GetLogger()->color_mode;
+    switch (mode)
     {
-        return DEFAULT_MODE;
-    }
+        case DEFAULT_MODE:
+        {
+            Assem.file_name = argv[1];
+            break;
+        }
 
-    return DEFAULT_MODE;
+        case COLOR_MODE:
+        {
+            Asm->file_name = argv[2];
+            break;
+        }
+
+        default:
+            break;
+    }
+#endif
+    return mode;
 }

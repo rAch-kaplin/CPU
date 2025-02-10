@@ -12,7 +12,7 @@ add
 popr ax
 
 pushr ax
-push 5
+push 3
 ja
 jmp 4
 
