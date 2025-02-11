@@ -30,7 +30,7 @@ int GetCommandCode(const char *cmd)
     return 0;
 }
 
-void Assembler()
+void Assembler(Assem *Asm)
 {
     FILE *file_asm = fopen("kvadrat.txt", "r");
     if (file_asm == nullptr)
@@ -46,7 +46,7 @@ void Assembler()
         assert(0);
     }
 
-    int CODE_SIZE = NumberCommands(file_asm);
+    int CODE_SIZE = NumberCommands(file_asm, Asm);
 
     fprintf(file_code, "%d\n", CODE_SIZE);
 
@@ -70,7 +70,6 @@ void Assembler()
                 int value = 0;
                 fscanf(file_asm, "%d", &value);
                 fprintf(file_code, "%d\n", value);
-                CODE_SIZE += 2;
                 break;
             }
 
@@ -80,7 +79,6 @@ void Assembler()
                 char reg[10] = {0};
                 fscanf(file_asm, "%s", reg);
                 fprintf(file_code, "%d\n", CompileArg(reg));
-                CODE_SIZE += 2;
                 break;
             }
 
@@ -90,42 +88,16 @@ void Assembler()
                 char reg[10] = {0};
                 fscanf(file_asm, "%s", reg);
                 fprintf(file_code, "%d\n", CompileArg(reg));
-                CODE_SIZE += 2;
                 break;
             }
 
             case CMD_ADD:
-            {
-                fprintf(file_code, "%d\n", cmd_code);
-                CODE_SIZE += 1;
-                break;
-            }
-
             case CMD_SUB:
-            {
-                fprintf(file_code, "%d\n", cmd_code);
-                CODE_SIZE += 1;
-                break;
-            }
-
             case CMD_OUT:
-            {
-                fprintf(file_code, "%d\n", cmd_code);
-                CODE_SIZE += 1;
-                break;
-            }
-
             case CMD_DIV:
-            {
-                fprintf(file_code, "%d\n", cmd_code);
-                CODE_SIZE += 1;
-                break;
-            }
-
             case CMD_MUL:
             {
                 fprintf(file_code, "%d\n", cmd_code);
-                CODE_SIZE += 1;
                 break;
             }
 
@@ -137,21 +109,20 @@ void Assembler()
                 fscanf(file_asm, "%d", &next);
                 fprintf(file_code, "%d\n", next);
 
-                CODE_SIZE += 2;
                 break;
             }
 
             case CMD_JA:
-            {
-                fprintf(file_code, "%d\n", cmd_code);
-                CODE_SIZE += 1;
-                break;
-            }
-
+            case CMD_JAE:
             case CMD_JB:
+            case CMD_JBE:
+            case CMD_JE:
+            case CMD_JNE:
             {
-                fprintf(file_code, "%d\n", cmd_code);
-                CODE_SIZE += 1;
+                fprintf(file_code, "%d ", cmd_code);
+                int label = 0;
+                fscanf(file_asm, "%d", &label);
+                fprintf(file_code, "%d\n", label);
                 break;
             }
 
@@ -162,10 +133,14 @@ void Assembler()
         if (cmd_code == CMD_HLT)
         {
             fprintf(file_code, "%d\n", cmd_code);
-            CODE_SIZE += 1;
             break;
         }
     }
+
+    // for (int i = 0; i < CODE_SIZE; i++)
+    // {
+    //     printf("&&&& --- %d\n", Asm->labels[i]);
+    // }
 
     fclose(file_asm);
     fclose(file_code);
@@ -188,12 +163,11 @@ void FillingCodeArray(CPU *proc)
     for (int i = 0; i < CODE_SIZE_BUFFER + 1; i++)
     {
         fscanf(file_code, "%d", &proc->code[i]);
-        //printf("%d ", proc->code[i]);
+        // printf("ZZZZ ---- %d ", proc->code[i]);
     }
     //printf("\n");
     fclose(file_code);
 }
-
 
 int CompileArg(const char *str)
 {
@@ -205,8 +179,7 @@ int CompileArg(const char *str)
     return -1;
 }
 
-
-int NumberCommands(FILE *file_asm)
+int NumberCommands(FILE *file_asm, Assem *Asm)
 {
     int CODE_SIZE = 0;
     while(true)
@@ -231,21 +204,38 @@ int NumberCommands(FILE *file_asm)
                     CODE_SIZE += 2;
                     break;
                 }
-
                 case CMD_ADD:
                 case CMD_SUB:
                 case CMD_OUT:
                 case CMD_DIV:
                 case CMD_MUL:
-                case CMD_JA:
-                case CMD_JB:
                 {
                     CODE_SIZE += 1;
                     break;
                 }
+                case CMD_JA:
+                case CMD_JAE:
+                case CMD_JB:
+                case CMD_JBE:
+                case CMD_JE:
+                case CMD_JNE:
+                {
+                    fscanf(file_asm, "%s", cmd);
+                    CODE_SIZE += 2;
+                    break;
+                }
+
+
 
                 default:
+                {
+                    if (strcmp(&cmd[strlen(cmd) - 1], ":") == 0)
+                    {
+                        cmd[strlen(cmd) - 1] = '\0';
+                        Asm->labels[atoi(cmd)] = CODE_SIZE;
+                    }
                     break;
+                }
             }
 
             if (cmd_code == CMD_HLT)

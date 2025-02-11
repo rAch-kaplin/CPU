@@ -13,10 +13,12 @@
 #endif
 
 const int SIZE_REGISTERS = 10;
+const size_t LABELS_SIZE = 128;
 
 typedef struct Assem
 {
     char *file_name;
+    int labels[LABELS_SIZE];
 } Assem;
 
 typedef struct CPU
@@ -24,11 +26,12 @@ typedef struct CPU
     stackElem *code;
     int IP;
     stackElem registers[SIZE_REGISTERS] = {0};
+    int *labels;
 } CPU;
 
 void FillingCodeArray(CPU *proc);
 int CompileArg(const char *str);
-int NumberCommands(FILE *file_code);
+int NumberCommands(FILE *file_asm, Assem *Asm);
 
 
 enum command
@@ -67,9 +70,9 @@ enum REG_T
 };
 
 
-void Assembler();
+void Assembler(Assem *Asm);
 int GetCommandCode(const char *cmd);
 const char* CommandToString(int cmd);
-void Run();
+void Run(Assem *Asm);
 
 #endif

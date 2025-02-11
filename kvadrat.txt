@@ -1,6 +1,8 @@
 push 1
 popr ax
 
+7:
+
 pushr ax
 pushr ax
 mul
@@ -13,7 +15,6 @@ popr ax
 
 pushr ax
 push 3
-ja
-jmp 4
+ja 7:
 
 hlt

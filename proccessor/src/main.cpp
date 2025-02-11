@@ -9,7 +9,6 @@
 
 OutputMode CheckArgs(int argc, char *argv[]);
 
-//TODO:  3) fix the jumps (after labels)
 //TODO:  5) make labels
 //TODO:  6) add registers to the logger
 //TODO:  7) make another logging depth
@@ -30,8 +29,9 @@ int main(int argc, char *argv[])
     loggerInit(LOGL_DEBUG, "logfile.log");
     DBG_PRINTF(COLOR_GREEN "Start CPU\n" COLOR_RESET);
 
-    Assembler();
-    Run();
+    struct Assem Asm = {};
+    Assembler(&Asm);
+    Run(&Asm);
 
     loggerDeinit();
     DBG_PRINTF(COLOR_GREEN "End of main!\n" COLOR_RESET);

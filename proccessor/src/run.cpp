@@ -9,7 +9,7 @@
 #include "debug_proc.h"
 #include "logger.h"
 
-void Run()
+void Run(Assem *Asm)
 {
     struct stack stk = {NULL, 0, 0};
     stackCtor(&stk, 8);
@@ -237,7 +237,7 @@ void Run()
 
                 if (val_1 > val_2)
                 {
-                    proc.IP += 1; //take value from label and go to next step
+                    proc.IP = Asm->labels[proc.code[proc.IP + 1]];
                 }
                 else
                 {
