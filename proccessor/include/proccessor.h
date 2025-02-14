@@ -78,7 +78,6 @@ enum REG_T
     dx = 3
 };
 
-
 void Assembler(Assem *Asm);
 int GetCommandCode(const char *cmd);
 const char* CommandToString(int cmd);

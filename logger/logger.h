@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include "stack.h"
 
-const size_t SIZE_BUFFER = 4096;
+const size_t SIZE_BUFFER = 8192;
 
 enum LogLevel
 {

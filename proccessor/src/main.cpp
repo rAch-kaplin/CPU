@@ -9,7 +9,6 @@
 
 OutputMode CheckArgs(int argc, char *argv[]);
 
-//TODO:  6) add registers to the logger
 //TODO:  7) make another logging depth
 //TODO:  11) maybe to do advanced push
 

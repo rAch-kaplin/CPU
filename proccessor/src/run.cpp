@@ -34,7 +34,7 @@ void Run(Assem *Asm)
                 DBG_PRINTF(COLOR_CYAN "Enter value: " COLOR_RESET);
                 DBG_PRINTF(COLOR_MAGENTA "%d\n" COLOR_RESET, value);
 
-                GetProcInstruction(cmd, value);
+                GetProcInstruction(cmd, &proc, value);
                 LOG(LOGL_DEBUG, "");
                 stackPush(&stk, value);
                 proc.IP += 2;
@@ -45,7 +45,7 @@ void Run(Assem *Asm)
             {
                 stackElem value = proc.registers[proc.code[proc.IP + 1]];
 
-                GetProcInstruction(cmd, value);
+                GetProcInstruction(cmd, &proc, value);
                 LOG(LOGL_DEBUG, "");
                 stackPush(&stk, value);
                 proc.IP += 2;
@@ -55,7 +55,7 @@ void Run(Assem *Asm)
             case CMD_POPR:
             {
                 stackElem value = 0;
-                GetProcInstruction(cmd, value);
+                GetProcInstruction(cmd, &proc, value);
                 LOG(LOGL_DEBUG, "");
                 stackPop(&stk, &value);
                 proc.registers[proc.code[proc.IP + 1]] = value;
@@ -66,7 +66,7 @@ void Run(Assem *Asm)
             case CMD_ADD:
             {
                 stackElem val_1 = 0, val_2 = 0;
-                GetProcInstruction(cmd);
+                GetProcInstruction(cmd, &proc);
                 LOG(LOGL_DEBUG, "");
 
                 stackPop(&stk, &val_1);
@@ -82,7 +82,7 @@ void Run(Assem *Asm)
 
             case CMD_SUB:
             {
-                GetProcInstruction(cmd);
+                GetProcInstruction(cmd, &proc);
                 LOG(LOGL_DEBUG, "");
                 stackElem val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
@@ -97,7 +97,7 @@ void Run(Assem *Asm)
 
             case CMD_MUL:
             {
-                GetProcInstruction(cmd);
+                GetProcInstruction(cmd, &proc);
                 LOG(LOGL_DEBUG, "");
                 stackElem val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
@@ -112,7 +112,7 @@ void Run(Assem *Asm)
 
             case CMD_DIV:
             {
-                GetProcInstruction(cmd);
+                GetProcInstruction(cmd, &proc);
                 LOG(LOGL_DEBUG, "");
                 stackElem val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
@@ -127,7 +127,7 @@ void Run(Assem *Asm)
 
             case CMD_SQRT:
             {
-                GetProcInstruction(cmd);
+                GetProcInstruction(cmd, &proc);
                 LOG(LOGL_DEBUG, "");
                 stackElem value = 0;
                 stackPop(&stk, &value);
@@ -141,7 +141,7 @@ void Run(Assem *Asm)
             case CMD_SIN:
             {
                 stackElem value = 0;
-                GetProcInstruction(cmd);
+                GetProcInstruction(cmd, &proc);
                 LOG(LOGL_DEBUG, "");
 
                 stackPop(&stk, &value);
@@ -154,7 +154,7 @@ void Run(Assem *Asm)
             case CMD_COS:
             {
                 stackElem value = 0;
-                GetProcInstruction(cmd);
+                GetProcInstruction(cmd, &proc);
                 LOG(LOGL_DEBUG, "");
 
                 stackPop(&stk, &value);
@@ -166,7 +166,7 @@ void Run(Assem *Asm)
 
             case CMD_OUT:
             {
-                GetProcInstruction(cmd);
+                GetProcInstruction(cmd, &proc);
                 LOG(LOGL_DEBUG, "");
                 stackElem val = 0;
                 stackPop(&stk, &val);
@@ -180,7 +180,7 @@ void Run(Assem *Asm)
             case CMD_JMP:
             {
                 proc.IP = proc.code[proc.IP + 1];
-                GetProcInstruction(cmd, proc.IP);
+                GetProcInstruction(cmd, &proc, proc.IP);
                 LOG(LOGL_DEBUG, "JMP to %d ", proc.code[proc.IP + 1]);
 
                 break;
@@ -189,7 +189,7 @@ void Run(Assem *Asm)
             case CMD_JB:
             {
                 stackElem val_1 = 0, val_2 = 0;
-                GetProcInstruction(cmd);
+                GetProcInstruction(cmd, &proc);
                 LOG(LOGL_DEBUG, "");
 
                 stackPop(&stk, &val_1);
@@ -209,7 +209,7 @@ void Run(Assem *Asm)
             case CMD_JBE:
             {
                 stackElem val_1 = 0, val_2 = 0;
-                GetProcInstruction(cmd);
+                GetProcInstruction(cmd, &proc);
                 LOG(LOGL_DEBUG, "");
 
                 stackPop(&stk, &val_1);
@@ -229,7 +229,7 @@ void Run(Assem *Asm)
             case CMD_JA:
             {
                 stackElem val_1 = 0, val_2 = 0;
-                GetProcInstruction(cmd);
+                GetProcInstruction(cmd, &proc);
                 LOG(LOGL_DEBUG, "");
 
                 stackPop(&stk, &val_1);
@@ -249,7 +249,7 @@ void Run(Assem *Asm)
             case CMD_JAE:
             {
                 stackElem val_1 = 0, val_2 = 0;
-                GetProcInstruction(cmd);
+                GetProcInstruction(cmd, &proc);
                 LOG(LOGL_DEBUG, "");
 
                 stackPop(&stk, &val_1);
@@ -269,7 +269,7 @@ void Run(Assem *Asm)
             case CMD_JE:
             {
                 stackElem val_1 = 0, val_2 = 0;
-                GetProcInstruction(cmd);
+                GetProcInstruction(cmd, &proc);
                 LOG(LOGL_DEBUG, "");
 
                 stackPop(&stk, &val_1);
@@ -289,7 +289,7 @@ void Run(Assem *Asm)
             case CMD_JNE:
             {
                 stackElem val_1 = 0, val_2 = 0;
-                GetProcInstruction(cmd);
+                GetProcInstruction(cmd, &proc);
                 LOG(LOGL_DEBUG, "");
 
                 stackPop(&stk, &val_1);
@@ -320,7 +320,7 @@ void Run(Assem *Asm)
 
         if (cmd == CMD_HLT)
         {
-            GetProcInstruction(cmd);
+            GetProcInstruction(cmd, &proc);
             LOG(LOGL_DEBUG, "");
             break;
         }

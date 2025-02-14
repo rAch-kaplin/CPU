@@ -6,7 +6,7 @@
 #include "color.h"
 #include "common.h"
 
-void AddArgsToCommand(Logger *log, int *current_len, const char *fmt, ...)
+int AddArgsToCommand(Logger *log, int *current_len, const char *fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
@@ -22,9 +22,11 @@ void AddArgsToCommand(Logger *log, int *current_len, const char *fmt, ...)
         *current_len += vsnprintf(log->proc_instruction + *current_len, SIZE_BUFFER - (size_t)*current_len, fmt, args);
     }
     va_end(args);
+
+    return *current_len;
 }
 
-void GetProcInstruction(int cmd, ...)
+void GetProcInstruction(int cmd, CPU *proc, ...)
 {
     va_list args;
     va_start(args, cmd);
@@ -100,6 +102,29 @@ void GetProcInstruction(int cmd, ...)
         default:
             break;
     }
+
+    if (GetLogger()->color_mode == COLOR_MODE)
+    {
+        current_len += snprintf(GetLogger()->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len,
+                                COLOR_RED "\n\tRegisters: " COLOR_RESET);
+    }
+    else
+    {
+        current_len += snprintf(GetLogger()->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len, "\n\tRegisters: ");
+    }
+    for (size_t i = 0; i < SIZE_REGISTERS; i++)
+        {
+            if (GetLogger()->color_mode == COLOR_MODE)
+            {
+                current_len += snprintf(GetLogger()->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len,
+                                        COLOR_RED " " STACK_ELEM_FORMAT COLOR_RESET, proc->registers[i]);
+            }
+            else
+            {
+                current_len += snprintf(GetLogger()->proc_instruction + current_len, SIZE_BUFFER - (size_t)current_len,
+                                        " " STACK_ELEM_FORMAT, proc->registers[i]);
+            }
+        }
 
     va_end(args);
 }
