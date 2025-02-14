@@ -13,12 +13,20 @@
 #endif
 
 const int SIZE_REGISTERS = 10;
-const size_t LABELS_SIZE = 128;
+const int LABELS_SIZE = 128;
+const size_t LABEL_NAME = 20;
+
+typedef struct
+{
+        char name[LABEL_NAME];
+        int label_value;
+} Label;
 
 typedef struct Assem
 {
-    char *file_name;
+    const char *file_name;
     int labels[LABELS_SIZE];
+    Label Labels[LABELS_SIZE];
 } Assem;
 
 typedef struct CPU
@@ -32,6 +40,7 @@ typedef struct CPU
 void FillingCodeArray(CPU *proc);
 int CompileArg(const char *str);
 int NumberCommands(FILE *file_asm, Assem *Asm);
+int FindLabel(Assem *Asm, char *cmd);
 
 
 enum command

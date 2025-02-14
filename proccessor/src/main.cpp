@@ -9,12 +9,8 @@
 
 OutputMode CheckArgs(int argc, char *argv[]);
 
-//TODO:  5) make labels
 //TODO:  6) add registers to the logger
 //TODO:  7) make another logging depth
-//TODO:  8) select a file using command line agrs ----
-//TODO:  9) select the logging depth using command line agrs ???? ----
-//TODO:  10) improve labels
 //TODO:  11) maybe to do advanced push
 
 
@@ -29,7 +25,8 @@ int main(int argc, char *argv[])
     loggerInit(LOGL_DEBUG, "logfile.log");
     DBG_PRINTF(COLOR_GREEN "Start CPU\n" COLOR_RESET);
 
-    struct Assem Asm = {};
+    struct Assem Asm = {"0",{0}, {{"next",  7},
+                            {"ded" , 32} }};
     Assembler(&Asm);
     Run(&Asm);
 

@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <assert.h>
 #include "proccessor.h"
+#include "color.h"
 
 
 int GetCommandCode(const char *cmd)
@@ -102,16 +103,6 @@ void Assembler(Assem *Asm)
             }
 
             case CMD_JMP:
-            {
-                fprintf(file_code, "%d ", cmd_code);
-
-                int next = 0;
-                fscanf(file_asm, "%d", &next);
-                fprintf(file_code, "%d\n", next);
-
-                break;
-            }
-
             case CMD_JA:
             case CMD_JAE:
             case CMD_JB:
@@ -120,9 +111,11 @@ void Assembler(Assem *Asm)
             case CMD_JNE:
             {
                 fprintf(file_code, "%d ", cmd_code);
-                int label = 0;
-                fscanf(file_asm, "%d", &label);
-                fprintf(file_code, "%d\n", label);
+                char label[20] = "";
+                fscanf(file_asm, "%s", label);
+                int DBG_label = FindLabel(Asm, &label[0]);
+                printf(COLOR_BLUE "-------DBG_label = %d\n" COLOR_RESET, DBG_label);
+                fprintf(file_code, "%d\n", DBG_label);
                 break;
             }
 
@@ -225,14 +218,14 @@ int NumberCommands(FILE *file_asm, Assem *Asm)
                     break;
                 }
 
-
-
                 default:
                 {
                     if (strcmp(&cmd[strlen(cmd) - 1], ":") == 0)
                     {
-                        cmd[strlen(cmd) - 1] = '\0';
-                        Asm->labels[atoi(cmd)] = CODE_SIZE;
+                        printf(COLOR_RED "%s\n" COLOR_RESET, cmd);
+                        int DBG_label = FindLabel(Asm, &cmd[0]);
+                        printf(COLOR_RED "-------DBG_label = %d\n" COLOR_RESET, DBG_label);
+                        Asm->labels[DBG_label] = CODE_SIZE;
                     }
                     break;
                 }
@@ -247,4 +240,17 @@ int NumberCommands(FILE *file_asm, Assem *Asm)
     fseek(file_asm, 0, SEEK_SET);
 
     return CODE_SIZE;
+}
+
+int FindLabel(Assem *Asm, char *cmd)
+{
+    cmd[strlen(cmd) - 1] = '\0';
+    for (int i = 0; i < LABELS_SIZE; i++)
+    {
+        if (strcmp(Asm->Labels[i].name, cmd) == 0)
+        {
+            return Asm->Labels[i].label_value;
+        }
+    }
+    return -10;
 }

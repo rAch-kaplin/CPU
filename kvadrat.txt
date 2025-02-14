@@ -1,7 +1,7 @@
 push 1
 popr ax
 
-7:
+next:
 
 pushr ax
 pushr ax
@@ -15,6 +15,6 @@ popr ax
 
 pushr ax
 push 3
-ja 7:
+ja next:
 
 hlt
