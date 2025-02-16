@@ -17,7 +17,7 @@ void Run(Assem *Asm)
     struct CPU proc = {};
 
     FillingCodeArray(&proc);
-    int next = 1;
+    bool next = true;
 
     while (next)
     {
@@ -201,7 +201,7 @@ void Run(Assem *Asm)
                 }
                 else
                 {
-                    proc.IP = proc.code[proc.IP + 2];
+                    proc.IP += 2;
                 }
                 break;
             }
@@ -221,7 +221,7 @@ void Run(Assem *Asm)
                 }
                 else
                 {
-                    proc.IP = proc.code[proc.IP + 2];
+                    proc.IP += 2;
                 }
                 break;
             }
@@ -284,6 +284,7 @@ void Run(Assem *Asm)
                     proc.IP = proc.code[proc.IP + 2];
                 }
                 break;
+                //TODO: makros
             }
 
             case CMD_JNE:

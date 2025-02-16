@@ -27,7 +27,7 @@ int GetCommandCode(const char *cmd)
     if (strcmp(cmd, "jae") == 0)    return CMD_JAE;
     if (strcmp(cmd, "je") == 0)     return CMD_JE;
     if (strcmp(cmd, "jne") == 0)    return CMD_JNE;
-
+    //TODO: make struct
     return 0;
 }
 
@@ -39,6 +39,7 @@ void Assembler(Assem *Asm)
         printf("file_asm == nullptr");
         assert(0);
     }
+    //TODO: from arg
 
     FILE *file_code = fopen("code.txt", "w+");
         if (file_code == nullptr)
@@ -47,13 +48,13 @@ void Assembler(Assem *Asm)
         assert(0);
     }
 
-    int CODE_SIZE = NumberCommands(file_asm, Asm);
+    int CODE_SIZE = NumberCommands(file_asm, Asm); //TODO: const
 
     fprintf(file_code, "%d\n", CODE_SIZE);
 
-    while(true)
+    while (true)
     {
-        char cmd[20] = "";
+        char cmd[20] = ""; //TODO: buffer overflow
         if (fscanf(file_asm, "%s", cmd) != 1)
         {
             printf("!!!!!!%s\n", cmd);
@@ -72,17 +73,10 @@ void Assembler(Assem *Asm)
                 fscanf(file_asm, "%d", &value);
                 fprintf(file_code, "%d\n", value);
                 break;
+                //TODO: make func
             }
-
+            //TODO: CMD_POP
             case CMD_PUSHR:
-            {
-                fprintf(file_code, "%d ", cmd_code);
-                char reg[10] = {0};
-                fscanf(file_asm, "%s", reg);
-                fprintf(file_code, "%d\n", CompileArg(reg));
-                break;
-            }
-
             case CMD_POPR:
             {
                 fprintf(file_code, "%d ", cmd_code);
@@ -237,7 +231,7 @@ int NumberCommands(FILE *file_asm, Assem *Asm)
                 break;
             }
         }
-    fseek(file_asm, 0, SEEK_SET);
+    fseek(file_asm, 0, SEEK_SET); //TODO: make it outside
 
     return CODE_SIZE;
 }

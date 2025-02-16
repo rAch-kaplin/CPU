@@ -34,7 +34,6 @@ typedef struct CPU
     stackElem *code;
     int IP;
     stackElem registers[SIZE_REGISTERS] = {0};
-    int *labels;
 } CPU;
 
 void FillingCodeArray(CPU *proc);

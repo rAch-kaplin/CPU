@@ -38,7 +38,7 @@ void loggerDeinit();
 const char* ColorLogMsg(const enum LogLevel levelMsg);
 void log(LogLevel levelMsg, const char *file, size_t line, const char *func,  const char *fmt, ...);
 
-#define LOG(levelMsg, fmt, ...)                   \
+#define LOG(levelMsg, fmt, ...)   /*TODO: logger corect  */              \
     do {                                          \
         LOG_BEGIN(levelMsg, fmt, ##__VA_ARGS__);  \
         LOG_MSG(fmt);                             \
