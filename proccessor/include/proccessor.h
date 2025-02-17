@@ -51,6 +51,7 @@ enum command
     CMD_OUT =       4,
     CMD_DIV =       5,
     CMD_MUL =       6,
+    CMD_POP =       7,
 
     CMD_PUSHR =    11,
     CMD_POPR =     12,

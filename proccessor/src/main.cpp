@@ -12,6 +12,11 @@ OutputMode CheckArgs(int argc, char *argv[]);
 //TODO:  7) make another logging depth
 //TODO:  11) maybe to do advanced push
 
+ServiceLines* GetServiceLines()
+{
+    static ServiceLines service = {"",""};
+    return &service;
+}
 
 int main(int argc, char *argv[])
 {
@@ -32,14 +37,13 @@ int main(int argc, char *argv[])
         printf("ERROR! from Assembler\n");
         return 1;
     }
-    
+
     Run(&Asm);
 
     loggerDeinit();
     DBG_PRINTF(COLOR_GREEN "End of main!\n" COLOR_RESET);
     return 0;
 }
-
 
 OutputMode CheckArgs(int argc, char *argv[])
 {
@@ -49,6 +53,7 @@ OutputMode CheckArgs(int argc, char *argv[])
         mode = COLOR_MODE;
         return COLOR_MODE;
     }
+
 #if 0
     OutputMode mode = GetLogger()->color_mode;
     switch (mode)

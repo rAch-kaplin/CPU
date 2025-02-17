@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "stack.h"
+#include "common.h"
 
 const size_t SIZE_BUFFER = 8192;
 
@@ -25,8 +26,6 @@ enum OutputMode
 typedef struct Logger {
     LogLevel levelLogger;
     FILE *logFile;
-    char stack_state[SIZE_BUFFER];
-    char proc_instruction[SIZE_BUFFER];
     OutputMode color_mode;
 } Logger;
 
@@ -55,14 +54,14 @@ void log(LogLevel levelMsg, const char *file, size_t line, const char *func,  co
 
 #define LOG_MSG(fmt, ...)                                                     \
     do {                                                                      \
-        fprintf(GetLogger()->logFile, "%s", GetLogger()->proc_instruction);   \
-        fprintf(GetLogger()->logFile, "\n%s", GetLogger()->stack_state);      \
+        fprintf(GetLogger()->logFile, "%s", GetServiceLines()->proc_instruction);   \
+        fprintf(GetLogger()->logFile, "\n%s", GetServiceLines()->stack_state);      \
     } while(0)
 
 #define LOG_END()                                                                         \
     do {                                                                                  \
-        memset(GetLogger()->stack_state, 0, sizeof(GetLogger()->stack_state));            \
-        memset(GetLogger()->proc_instruction, 0, sizeof(GetLogger()->proc_instruction));  \
+        memset(GetServiceLines()->stack_state, 0, sizeof(GetServiceLines()->stack_state));            \
+        memset(GetServiceLines()->proc_instruction, 0, sizeof(GetServiceLines()->proc_instruction));  \
         fflush(GetLogger()->logFile);                                                     \
     } while(0)
 

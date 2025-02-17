@@ -22,6 +22,7 @@ int GetCommandCode(const char *cmd)
                                     {"div",     CMD_DIV},
                                     {"mul",     CMD_MUL},
                                     {"hlt",     CMD_HLT},
+                                    {"pop",     CMD_POP},
                                     {"pushr",   CMD_PUSHR},
                                     {"popr",    CMD_POPR},
                                     {"jmp",     CMD_JMP},
@@ -34,6 +35,7 @@ int GetCommandCode(const char *cmd)
                                     {"jae",     CMD_JAE},
                                     {"je",      CMD_JE},
                                     {"jne",     CMD_JNE} };
+
     int count_command = sizeof(command_code) / sizeof(command_code[0]);
 
     for (int i = 0; i < count_command; i++)
@@ -49,7 +51,7 @@ int GetCommandCode(const char *cmd)
 
 CodeError Assembler(Assem *Asm)
 {
-    FILE *file_asm = fopen("kvadrat.txt", "r");
+    FILE *file_asm = fopen("kvadrat.asm", "r");
     if (file_asm == nullptr)
     {
         return FILE_NOT_OPEN;
@@ -62,7 +64,8 @@ CodeError Assembler(Assem *Asm)
         return FILE_NOT_OPEN;
     }
 
-    const int CODE_SIZE = NumberCommands(file_asm, Asm); //TODO: const
+    const int CODE_SIZE = NumberCommands(file_asm, Asm);
+    fseek(file_asm, 0, SEEK_SET);
 
     fprintf(file_code, "%d\n", CODE_SIZE);
 
@@ -89,7 +92,14 @@ CodeError Assembler(Assem *Asm)
                 break;
                 //TODO: make func
             }
-            //TODO: CMD_POP
+
+            case CMD_POP:
+            {
+                fprintf(file_code, "%d\n", cmd_code);
+                int value = 0;
+                fscanf(file_asm, "%d", &value);
+                break;
+            }
             case CMD_PUSHR:
             case CMD_POPR:
             {
@@ -165,7 +175,7 @@ void FillingCodeArray(CPU *proc)
     for (int i = 0; i < CODE_SIZE_BUFFER + 1; i++)
     {
         fscanf(file_code, "%d", &proc->code[i]);
-        // printf("ZZZZ ---- %d ", proc->code[i]);
+        //printf("ZZZZ ---- %d ", proc->code[i]);
     }
     //printf("\n");
     fclose(file_code);
@@ -246,7 +256,6 @@ int NumberCommands(FILE *file_asm, Assem *Asm)
                 break;
             }
         }
-    fseek(file_asm, 0, SEEK_SET); //TODO: make it outside
 
     return CODE_SIZE;
 }

@@ -8,7 +8,7 @@
 
 Logger* GetLogger()
 {
-    static Logger logger = {LOGL_DEBUG, NULL, {0}, {0}, DEFAULT_MODE};
+    static Logger logger = {LOGL_DEBUG, NULL, DEFAULT_MODE};
     return &logger;
 }
 

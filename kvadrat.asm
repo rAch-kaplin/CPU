@@ -18,3 +18,4 @@ push 3
 ja next:
 
 hlt
+

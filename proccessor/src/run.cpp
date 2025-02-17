@@ -9,6 +9,24 @@
 #include "debug_proc.h"
 #include "logger.h"
 
+// #define CONDITIONAL_JMP(condition)
+//     stackElem val_1 = 0, val_2 = 0;
+//     GetProcInstruction(cmd, &proc);
+//     LOG(LOGL_DEBUG, "");
+//
+//     stackPop(&stk, &val_1);
+//     stackPop(&stk, &val_2);
+//
+//     if ((val_1) condition (val_2))
+//     {
+//         proc.IP = proc.code[proc.IP + 1];
+//     }
+//     else
+//     {
+//         proc.IP += 2;
+//     }
+
+
 void Run(Assem *Asm)
 {
     struct stack stk = {NULL, 0, 0};

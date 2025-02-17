@@ -11,6 +11,7 @@ const char* CommandToString(int cmd)
         case CMD_DIV:     return "div";
         case CMD_MUL:     return "mul";
         case CMD_HLT:     return "hlt";
+        case CMD_POP:     return "pop";
         case CMD_PUSHR:   return "pushr";
         case CMD_POPR:    return "popr";
         case CMD_JMP:     return "jmp";
