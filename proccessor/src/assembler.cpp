@@ -49,19 +49,18 @@ int GetCommandCode(const char *cmd)
     return 0;
 }
 
-CodeError Assembler(Assem *Asm)
+const char* Assembler(Assem *Asm)
 {
-    FILE *file_asm = fopen("kvadrat.asm", "r");
+    FILE *file_asm = fopen(Asm->file_name, "r");
     if (file_asm == nullptr)
     {
-        return FILE_NOT_OPEN;
+        return "invalid file_asm couldn't be opened: ";
     }
-    //TODO: from arg
 
     FILE *file_code = fopen("code.txt", "w+");
         if (file_code == nullptr)
     {
-        return FILE_NOT_OPEN;
+        return "file_code can't open";
     }
 
     const int CODE_SIZE = NumberCommands(file_asm, Asm);
@@ -155,7 +154,7 @@ CodeError Assembler(Assem *Asm)
 
     fclose(file_asm);
     fclose(file_code);
-    return ITS_OK;
+    return NULL;
 }
 
 void FillingCodeArray(CPU *proc)

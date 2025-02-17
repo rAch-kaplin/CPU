@@ -37,7 +37,7 @@ void loggerDeinit();
 const char* ColorLogMsg(const enum LogLevel levelMsg);
 void log(LogLevel levelMsg, const char *file, size_t line, const char *func,  const char *fmt, ...);
 
-#define LOG(levelMsg, fmt, ...)   /*TODO: logger corect  */              \
+#define LOG(levelMsg, fmt, ...)                   \
     do {                                          \
         LOG_BEGIN(levelMsg, fmt, ##__VA_ARGS__);  \
         LOG_MSG(fmt);                             \
@@ -51,18 +51,18 @@ void log(LogLevel levelMsg, const char *file, size_t line, const char *func,  co
             log(levelMsg, __FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__);  \
         }                                                                     \
     } while(0)
-
-#define LOG_MSG(fmt, ...)                                                     \
-    do {                                                                      \
+    
+#define LOG_MSG(fmt, ...)                                                           \
+    do {                                                                            \
         fprintf(GetLogger()->logFile, "%s", GetServiceLines()->proc_instruction);   \
         fprintf(GetLogger()->logFile, "\n%s", GetServiceLines()->stack_state);      \
     } while(0)
 
-#define LOG_END()                                                                         \
-    do {                                                                                  \
+#define LOG_END()                                                                                     \
+    do {                                                                                              \
         memset(GetServiceLines()->stack_state, 0, sizeof(GetServiceLines()->stack_state));            \
         memset(GetServiceLines()->proc_instruction, 0, sizeof(GetServiceLines()->proc_instruction));  \
-        fflush(GetLogger()->logFile);                                                     \
+        fflush(GetLogger()->logFile);                                                                 \
     } while(0)
 
 #endif //_HLOGGER

@@ -6,4 +6,4 @@
 int AddArgsToCommand(Logger *log, int *current_len, const char *fmt, ...);
 void GetProcInstruction(int cmd, CPU *proc, ...);
 
-#endif
+#endif //_HDEBUG_PROC

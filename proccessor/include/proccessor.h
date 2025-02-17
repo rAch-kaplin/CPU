@@ -1,7 +1,7 @@
 #ifndef _HPROCCESSOR
 #define _HPROCCESSOR
 
-//#define DBG
+#define DBG
 #include <stdlib.h>
 #include <stdio.h>
 #include "stack.h"
@@ -79,9 +79,11 @@ enum REG_T
     dx = 3
 };
 
-CodeError Assembler(Assem *Asm);
+const char* Assembler(Assem *Asm);
 int GetCommandCode(const char *cmd);
 const char* CommandToString(int cmd);
-void Run(Assem *Asm);
+const char* Run(Assem *Asm);
+void SingleStackOperation(stack *stk, double (*operation)(double));
+void TwoElemStackOperation(stack *stk, stackElem (*operation)(stackElem a, stackElem b));
 
-#endif
+#endif //HPROCCESSOR

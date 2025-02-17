@@ -4,6 +4,7 @@
 enum CodeError
 {
     FILE_NOT_OPEN = 10,
+    UNKNOW_COMMAND = 20,
     ITS_OK = 0
 };
 

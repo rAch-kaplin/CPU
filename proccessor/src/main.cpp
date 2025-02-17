@@ -3,11 +3,10 @@
 #include "color.h"
 #include "stack.h"
 #include "logger.h"
-#define DBG
 #include "proccessor.h"
 #include "common.h"
 
-OutputMode CheckArgs(int argc, char *argv[]);
+void CheckArgs(int argc, char *argv[], Assem *Asm);
 
 //TODO:  7) make another logging depth
 //TODO:  11) maybe to do advanced push
@@ -20,59 +19,57 @@ ServiceLines* GetServiceLines()
 
 int main(int argc, char *argv[])
 {
-    if (CheckArgs(argc, argv) == COLOR_MODE)
-    {
-        printf(COLOR_MAGENTA "COLOR_MODE ON\n" COLOR_RESET);
-        GetLogger()->color_mode = COLOR_MODE;
-    }
+    struct Assem Asm = {"0",{0}, {{"next",  7},
+                            {"ded" , 32} }};
+
+    CheckArgs(argc, argv, &Asm);
 
     loggerInit(LOGL_DEBUG, "logfile.log");
     DBG_PRINTF(COLOR_GREEN "Start CPU\n" COLOR_RESET);
 
-    struct Assem Asm = {"0",{0}, {{"next",  7},
-                            {"ded" , 32} }};
-    CodeError error = Assembler(&Asm);
-    if (error != ITS_OK)
+
+    const char* error_asm = Assembler(&Asm);
+    if (error_asm != NULL)
     {
-        printf("ERROR! from Assembler\n");
+        printf("ERROR! from Assembler: %s \n", error_asm);
         return 1;
     }
 
-    Run(&Asm);
+    const char* error_run = Run(&Asm);
+    if (error_run != NULL)
+    {
+        printf("ERROR! from Run ^\n");
+        return 1;
+    }
 
     loggerDeinit();
     DBG_PRINTF(COLOR_GREEN "End of main!\n" COLOR_RESET);
     return 0;
 }
 
-OutputMode CheckArgs(int argc, char *argv[])
+void CheckArgs(int argc, char *argv[], Assem *Asm)
 {
-    OutputMode mode = DEFAULT_MODE;
-    if (argc > 1 && strcmp(argv[1], "COLOR_MODE") == 0)
+    GetLogger()->color_mode = DEFAULT_MODE;
+    Asm->file_name = "kvadrat.asm";
+
+    const char* color_mode = NULL;
+
+    for (int i = 1; i < argc; i++)
     {
-        mode = COLOR_MODE;
-        return COLOR_MODE;
+        if (strcmp(argv[i], "-file") == 0 && i + 1 < argc)
+        {
+            Asm->file_name = argv[i + 1];
+            i++;
+        }
+        else if (strcmp(argv[i], "-mode") == 0 && i + 1 < argc)
+        {
+            color_mode = argv[i + 1];
+            if (strcmp(color_mode, "COLOR_MODE") == 0)
+            {
+                GetLogger()->color_mode = COLOR_MODE;
+            }
+            i++;
+        }
     }
 
-#if 0
-    OutputMode mode = GetLogger()->color_mode;
-    switch (mode)
-    {
-        case DEFAULT_MODE:
-        {
-            Assem.file_name = argv[1];
-            break;
-        }
-
-        case COLOR_MODE:
-        {
-            Asm->file_name = argv[2];
-            break;
-        }
-
-        default:
-            break;
-    }
-#endif
-    return mode;
 }
