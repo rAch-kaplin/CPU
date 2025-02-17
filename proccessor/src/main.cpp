@@ -26,7 +26,13 @@ int main(int argc, char *argv[])
 
     struct Assem Asm = {"0",{0}, {{"next",  7},
                             {"ded" , 32} }};
-    Assembler(&Asm);
+    CodeError error = Assembler(&Asm);
+    if (error != ITS_OK)
+    {
+        printf("ERROR! from Assembler\n");
+        return 1;
+    }
+    
     Run(&Asm);
 
     loggerDeinit();

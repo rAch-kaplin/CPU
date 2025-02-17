@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "stack.h"
+#include "common.h"
 
 #ifdef DBG
     #define DBG_PRINTF(...) printf(__VA_ARGS__)
@@ -77,7 +78,7 @@ enum REG_T
     dx = 3
 };
 
-void Assembler(Assem *Asm);
+CodeError Assembler(Assem *Asm);
 int GetCommandCode(const char *cmd);
 const char* CommandToString(int cmd);
 void Run(Assem *Asm);

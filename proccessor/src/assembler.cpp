@@ -2,60 +2,74 @@
 #include <string.h>
 #include <stdbool.h>
 #include <assert.h>
+#include <ctype.h>
 #include "proccessor.h"
 #include "color.h"
+#include "common.h"
 
+typedef struct
+{
+    const char *cmd_name;
+    const int cmd_code;
+} CommandCode;
 
 int GetCommandCode(const char *cmd)
 {
-    if (strcmp(cmd, "push") == 0)   return CMD_PUSH;
-    if (strcmp(cmd, "add") == 0)    return CMD_ADD;
-    if (strcmp(cmd, "sub") == 0)    return CMD_SUB;
-    if (strcmp(cmd, "out") == 0)    return CMD_OUT;
-    if (strcmp(cmd, "div") == 0)    return CMD_DIV;
-    if (strcmp(cmd, "mul") == 0)    return CMD_MUL;
-    if (strcmp(cmd, "hlt") == 0)    return CMD_HLT;
-    if (strcmp(cmd, "pushr") == 0)  return CMD_PUSHR;
-    if (strcmp(cmd, "popr") == 0)   return CMD_POPR;
-    if (strcmp(cmd, "jmp") == 0)    return CMD_JMP;
-    if (strcmp(cmd, "sqrt") == 0)   return CMD_SQRT;
-    if (strcmp(cmd, "sin") == 0)    return CMD_SIN;
-    if (strcmp(cmd, "cos") == 0)    return CMD_COS;
-    if (strcmp(cmd, "jb") == 0)     return CMD_JB;
-    if (strcmp(cmd, "jbe") == 0)    return CMD_JBE;
-    if (strcmp(cmd, "ja") == 0)     return CMD_JA;
-    if (strcmp(cmd, "jae") == 0)    return CMD_JAE;
-    if (strcmp(cmd, "je") == 0)     return CMD_JE;
-    if (strcmp(cmd, "jne") == 0)    return CMD_JNE;
-    //TODO: make struct
+    CommandCode command_code[] = {  {"push",    CMD_PUSH},
+                                    {"add",     CMD_ADD},
+                                    {"sub",     CMD_SUB},
+                                    {"out",     CMD_OUT},
+                                    {"div",     CMD_DIV},
+                                    {"mul",     CMD_MUL},
+                                    {"hlt",     CMD_HLT},
+                                    {"pushr",   CMD_PUSHR},
+                                    {"popr",    CMD_POPR},
+                                    {"jmp",     CMD_JMP},
+                                    {"sqrt",    CMD_SQRT},
+                                    {"sin",     CMD_SIN},
+                                    {"cos",     CMD_COS},
+                                    {"jb",      CMD_JB},
+                                    {"jbe",     CMD_JBE},
+                                    {"ja",      CMD_JA},
+                                    {"jae",     CMD_JAE},
+                                    {"je",      CMD_JE},
+                                    {"jne",     CMD_JNE} };
+    int count_command = sizeof(command_code) / sizeof(command_code[0]);
+
+    for (int i = 0; i < count_command; i++)
+    {
+        if (strcmp(cmd, command_code[i].cmd_name) == 0)
+        {
+            return command_code[i].cmd_code;
+        }
+    }
+
     return 0;
 }
 
-void Assembler(Assem *Asm)
+CodeError Assembler(Assem *Asm)
 {
     FILE *file_asm = fopen("kvadrat.txt", "r");
     if (file_asm == nullptr)
     {
-        printf("file_asm == nullptr");
-        assert(0);
+        return FILE_NOT_OPEN;
     }
     //TODO: from arg
 
     FILE *file_code = fopen("code.txt", "w+");
         if (file_code == nullptr)
     {
-        printf("file_code == nullptr");
-        assert(0);
+        return FILE_NOT_OPEN;
     }
 
-    int CODE_SIZE = NumberCommands(file_asm, Asm); //TODO: const
+    const int CODE_SIZE = NumberCommands(file_asm, Asm); //TODO: const
 
     fprintf(file_code, "%d\n", CODE_SIZE);
 
     while (true)
     {
-        char cmd[20] = ""; //TODO: buffer overflow
-        if (fscanf(file_asm, "%s", cmd) != 1)
+        char cmd[20] = "";
+        if (fscanf(file_asm, "%19s", cmd) != 1)
         {
             printf("!!!!!!%s\n", cmd);
             printf("the string incorrectly\n");
@@ -131,6 +145,7 @@ void Assembler(Assem *Asm)
 
     fclose(file_asm);
     fclose(file_code);
+    return ITS_OK;
 }
 
 void FillingCodeArray(CPU *proc)
