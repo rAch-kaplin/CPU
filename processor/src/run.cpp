@@ -40,12 +40,6 @@ const char* Run()
     FillingCodeArray(&proc);
     bool next = true;
 
-    // for (int i = 0; i < 20; i++)
-    // {
-    //     fprintf(stderr, " ---- %d\n", proc.code[i]);
-    // }
-    // printf("\n");
-
     while (next)
     {
         stackElem cmd = proc.code[proc.IP];
@@ -253,49 +247,25 @@ void TwoElemStackOperation(stack *stk, stackElem (*operation)(stackElem val1, st
 
 void FillingCodeArray(CPU *proc)
 {
-    FILE *file_code = fopen("programms/code.txt", "r");
-        if (file_code == nullptr)
-        {
-            printf("Error: file_code == nullptr\n");
-            assert(0);
-        }
+    FILE* bin_file = fopen("programms/bin_code.txt", "rb");
+    assert(bin_file != NULL);
 
-        int CODE_SIZE_BUFFER = 0;
-        fscanf(file_code, "%d", &CODE_SIZE_BUFFER);
+    fseek(bin_file, 0, SEEK_END);
+    long file_size = ftell(bin_file);
+    rewind(bin_file);
 
-        proc->code = (int*)calloc((size_t)CODE_SIZE_BUFFER + 1, sizeof(int));
+    size_t num_elements = (size_t)file_size / sizeof(int);
 
-        for (int i = 0; i < CODE_SIZE_BUFFER + 1; i++)
-        {
-            fscanf(file_code, "%d", &proc->code[i]);
-            //printf("ZZZZ ---- %d ", proc->code[i]);
-        }
-        //printf("\n");
-        fclose(file_code);
+    proc->code = (int*)calloc(num_elements + 1, sizeof(file_size / num_elements));
+    assert(proc->code);
 
-// FILE* bin_file = fopen("programms/bin_code.txt", "rb");
-//     assert(bin_file != NULL);
-//
-//
-//     fseek(bin_file, 0, SEEK_END);
-//     long file_size = ftell(bin_file);
-//     rewind(bin_file);
-//
-//
-//     int num_elements = file_size / sizeof(int);
-//
-//
-//     int* data = (int*)calloc(num_elements + 1, sizeof(file_size / num_elements));
-//     assert(data != NULL);
-//
-//
-//     size_t elements_read = fread(data, sizeof(int), num_elements, bin_file);
-//     if (elements_read != num_elements)
-//     {
-//         fprintf(stderr, "Error: read %zu elements, expected %d\n", elements_read, num_elements);
-//     }
-//
-//     fclose(bin_file);
+    size_t elements_read = fread(proc->code, sizeof(int), num_elements, bin_file);
+    if (elements_read != num_elements)
+    {
+        fprintf(stderr, "Error: read %zu elements, expected %zu\n", elements_read, num_elements);
+    }
+
+    fclose(bin_file);
 }
 
 

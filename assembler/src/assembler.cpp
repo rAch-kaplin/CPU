@@ -65,7 +65,7 @@ const char* Assembler(Assem *Asm)
 
     //fwrite(&CODE_SIZE, sizeof(int), 1, file_code);
 
-    fprintf(file_code, "%d\n", Asm->CODE_SIZE);
+    //fprintf(file_code, "%d\n", Asm->CODE_SIZE);
 
     while (true)
     {
@@ -152,7 +152,18 @@ const char* Assembler(Assem *Asm)
         }
     }
 
-    fread(&Asm->code, sizeof(1), (size_t)Asm->CODE_SIZE + 1, file_code);
+    fseek(file_code, 0, SEEK_SET);
+
+    for (int i = 0; i < Asm->CODE_SIZE; i++)
+    {
+        fscanf(file_code, "%d", &Asm->code[i]);
+    }
+
+    for (int i = 0; i < Asm->CODE_SIZE + 1; i++)
+    {
+        printf("%d ", Asm->code[i]);
+    }
+        printf("\n");
 
     // for (int i = 0; i < CODE_SIZE; i++)
     // {
