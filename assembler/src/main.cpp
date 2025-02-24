@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 
 void CheckArgsAsm(int argc, char *argv[], Assem *Asm)
 {
-    Asm->file_name = "kvadrat.asm";
+    Asm->file_name = "programms/kvadrat.asm";
 
     for (int i = 1; i < argc; i++)
     {

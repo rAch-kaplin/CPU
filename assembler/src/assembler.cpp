@@ -58,7 +58,7 @@ const char* Assembler(Assem *Asm)
         return "invalid file_asm couldn't be opened: ";
     }
 
-    FILE *file_code = fopen("code.txt", "w+");
+    FILE *file_code = fopen("programms/code.txt", "w+");
         if (file_code == nullptr)
     {
         return "file_code can't open";

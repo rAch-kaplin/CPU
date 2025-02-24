@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 {
     CheckArgsProc(argc, argv);
 
-    loggerInit(LOGL_DEBUG, "logfile.log");
+    loggerInit(LOGL_DEBUG, "logger/logfile.log");
 
     const char* error_run = Run();
     if (error_run != NULL)

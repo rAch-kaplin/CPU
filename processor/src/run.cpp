@@ -247,7 +247,7 @@ void TwoElemStackOperation(stack *stk, stackElem (*operation)(stackElem val1, st
 
 void FillingCodeArray(CPU *proc)
 {
-    FILE *file_code = fopen("code.txt", "r");
+    FILE *file_code = fopen("programms/code.txt", "r");
     if (file_code == nullptr)
     {
         printf("Error: file_code == nullptr\n");
