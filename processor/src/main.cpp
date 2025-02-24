@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     const char* error_run = Run();
     if (error_run != NULL)
     {
-        printf("ERROR! from Run ^\n");
+        printf("ERROR! from Run ^, %s\n", error_run);
         return 1;
     }
 

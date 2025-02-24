@@ -18,6 +18,8 @@ typedef struct
 
 typedef struct Assem
 {
+    int *code;
+    int CODE_SIZE;
     const char *file_name;
     int label_count = 0;
     Label Labels[LABELS_SIZE];
@@ -25,7 +27,7 @@ typedef struct Assem
 
 
 void CheckArgsAsm(int argc, char *argv[], Assem *Asm);
-int NumberCommands(FILE *file_asm, Assem *Asm);
+int FirstPassFile(FILE *file_asm, Assem *Asm);
 int FindLabel(Assem *Asm, char *cmd);
 const char* Assembler(Assem *Asm);
 

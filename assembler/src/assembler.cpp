@@ -16,26 +16,26 @@ typedef struct
 
 int GetCommandCode(const char *cmd)
 {
-    CommandCode command_code[] = {  {"push",    CMD_PUSH},
-                                    {"add",     CMD_ADD},
-                                    {"sub",     CMD_SUB},
-                                    {"out",     CMD_OUT},
-                                    {"div",     CMD_DIV},
-                                    {"mul",     CMD_MUL},
-                                    {"hlt",     CMD_HLT},
-                                    {"pop",     CMD_POP},
-                                    {"pushr",   CMD_PUSHR},
-                                    {"popr",    CMD_POPR},
-                                    {"jmp",     CMD_JMP},
-                                    {"sqrt",    CMD_SQRT},
-                                    {"sin",     CMD_SIN},
-                                    {"cos",     CMD_COS},
-                                    {"jb",      CMD_JB},
-                                    {"jbe",     CMD_JBE},
-                                    {"ja",      CMD_JA},
-                                    {"jae",     CMD_JAE},
-                                    {"je",      CMD_JE},
-                                    {"jne",     CMD_JNE} };
+    static const CommandCode command_code[] = { {"push",    CMD_PUSH},
+                                                {"add",     CMD_ADD},
+                                                {"sub",     CMD_SUB},
+                                                {"out",     CMD_OUT},
+                                                {"div",     CMD_DIV},
+                                                {"mul",     CMD_MUL},
+                                                {"hlt",     CMD_HLT},
+                                                {"pop",     CMD_POP},
+                                                {"pushr",   CMD_PUSHR},
+                                                {"popr",    CMD_POPR},
+                                                {"jmp",     CMD_JMP},
+                                                {"sqrt",    CMD_SQRT},
+                                                {"sin",     CMD_SIN},
+                                                {"cos",     CMD_COS},
+                                                {"jb",      CMD_JB},
+                                                {"jbe",     CMD_JBE},
+                                                {"ja",      CMD_JA},
+                                                {"jae",     CMD_JAE},
+                                                {"je",      CMD_JE},
+                                                {"jne",     CMD_JNE} };
 
     int count_command = sizeof(command_code) / sizeof(command_code[0]);
 
@@ -53,21 +53,19 @@ int GetCommandCode(const char *cmd)
 const char* Assembler(Assem *Asm)
 {
     FILE *file_asm = fopen(Asm->file_name, "r");
-    if (file_asm == nullptr)
-    {
-        return "invalid file_asm couldn't be opened: ";
-    }
+    assert(file_asm != nullptr);
 
     FILE *file_code = fopen("programms/code.txt", "w+");
-        if (file_code == nullptr)
-    {
-        return "file_code can't open";
-    }
+    assert(file_code != nullptr);
 
-    const int CODE_SIZE = NumberCommands(file_asm, Asm);
+    Asm->CODE_SIZE = FirstPassFile(file_asm, Asm);
     fseek(file_asm, 0, SEEK_SET);
 
-    fprintf(file_code, "%d\n", CODE_SIZE);
+    Asm->code = (int*)calloc((size_t)Asm->CODE_SIZE + 1, sizeof(int));
+
+    //fwrite(&CODE_SIZE, sizeof(int), 1, file_code);
+
+    fprintf(file_code, "%d\n", Asm->CODE_SIZE);
 
     while (true)
     {
@@ -90,7 +88,6 @@ const char* Assembler(Assem *Asm)
                 fscanf(file_asm, "%d", &value);
                 fprintf(file_code, "%d\n", value);
                 break;
-                //TODO: make func
             }
 
             case CMD_POP:
@@ -155,6 +152,8 @@ const char* Assembler(Assem *Asm)
         }
     }
 
+    fread(&Asm->code, sizeof(1), (size_t)Asm->CODE_SIZE + 1, file_code);
+
     // for (int i = 0; i < CODE_SIZE; i++)
     // {
     //     printf("&&&& --- %d\n", Asm->labels[i]);
@@ -177,7 +176,7 @@ int CompileArg(const char *str)
     return -1;
 }
 
-int NumberCommands(FILE *file_asm, Assem *Asm)
+int FirstPassFile(FILE *file_asm, Assem *Asm)
 {
     int CODE_SIZE = 0;
     while(true)
@@ -260,3 +259,5 @@ int FindLabel(Assem *Asm, char *cmd)
 
     return -10;
 }
+
+

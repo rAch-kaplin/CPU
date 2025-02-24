@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 #include "color.h"
 #include "common.h"
 #include "CommonProcAssem.h"
@@ -17,6 +18,13 @@ int main(int argc, char *argv[])
         printf("ERROR! from Assembler: %s \n", error_asm);
         return 1;
     }
+
+    FILE *bin_file = fopen("programms/bin_code.txt", "wb");
+    assert(bin_file);
+
+    fwrite(Asm.code, sizeof(int), (size_t)Asm.CODE_SIZE, bin_file);
+    free(Asm.code);
+    fclose(bin_file);
 
     printf(COLOR_GREEN "End of main_assembler!\n" COLOR_RESET);
     return 0;
