@@ -13,10 +13,10 @@ CFLAGS = -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ -Waggressive-loo
 ASSEMBLER_SOURCES = assembler/src/main.cpp               \
                     assembler/src/assembler.cpp
 
-PROCESSOR_SOURCES = processor/src/main.cpp              \
-                    processor/src/disassembler.cpp      \
-                    processor/src/run.cpp               \
-                    processor/src/debug_proc.cpp        \
+PROCESSOR_SOURCES = processor/src/main.cpp               \
+                    processor/src/disassembler.cpp       \
+                    processor/src/run.cpp                \
+                    processor/src/debug_proc.cpp         \
                     stack/src/stack.cpp                  \
                     stack/src/debug.cpp                  \
                     logger/logger.cpp
@@ -27,7 +27,7 @@ PROCESSOR_OBJECTS = $(PROCESSOR_SOURCES:proccessor/src/%.cpp=proccessor/obj/%.o)
 
 INCLUDES = -I./stack/include -I./processor/include -I./Common -I./logger -I./assembler/include
 
-all: asm proc
+build: asm proc
 
 asm: $(ASSEMBLER_OBJECTS)
 	$(CC) $(CFLAGS) $(INCLUDES) $^ -o asm
@@ -40,6 +40,9 @@ assembler/obj/%.o: assembler/src/%.cpp
 
 proccessor/obj/%.o: proccessor/src/%.cpp
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+all: build
+	@echo "\033[33mCompilation complete. Run the programs using './asm' and './proc'.\033[0m"
 
 clean:
 	rm -rf assembler/obj/*.o processor/obj/*.o asm proc
