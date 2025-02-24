@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    const char* error_run = Run(&Asm);
+    const char* error_run = Run();
     if (error_run != NULL)
     {
         printf("ERROR! from Run ^\n");

@@ -130,9 +130,16 @@ const char* Assembler(Assem *Asm)
                 fprintf(file_code, "%d ", cmd_code);
                 char label[20] = "";
                 fscanf(file_asm, "%s", label);
-                int DBG_label = FindLabel(Asm, &label[0]);
-                printf(COLOR_BLUE "-------DBG_label = %d\n" COLOR_RESET, DBG_label);
-                fprintf(file_code, "%d\n", DBG_label);
+                int label_index = FindLabel(Asm, label);
+                if (label_index != -10)
+                {
+                    fprintf(file_code, "%d\n", label_index);
+                }
+                else
+                {
+                    fprintf(file_code, "Error: Label not found\n");
+                    return "LABEL ERROR!";
+                }
                 break;
             }
 
@@ -157,28 +164,7 @@ const char* Assembler(Assem *Asm)
     return NULL;
 }
 
-void FillingCodeArray(CPU *proc)
-{
-    FILE *file_code = fopen("code.txt", "r");
-    if (file_code == nullptr)
-    {
-        printf("Error: file_code == nullptr\n");
-        assert(0);
-    }
 
-    int CODE_SIZE_BUFFER = 0;
-    fscanf(file_code, "%d", &CODE_SIZE_BUFFER);
-
-    proc->code = (int*)calloc((size_t)CODE_SIZE_BUFFER + 1, sizeof(int));
-
-    for (int i = 0; i < CODE_SIZE_BUFFER + 1; i++)
-    {
-        fscanf(file_code, "%d", &proc->code[i]);
-        //printf("ZZZZ ---- %d ", proc->code[i]);
-    }
-    //printf("\n");
-    fclose(file_code);
-}
 
 int CompileArg(const char *str)
 {
@@ -240,11 +226,12 @@ int NumberCommands(FILE *file_asm, Assem *Asm)
                 {
                     if (strcmp(&cmd[strlen(cmd) - 1], ":") == 0)
                     {
-                        printf(COLOR_RED "%s\n" COLOR_RESET, cmd);
-                        int DBG_label = FindLabel(Asm, &cmd[0]);
-                        printf(COLOR_RED "-------DBG_label = %d\n" COLOR_RESET, DBG_label);
-                        Asm->labels[DBG_label] = CODE_SIZE;
+                        cmd[strlen(cmd) - 1] = '\0';
+                        strcpy(Asm->Labels[Asm->label_count].name, cmd);
+                        Asm->Labels[Asm->label_count].value = CODE_SIZE;
+                        Asm->label_count++;
                     }
+
                     break;
                 }
             }
@@ -266,8 +253,9 @@ int FindLabel(Assem *Asm, char *cmd)
     {
         if (strcmp(Asm->Labels[i].name, cmd) == 0)
         {
-            return Asm->Labels[i].label_value;
+            return Asm->Labels[i].value;
         }
     }
+
     return -10;
 }

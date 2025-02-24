@@ -21,7 +21,7 @@
                                                           \
         if ((val_1) condition (val_2))                    \
         {                                                 \
-            proc.IP = Asm->labels[proc.code[proc.IP + 1]];\
+            proc.IP += 1;                                 \
         }                                                 \
         else                                              \
         {                                                 \
@@ -29,7 +29,7 @@
         }                                                 \
     } while(0)
 
-const char* Run(Assem *Asm)
+const char* Run()
 {
     struct stack stk = {NULL, 0, 0};
     stackCtor(&stk, 8);
@@ -243,3 +243,28 @@ void TwoElemStackOperation(stack *stk, stackElem (*operation)(stackElem val1, st
     stackPop(stk, &val_2);
     stackPush(stk, operation(val_1, val_2));
 }
+
+void FillingCodeArray(CPU *proc)
+{
+    FILE *file_code = fopen("code.txt", "r");
+    if (file_code == nullptr)
+    {
+        printf("Error: file_code == nullptr\n");
+        assert(0);
+    }
+
+    int CODE_SIZE_BUFFER = 0;
+    fscanf(file_code, "%d", &CODE_SIZE_BUFFER);
+
+    proc->code = (int*)calloc((size_t)CODE_SIZE_BUFFER + 1, sizeof(int));
+
+    for (int i = 0; i < CODE_SIZE_BUFFER + 1; i++)
+    {
+        fscanf(file_code, "%d", &proc->code[i]);
+        //printf("ZZZZ ---- %d ", proc->code[i]);
+    }
+    //printf("\n");
+    fclose(file_code);
+}
+
+

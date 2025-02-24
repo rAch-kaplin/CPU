@@ -20,13 +20,13 @@ const size_t LABEL_NAME = 20;
 typedef struct
 {
         char name[LABEL_NAME];
-        int label_value;
+        int value;
 } Label;
 
 typedef struct Assem
 {
     const char *file_name;
-    int labels[LABELS_SIZE];
+    int label_count = 0;
     Label Labels[LABELS_SIZE];
 } Assem;
 
@@ -82,7 +82,7 @@ enum REG_T
 const char* Assembler(Assem *Asm);
 int GetCommandCode(const char *cmd);
 const char* CommandToString(int cmd);
-const char* Run(Assem *Asm);
+const char* Run();
 void SingleStackOperation(stack *stk, double (*operation)(double));
 void TwoElemStackOperation(stack *stk, stackElem (*operation)(stackElem a, stackElem b));
 
