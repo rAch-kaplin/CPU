@@ -1,17 +1,11 @@
 #ifndef _HASSEMBLER
 #define _HASSEMBLER
 
-#define DBG
 #include <stdlib.h>
 #include <stdio.h>
 #include "stack.h"
 #include "common.h"
 
-#ifdef DBG
-    #define DBG_PRINTF(...) printf(__VA_ARGS__)
-#else
-    #define DBG_PRINTF(...) ((void)0)
-#endif
 
 const int LABELS_SIZE = 128;
 const size_t LABEL_NAME = 20;
@@ -30,7 +24,7 @@ typedef struct Assem
 } Assem;
 
 
-
+void CheckArgsAsm(int argc, char *argv[], Assem *Asm);
 int NumberCommands(FILE *file_asm, Assem *Asm);
 int FindLabel(Assem *Asm, char *cmd);
 const char* Assembler(Assem *Asm);

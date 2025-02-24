@@ -10,25 +10,37 @@ CFLAGS = -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ -Waggressive-loo
          -flto-odr-type-merging -fno-omit-frame-pointer -Wlarger-than=35000 -Wstack-usage=8192 -pie -fPIE -Werror=vla \
          -fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,integer-divide-by-zero,leak,nonnull-attribute,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr
 
-SOURCES = proccessor/src/main.cpp              \
-          proccessor/src/assembler.cpp         \
-          proccessor/src/disassembler.cpp      \
-          proccessor/src/run.cpp               \
-          proccessor/src/debug_proc.cpp        \
-          stack/src/stack.cpp                  \
-          stack/src/debug.cpp                  \
-          logger/logger.cpp
+ASSEMBLER_SOURCES = assembler/src/main.cpp               \
+                    assembler/src/assembler.cpp
 
-OBJECTS = $(SOURCES:src/%.cpp=%.o)
-INCLUDES = -I./stack/include -I./proccessor/include -I./Common -I./logger -I./assembler/include
+PROCESSOR_SOURCES = processor/src/main.cpp              \
+                    processor/src/disassembler.cpp      \
+                    processor/src/run.cpp               \
+                    processor/src/debug_proc.cpp        \
+                    stack/src/stack.cpp                  \
+                    stack/src/debug.cpp                  \
+                    logger/logger.cpp
 
-all: do.exe
+ASSEMBLER_OBJECTS = $(ASSEMBLER_SOURCES:assembler/src/%.cpp=assembler/obj/%.o)
 
-do.exe: $(OBJECTS)
-	$(CC) $(CFLAGS) $(INCLUDES) $^ -o do
+PROCESSOR_OBJECTS = $(PROCESSOR_SOURCES:proccessor/src/%.cpp=proccessor/obj/%.o)
 
-%.o: src/%.cpp
+INCLUDES = -I./stack/include -I./processor/include -I./Common -I./logger -I./assembler/include
+
+all: asm proc
+
+asm: $(ASSEMBLER_OBJECTS)
+	$(CC) $(CFLAGS) $(INCLUDES) $^ -o asm
+
+proc: $(PROCESSOR_OBJECTS)
+	$(CC) $(CFLAGS) $(INCLUDES) $^ -o proc
+
+assembler/obj/%.o: assembler/src/%.cpp
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+proccessor/obj/%.o: proccessor/src/%.cpp
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm -rf do.exe *.o
+	rm -rf assembler/obj/*.o processor/obj/*.o asm proc
+
