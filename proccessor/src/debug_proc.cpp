@@ -5,6 +5,7 @@
 #include "debug_proc.h"
 #include "color.h"
 #include "common.h"
+#include "CommonProcAssem.h"
 
 int AddArgsToCommand(Logger *log, int *current_len, const char *fmt, ...)
 {

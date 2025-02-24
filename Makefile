@@ -20,7 +20,7 @@ SOURCES = proccessor/src/main.cpp              \
           logger/logger.cpp
 
 OBJECTS = $(SOURCES:src/%.cpp=%.o)
-INCLUDES = -I./stack/include -I./proccessor/include -I./Common -I./logger
+INCLUDES = -I./stack/include -I./proccessor/include -I./Common -I./logger -I./assembler/include
 
 all: do.exe
 

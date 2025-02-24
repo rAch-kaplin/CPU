@@ -8,6 +8,7 @@
 #include "stack.h"
 #include "debug_proc.h"
 #include "logger.h"
+#include "CommonProcAssem.h"
 
 #define CONDITIONAL_JMP(condition)                        \
     do                                                    \

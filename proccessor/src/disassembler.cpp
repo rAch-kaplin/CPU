@@ -1,4 +1,5 @@
 #include "proccessor.h"
+#include "CommonProcAssem.h"
 
 const char* CommandToString(int cmd)
 {

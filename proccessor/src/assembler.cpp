@@ -3,9 +3,10 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <ctype.h>
-#include "proccessor.h"
 #include "color.h"
 #include "common.h"
+#include "CommonProcAssem.h"
+#include "assembler.h"
 
 typedef struct
 {

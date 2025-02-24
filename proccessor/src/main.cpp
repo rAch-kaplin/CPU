@@ -5,11 +5,11 @@
 #include "logger.h"
 #include "proccessor.h"
 #include "common.h"
+#include "CommonProcAssem.h"
+#include "assembler.h"
+
 
 void CheckArgs(int argc, char *argv[], Assem *Asm);
-
-//TODO:  7) make another logging depth
-//TODO:  11) maybe to do advanced push
 
 ServiceLines* GetServiceLines()
 {
@@ -19,8 +19,7 @@ ServiceLines* GetServiceLines()
 
 int main(int argc, char *argv[])
 {
-    struct Assem Asm = {"0",{0}, {{"next",  7},
-                            {"ded" , 32} }};
+    struct Assem Asm = {};
 
     CheckArgs(argc, argv, &Asm);
 
