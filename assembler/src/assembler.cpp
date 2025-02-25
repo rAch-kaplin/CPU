@@ -32,13 +32,6 @@ const char* Assembler(Assem *Asm)
                 break;
             }
 
-            case CMD_POP:
-            {
-                fprintf(file_code, "%d\n", cmd_code);
-                int value = 0;
-                fscanf(file_asm, "%d", &value);
-                break;
-            }
             case CMD_PUSHR:
             case CMD_POPR:
             {
@@ -49,6 +42,7 @@ const char* Assembler(Assem *Asm)
                 break;
             }
 
+            case CMD_POP:
             case CMD_ADD:
             case CMD_SUB:
             case CMD_OUT:
@@ -67,17 +61,9 @@ const char* Assembler(Assem *Asm)
             case CMD_JE:
             case CMD_JNE:
             {
-                fprintf(file_code, "%d ", cmd_code);
-                char label[20] = "";
-                fscanf(file_asm, "%s", label);
-                int label_index = FindLabel(Asm, label);
-                if (label_index != -10)
+                CodeError error = AssemblyLabels(file_asm, file_code, Asm, cmd_code);
+                if (error)
                 {
-                    fprintf(file_code, "%d\n", label_index);
-                }
-                else
-                {
-                    fprintf(file_code, "Error: Label not found\n");
                     return "LABEL ERROR!";
                 }
                 break;
@@ -99,6 +85,24 @@ const char* Assembler(Assem *Asm)
 
     DtorAssembly(file_asm, file_code);
     return NULL;
+}
+
+CodeError AssemblyLabels(FILE *file_asm, FILE *file_code, Assem *Asm, int cmd_code)
+{
+    fprintf(file_code, "%d ", cmd_code);
+    char label[20] = "";
+    fscanf(file_asm, "%s", label);
+    int label_index = FindLabel(Asm, label);
+    if (label_index != -10)
+    {
+        fprintf(file_code, "%d\n", label_index);
+    }
+    else
+    {
+        fprintf(file_code, "Error: Label not found\n");
+        return UNKNOW_LABEL;
+    }
+    return ITS_OK;
 }
 
 void DtorAssembly(FILE *file_asm, FILE *file_code)

@@ -63,7 +63,6 @@ const char* Run()
     FillingCodeArray(&proc);
 
     bool next = true;
-
     while (next)
     {
         stackElem cmd = proc.code[proc.IP];
@@ -103,11 +102,7 @@ const char* Run()
             case CMD_ADD:
             {
                 GetProcInstruction(cmd, &proc);
-                LOG(LOGL_DEBUG, "");
-                stackElem val_1 = 0, val_2 = 0;
-                stackPop(&stk, &val_1);
-                stackPop(&stk, &val_2);
-                stackPush(&stk, val_1 + val_2);
+                TwoElemStackOperation(&stk, [](stackElem val1, stackElem val2) { return val2 + val1;} );
                 break;
             }
 

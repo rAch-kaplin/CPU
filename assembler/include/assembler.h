@@ -26,7 +26,7 @@ typedef struct Assem
 } Assem;
 
 
-
+CodeError AssemblyLabels(FILE *file_asm, FILE *file_code, Assem *Asm, int cmd_code);
 void CtorAssembly(FILE **file_asm, FILE **file_code, Assem *Asm);
 void DtorAssembly(FILE *file_asm, FILE *file_code);
 int ReadingCommand(FILE *file_asm, char *cmd);
