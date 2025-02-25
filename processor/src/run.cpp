@@ -30,14 +30,38 @@
         }                                                 \
     } while(0)
 
+void IpCounter(CPU *proc, stackElem cmd, int count_command)
+{
+    for (int i = 0; i < count_command; i++)
+    {
+        if (cmd == command_code[i].cmd_code)
+        {
+            switch (cmd)
+            {
+                case CMD_JMP:
+                case CMD_JB:
+                case CMD_JBE:
+                case CMD_JA:
+                case CMD_JAE:
+                case CMD_JE:
+                case CMD_JNE:
+                    return;
+
+                default:
+                    proc->IP += 1 + command_code[i].quantity_args;
+                    break;
+            }
+        }
+    }
+}
+
 const char* Run()
 {
     struct stack stk = {NULL, 0, 0};
     stackCtor(&stk, 8);
-
     struct CPU proc = {};
-
     FillingCodeArray(&proc);
+
     bool next = true;
 
     while (next)
@@ -53,7 +77,6 @@ const char* Run()
                 GetProcInstruction(cmd, &proc, value);
                 LOG(LOGL_DEBUG, "");
                 stackPush(&stk, value);
-                proc.IP += 2;
                 break;
             }
 
@@ -64,7 +87,6 @@ const char* Run()
                 GetProcInstruction(cmd, &proc, value);
                 LOG(LOGL_DEBUG, "");
                 stackPush(&stk, value);
-                proc.IP += 2;
                 break;
             }
 
@@ -75,7 +97,6 @@ const char* Run()
                 LOG(LOGL_DEBUG, "");
                 stackPop(&stk, &value);
                 proc.registers[proc.code[proc.IP + 1]] = value;
-                proc.IP += 2;
                 break;
             }
 
@@ -86,10 +107,7 @@ const char* Run()
                 stackElem val_1 = 0, val_2 = 0;
                 stackPop(&stk, &val_1);
                 stackPop(&stk, &val_2);
-
                 stackPush(&stk, val_1 + val_2);
-                proc.IP += 1;
-
                 break;
             }
 
@@ -97,8 +115,6 @@ const char* Run()
             {
                 GetProcInstruction(cmd, &proc);
                 TwoElemStackOperation(&stk, [](stackElem val1, stackElem val2) { return val2 - val1;} );
-                proc.IP += 1;
-
                 break;
             }
 
@@ -106,8 +122,6 @@ const char* Run()
             {
                 GetProcInstruction(cmd, &proc);
                 TwoElemStackOperation(&stk, [](stackElem val1, stackElem val2) { return val2 * val1;} );
-                proc.IP += 1;
-
                 break;
             }
 
@@ -115,8 +129,6 @@ const char* Run()
             {
                 GetProcInstruction(cmd, &proc);
                 TwoElemStackOperation(&stk, [](stackElem val1, stackElem val2) { return val2 / val1;} );
-                proc.IP += 1;
-
                 break;
             }
 
@@ -124,8 +136,6 @@ const char* Run()
             {
                 GetProcInstruction(cmd, &proc);
                 SingleStackOperation(&stk, sqrt);
-                proc.IP += 1;
-
                 break;
             }
 
@@ -133,8 +143,6 @@ const char* Run()
             {
                 GetProcInstruction(cmd, &proc);
                 SingleStackOperation(&stk, sin);
-                proc.IP += 1;
-
                 break;
             }
 
@@ -142,8 +150,6 @@ const char* Run()
             {
                 GetProcInstruction(cmd, &proc);
                 SingleStackOperation(&stk, cos);
-                proc.IP += 1;
-
                 break;
             }
 
@@ -153,8 +159,6 @@ const char* Run()
                 LOG(LOGL_DEBUG, "");
                 stackElem val = 0;
                 stackPop(&stk, &val);
-                proc.IP += 1;
-
                 break;
             }
 
@@ -210,11 +214,13 @@ const char* Run()
 
             default:
             {
-                //const char * cmd_code = CommandToString(int cmd);
                 return "Unknow command:(";
                 break;
             }
         }
+
+        size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
+        IpCounter(&proc, cmd,  (int)count_command);
 
         if (cmd == CMD_HLT)
         {
@@ -223,6 +229,7 @@ const char* Run()
             break;
         }
     }
+
     free(proc.code);
     stackDtor(&stk);
     return NULL;
@@ -245,18 +252,15 @@ void TwoElemStackOperation(stack *stk, stackElem (*operation)(stackElem val1, st
     stackPush(stk, operation(val_1, val_2));
 }
 
-void FillingCodeArray(CPU *proc)
+int FillingCodeArray(CPU *proc)
 {
     FILE* bin_file = fopen("programms/bin_code.txt", "rb");
     assert(bin_file != NULL);
 
-    fseek(bin_file, 0, SEEK_END);
-    long file_size = ftell(bin_file);
-    rewind(bin_file);
+    size_t file_size = GetBinFileSize(bin_file);
+    size_t num_elements = file_size / sizeof(int);
 
-    size_t num_elements = (size_t)file_size / sizeof(int);
-
-    proc->code = (int*)calloc(num_elements + 1, sizeof(file_size / num_elements));
+    proc->code = (int*)calloc(num_elements + 1, sizeof(int));
     assert(proc->code);
 
     size_t elements_read = fread(proc->code, sizeof(int), num_elements, bin_file);
@@ -266,6 +270,16 @@ void FillingCodeArray(CPU *proc)
     }
 
     fclose(bin_file);
+    return (int)num_elements;
+}
+
+size_t GetBinFileSize(FILE *bin_file)
+{
+    fseek(bin_file, 0, SEEK_END);
+    long file_size = ftell(bin_file);
+    rewind(bin_file);
+
+    return (size_t)file_size;
 }
 
 

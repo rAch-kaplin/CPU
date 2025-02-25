@@ -37,8 +37,34 @@ enum REG_T
     dx = 3
 };
 
+typedef struct
+{
+    const char *cmd_name;
+    const int cmd_code;
+    int quantity_args;
+} CommandCode;
+
+static const CommandCode command_code[] = { {"push",    CMD_PUSH,  1},
+                                            {"add",     CMD_ADD,   0},
+                                            {"sub",     CMD_SUB,   0},
+                                            {"out",     CMD_OUT,   0},
+                                            {"div",     CMD_DIV,   0},
+                                            {"mul",     CMD_MUL,   0},
+                                            {"hlt",     CMD_HLT,   0},
+                                            {"pop",     CMD_POP,   0},
+                                            {"pushr",   CMD_PUSHR, 1},
+                                            {"popr",    CMD_POPR,  1},
+                                            {"jmp",     CMD_JMP,   1},
+                                            {"sqrt",    CMD_SQRT,  0},
+                                            {"sin",     CMD_SIN,   0},
+                                            {"cos",     CMD_COS,   0},
+                                            {"jb",      CMD_JB,    1},
+                                            {"jbe",     CMD_JBE,   1},
+                                            {"ja",      CMD_JA,    1},
+                                            {"jae",     CMD_JAE,   1},
+                                            {"je",      CMD_JE,    1},
+                                            {"jne",     CMD_JNE,   1} };
+
 int CompileArg(const char *str);
-
-
 
 #endif //HCOMMON_PROC_ASSEM
