@@ -38,7 +38,7 @@ enum REG_T
 };
 
 int CompileArg(const char *str);
-int GetCommandCode(const char *cmd);
+
 
 
 #endif //HCOMMON_PROC_ASSEM

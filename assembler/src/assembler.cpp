@@ -8,38 +8,11 @@
 #include "CommonProcAssem.h"
 #include "assembler.h"
 
-typedef struct
+
+
+int GetCommandCode(const char *cmd, size_t count_command)
 {
-    const char *cmd_name;
-    const int cmd_code;
-} CommandCode;
-
-int GetCommandCode(const char *cmd)
-{
-    static const CommandCode command_code[] = { {"push",    CMD_PUSH},
-                                                {"add",     CMD_ADD},
-                                                {"sub",     CMD_SUB},
-                                                {"out",     CMD_OUT},
-                                                {"div",     CMD_DIV},
-                                                {"mul",     CMD_MUL},
-                                                {"hlt",     CMD_HLT},
-                                                {"pop",     CMD_POP},
-                                                {"pushr",   CMD_PUSHR},
-                                                {"popr",    CMD_POPR},
-                                                {"jmp",     CMD_JMP},
-                                                {"sqrt",    CMD_SQRT},
-                                                {"sin",     CMD_SIN},
-                                                {"cos",     CMD_COS},
-                                                {"jb",      CMD_JB},
-                                                {"jbe",     CMD_JBE},
-                                                {"ja",      CMD_JA},
-                                                {"jae",     CMD_JAE},
-                                                {"je",      CMD_JE},
-                                                {"jne",     CMD_JNE} };
-
-    int count_command = sizeof(command_code) / sizeof(command_code[0]);
-
-    for (int i = 0; i < count_command; i++)
+    for (size_t i = 0; i < count_command; i++)
     {
         if (strcmp(cmd, command_code[i].cmd_name) == 0)
         {
@@ -63,9 +36,6 @@ const char* Assembler(Assem *Asm)
 
     Asm->code = (int*)calloc((size_t)Asm->CODE_SIZE + 1, sizeof(int));
 
-    //fwrite(&CODE_SIZE, sizeof(int), 1, file_code);
-
-    //fprintf(file_code, "%d\n", Asm->CODE_SIZE);
 
     while (true)
     {
@@ -73,11 +43,11 @@ const char* Assembler(Assem *Asm)
         if (fscanf(file_asm, "%19s", cmd) != 1)
         {
             printf("!!!!!!%s\n", cmd);
-            printf("the string incorrectly\n");
-            break;
+            return "cmd incorrectly";
         }
 
-        int cmd_code = GetCommandCode(cmd);
+        size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
+        int cmd_code = GetCommandCode(cmd, count_command);
 
         switch (cmd_code)
         {
@@ -195,12 +165,12 @@ int FirstPassFile(FILE *file_asm, Assem *Asm)
             char cmd[20] = "";
             if (fscanf(file_asm, "%s", cmd) != 1)
             {
-                printf("!!!!!!%s\n", cmd);
                 printf("the string incorrectly\n");
-                break;
+                return -1;
             }
 
-            int cmd_code = GetCommandCode(cmd);
+            size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
+            int cmd_code = GetCommandCode(cmd, count_command);
 
             switch (cmd_code)
             {
