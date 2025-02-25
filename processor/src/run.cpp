@@ -10,57 +10,13 @@
 #include "logger.h"
 #include "CommonProcAssem.h"
 
-#define CONDITIONAL_JMP(condition)                        \
-    do                                                    \
-    {                                                     \
-        stackElem val_1 = 0, val_2 = 0;                   \
-        GetProcInstruction(cmd, &proc);                   \
-        LOG(LOGL_DEBUG, "");                              \
-                                                          \
-        stackPop(&stk, &val_1);                           \
-        stackPop(&stk, &val_2);                           \
-                                                          \
-        if ((val_1) condition (val_2))                    \
-        {                                                 \
-            proc.IP += 1;                                 \
-        }                                                 \
-        else                                              \
-        {                                                 \
-            proc.IP += 2;                                 \
-        }                                                 \
-    } while(0)
-
-void IpCounter(CPU *proc, stackElem cmd, int count_command)
-{
-    for (int i = 0; i < count_command; i++)
-    {
-        if (cmd == command_code[i].cmd_code)
-        {
-            switch (cmd)
-            {
-                case CMD_JMP:
-                case CMD_JB:
-                case CMD_JBE:
-                case CMD_JA:
-                case CMD_JAE:
-                case CMD_JE:
-                case CMD_JNE:
-                    return;
-
-                default:
-                    proc->IP += 1 + command_code[i].quantity_args;
-                    break;
-            }
-        }
-    }
-}
-
 const char* Run()
 {
     struct stack stk = {NULL, 0, 0};
     stackCtor(&stk, 8);
     struct CPU proc = {};
     FillingCodeArray(&proc);
+    size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
 
     bool next = true;
     while (next)
@@ -71,31 +27,19 @@ const char* Run()
         {
             case CMD_PUSH:
             {
-                stackElem value = proc.code[proc.IP + 1];
-
-                GetProcInstruction(cmd, &proc, value);
-                LOG(LOGL_DEBUG, "");
-                stackPush(&stk, value);
+                ProcessingStackCommands(&proc, &stk, cmd, true, false, false);
                 break;
             }
 
             case CMD_PUSHR:
             {
-                stackElem value = proc.registers[proc.code[proc.IP + 1]];
-
-                GetProcInstruction(cmd, &proc, value);
-                LOG(LOGL_DEBUG, "");
-                stackPush(&stk, value);
+                ProcessingStackCommands(&proc, &stk, cmd, false, true, false);
                 break;
             }
 
             case CMD_POPR:
             {
-                stackElem value = 0;
-                GetProcInstruction(cmd, &proc, value);
-                LOG(LOGL_DEBUG, "");
-                stackPop(&stk, &value);
-                proc.registers[proc.code[proc.IP + 1]] = value;
+                ProcessingStackCommands(&proc, &stk, cmd, false, false, true);
                 break;
             }
 
@@ -214,7 +158,6 @@ const char* Run()
             }
         }
 
-        size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
         IpCounter(&proc, cmd,  (int)count_command);
 
         if (cmd == CMD_HLT)
@@ -277,4 +220,57 @@ size_t GetBinFileSize(FILE *bin_file)
     return (size_t)file_size;
 }
 
+void IpCounter(CPU *proc, stackElem cmd, int count_command)
+{
+    for (int i = 0; i < count_command; i++)
+    {
+        if (cmd == command_code[i].cmd_code)
+        {
+            switch (cmd)
+            {
+                case CMD_JMP:
+                case CMD_JB:
+                case CMD_JBE:
+                case CMD_JA:
+                case CMD_JAE:
+                case CMD_JE:
+                case CMD_JNE:
+                    return;
 
+                default:
+                    proc->IP += 1 + command_code[i].quantity_args;
+                    break;
+            }
+        }
+    }
+}
+
+int ProcessingStackCommands(CPU *proc, stack *stk, int cmd, bool IsPush, bool IsPushr, bool IsPopr)
+{
+    if (IsPush)
+    {
+        stackElem value = proc->code[proc->IP + 1];
+        GetProcInstruction(cmd, proc, value);
+        LOG(LOGL_DEBUG, "");
+        stackPush(stk, value);
+    }
+
+    else if (IsPushr)
+    {
+        stackElem value = proc->registers[proc->code[proc->IP + 1]];
+        GetProcInstruction(cmd, proc, value);
+        LOG(LOGL_DEBUG, "");
+        stackPush(stk, value);
+    }
+
+    else if (IsPopr)
+    {
+        stackElem value = 0;
+        GetProcInstruction(cmd, proc, value);
+        LOG(LOGL_DEBUG, "");
+        stackPop(stk, &value);
+        proc->registers[proc->code[proc->IP + 1]] = value;
+    }
+
+    return 0;
+}
