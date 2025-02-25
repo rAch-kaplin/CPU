@@ -61,5 +61,6 @@ int FirstPassFile(FILE *file_asm, Assem *Asm);
 int FindLabel(Assem *Asm, char *cmd);
 const char* Assembler(Assem *Asm);
 void FillBufferCode(Assem *Asm, FILE *file_code);
+void WriteBinFile(Assem *Asm);
 
 #endif //HASSEMBLER
