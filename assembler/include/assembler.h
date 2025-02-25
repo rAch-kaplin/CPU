@@ -52,10 +52,14 @@ static const CommandCode command_code[] = { {"push",    CMD_PUSH},
                                             {"je",      CMD_JE},
                                             {"jne",     CMD_JNE} };
 
+void CtorAssembly(FILE **file_asm, FILE **file_code, Assem *Asm);
+void DtorAssembly(FILE *file_asm, FILE *file_code);
+int ReadingCommand(FILE *file_asm, char *cmd);
 int GetCommandCode(const char *cmd, size_t count_command);
 void CheckArgsAsm(int argc, char *argv[], Assem *Asm);
 int FirstPassFile(FILE *file_asm, Assem *Asm);
 int FindLabel(Assem *Asm, char *cmd);
 const char* Assembler(Assem *Asm);
+void FillBufferCode(Assem *Asm, FILE *file_code);
 
 #endif //HASSEMBLER

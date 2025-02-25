@@ -8,43 +8,15 @@
 #include "CommonProcAssem.h"
 #include "assembler.h"
 
-
-
-int GetCommandCode(const char *cmd, size_t count_command)
-{
-    for (size_t i = 0; i < count_command; i++)
-    {
-        if (strcmp(cmd, command_code[i].cmd_name) == 0)
-        {
-            return command_code[i].cmd_code;
-        }
-    }
-
-    return 0;
-}
-
 const char* Assembler(Assem *Asm)
 {
-    FILE *file_asm = fopen(Asm->file_name, "r");
-    assert(file_asm != nullptr);
-
-    FILE *file_code = fopen("programms/code.txt", "w+");
-    assert(file_code != nullptr);
-
-    Asm->CODE_SIZE = FirstPassFile(file_asm, Asm);
-    fseek(file_asm, 0, SEEK_SET);
-
-    Asm->code = (int*)calloc((size_t)Asm->CODE_SIZE + 1, sizeof(int));
-
+    FILE *file_asm = NULL, *file_code = NULL;
+    CtorAssembly(&file_asm, &file_code, Asm);
 
     while (true)
     {
         char cmd[20] = "";
-        if (fscanf(file_asm, "%19s", cmd) != 1)
-        {
-            printf("!!!!!!%s\n", cmd);
-            return "cmd incorrectly";
-        }
+        ReadingCommand(file_asm, &cmd[0]);
 
         size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
         int cmd_code = GetCommandCode(cmd, count_command);
@@ -123,7 +95,20 @@ const char* Assembler(Assem *Asm)
     }
 
     fseek(file_code, 0, SEEK_SET);
+    FillBufferCode(Asm, file_code);
 
+    DtorAssembly(file_asm, file_code);
+    return NULL;
+}
+
+void DtorAssembly(FILE *file_asm, FILE *file_code)
+{
+    fclose(file_asm);
+    fclose(file_code);
+}
+
+void FillBufferCode(Assem *Asm, FILE *file_code)
+{
     for (int i = 0; i < Asm->CODE_SIZE; i++)
     {
         fscanf(file_code, "%d", &Asm->code[i]);
@@ -134,17 +119,7 @@ const char* Assembler(Assem *Asm)
         printf("%d ", Asm->code[i]);
     }
         printf("\n");
-
-    // for (int i = 0; i < CODE_SIZE; i++)
-    // {
-    //     printf("&&&& --- %d\n", Asm->labels[i]);
-    // }
-
-    fclose(file_asm);
-    fclose(file_code);
-    return NULL;
 }
-
 
 
 int CompileArg(const char *str)
@@ -155,6 +130,43 @@ int CompileArg(const char *str)
     if (strcmp(str, "dx") == 0) return 3;
 
     return -1;
+}  //FIXME: struct
+
+int GetCommandCode(const char *cmd, size_t count_command)
+{
+    for (size_t i = 0; i < count_command; i++)
+    {
+        if (strcmp(cmd, command_code[i].cmd_name) == 0)
+        {
+            return command_code[i].cmd_code;
+        }
+    }
+
+    return 0;
+}
+
+void CtorAssembly(FILE **file_asm, FILE **file_code, Assem *Asm)
+{
+    *file_asm = fopen(Asm->file_name, "r");
+    assert(*file_asm != nullptr);
+
+    *file_code = fopen("programms/code.txt", "w+");
+    assert(*file_code != nullptr);
+
+    Asm->CODE_SIZE = FirstPassFile(*file_asm, Asm);
+    fseek(*file_asm, 0, SEEK_SET);
+
+    Asm->code = (int*)calloc((size_t)Asm->CODE_SIZE + 1, sizeof(int));
+}
+
+int ReadingCommand(FILE *file_asm, char *cmd)
+{
+    if (fscanf(file_asm, "%19s", cmd) != 1)
+        {
+            printf("!!!!!!%s\n", cmd);
+            return -5;
+        }
+        return 0;
 }
 
 int FirstPassFile(FILE *file_asm, Assem *Asm)
