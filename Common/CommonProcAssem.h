@@ -29,6 +29,8 @@ enum command
     CMD_FUNC =     50,
     CMD_RET =      51,
 
+    CMD_IN = 60,
+
     CMD_HLT =      -1
 };
 
@@ -68,7 +70,8 @@ static const CommandCode command_code[] = { {"push",    CMD_PUSH,  1},
                                             {"je",      CMD_JE,    1},
                                             {"jne",     CMD_JNE,   1},
                                             {"call",    CMD_FUNC,  1},
-                                            {"ret",     CMD_RET,   0} };
+                                            {"ret",     CMD_RET,   0},
+                                            {"in",      CMD_IN,    0}};
 
 int CompileArg(const char *str);
 

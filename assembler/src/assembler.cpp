@@ -62,6 +62,7 @@ const char* Assembler(Assem *Asm)
             case CMD_DIV:
             case CMD_MUL:
             case CMD_HLT:
+            case CMD_IN:
             {
                 fprintf(file_code, "%d\n", cmd_code);
                 break;
@@ -224,6 +225,7 @@ int FirstPassFile(FILE *file_asm, Assem *Asm)
             case CMD_MUL:
             case CMD_RET:
             case CMD_HLT:
+            case CMD_IN:
             {
                 CODE_SIZE += 1;
                 break;

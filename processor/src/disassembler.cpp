@@ -27,6 +27,7 @@ const char* CommandToString(int cmd)
         case CMD_COS:     return "cos";
         case CMD_FUNC:    return "call";
         case CMD_RET:     return "ret";
+        case CMD_IN:      return "in";
 
         default:          return "Unknown";
     }

@@ -33,14 +33,21 @@ const char* Run()
     {
         stackElem cmd = proc.code[proc.IP];
 
-        // for (size_t i = 0; i < count_command; i++)
-        // {
-        //     printf("%d ", proc.code[proc.IP]);
-        // }
-        // printf("\n");
-
         switch (cmd)
         {
+            case CMD_IN:
+            {
+                GetProcInstruction(cmd, &proc);
+                LOG(LOGL_DEBUG, "");
+
+                stackElem input_value = 0;
+                printf("Enter a value: ");
+                scanf("%d", &input_value);
+                proc.registers[0] = input_value;
+                proc.IP += 1;
+                break;
+            }
+
             case CMD_FUNC:
             {
                 GetProcInstruction(cmd, &proc);
@@ -133,6 +140,7 @@ const char* Run()
                 LOG(LOGL_DEBUG, "");
                 stackElem val = 0;
                 stackPop(&stk, &val);
+                printf("Out: %d\n", val);
                 break;
             }
 
@@ -243,11 +251,11 @@ int FillingCodeArray(CPU *proc)
         fprintf(stderr, "Error: read %zu elements, expected %zu\n", elements_read, num_elements);
     }
 
-    for (size_t i = 0; i < num_elements; i++)
-    {
-        printf(COLOR_BLUE "%d " COLOR_RESET, proc->code[i]);
-    }
-    printf("\n");
+    // for (size_t i = 0; i < num_elements; i++)
+    // {
+    //     printf(COLOR_BLUE "%d " COLOR_RESET, proc->code[i]);
+    // }
+    // printf("\n");
 
     fclose(bin_file);
     return (int)num_elements;
