@@ -19,18 +19,32 @@ const char* Run()
     struct CPU proc = {};
     //FIXME: ctor proc
 
-    FillingCodeArray(&proc);
+    int size_buffer = FillingCodeArray(&proc);
     size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
+
+    for (int i = 0; i < size_buffer; i++)
+    {
+        printf(COLOR_MAGENTA "%d " COLOR_RESET, proc.code[i]);
+    }
+    printf("\n");
 
     bool next = true;
     while (next)
     {
         stackElem cmd = proc.code[proc.IP];
 
+        // for (size_t i = 0; i < count_command; i++)
+        // {
+        //     printf("%d ", proc.code[proc.IP]);
+        // }
+        // printf("\n");
+
         switch (cmd)
         {
             case CMD_FUNC:
             {
+                GetProcInstruction(cmd, &proc);
+                LOG(LOGL_DEBUG, "");
                 stackPush(&retAddrStk, proc.IP + 2);
                 proc.IP = proc.code[proc.IP + 1];
                 break;
@@ -38,6 +52,8 @@ const char* Run()
 
             case CMD_RET:
             {
+                GetProcInstruction(cmd, &proc);
+                LOG(LOGL_DEBUG, "");
                 int retAddr = 0;
                 stackPop(&retAddrStk, &retAddr);
                 proc.IP = retAddr;
@@ -227,6 +243,12 @@ int FillingCodeArray(CPU *proc)
         fprintf(stderr, "Error: read %zu elements, expected %zu\n", elements_read, num_elements);
     }
 
+    for (size_t i = 0; i < num_elements; i++)
+    {
+        printf(COLOR_BLUE "%d " COLOR_RESET, proc->code[i]);
+    }
+    printf("\n");
+
     fclose(bin_file);
     return (int)num_elements;
 }
@@ -248,6 +270,8 @@ void IpCounter(CPU *proc, stackElem cmd, int count_command)
         {
             switch (cmd)
             {
+                case CMD_FUNC:
+                case CMD_RET:
                 case CMD_JMP:
                 case CMD_JB:
                 case CMD_JBE:

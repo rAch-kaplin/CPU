@@ -1,90 +1,90 @@
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][45:stackCtor]: STACK Ctor:
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][45:stackCtor]: STACK Ctor: 0x7ffed8a16090
 	Data:  -559039810 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][45:stackCtor]: STACK Ctor:
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][45:stackCtor]: STACK Ctor: 0x7ffed8a16090
 	Data:  -559039810 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][processor/src/run.cpp][274:ProcessingStackCommands]: Enter command: push 1
+[2025-02-27 00:42:21][DEBUG][processor/src/run.cpp][296:ProcessingStackCommands]: Enter command: push 1
 	Registers:  0 0 0 0 0 0 0 0 0 0
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 1
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 1
 	Data:  -559039810 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][processor/src/run.cpp][290:ProcessingStackCommands]: Enter command: popr
+[2025-02-27 00:42:21][DEBUG][processor/src/run.cpp][312:ProcessingStackCommands]: Enter command: popr
 	Registers:  0 0 0 0 0 0 0 0 0 0
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 1
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 1
 	Data:  -559039810 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][processor/src/run.cpp][282:ProcessingStackCommands]: Enter command: pushr 1
+[2025-02-27 00:42:21][DEBUG][processor/src/run.cpp][304:ProcessingStackCommands]: Enter command: pushr 1
 	Registers:  1 0 0 0 0 0 0 0 0 0
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 1
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 1
 	Data:  -559039810 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][processor/src/run.cpp][282:ProcessingStackCommands]: Enter command: pushr 1
+[2025-02-27 00:42:21][DEBUG][processor/src/run.cpp][304:ProcessingStackCommands]: Enter command: pushr 1
 	Registers:  1 0 0 0 0 0 0 0 0 0
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 1
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 1
 	Data:  -559039810 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][processor/src/run.cpp][206:TwoElemStackOperation]: Enter command: mul
+[2025-02-27 00:42:21][DEBUG][processor/src/run.cpp][222:TwoElemStackOperation]: Enter command: mul
 	Registers:  1 0 0 0 0 0 0 0 0 0
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 1
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 1
 	Data:  -559039810 1 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 1
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 1
 	Data:  -559039810 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 1
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 1
 	Data:  -559039810 1 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][processor/src/run.cpp][117:Run]: Enter command: out
+[2025-02-27 00:42:21][DEBUG][processor/src/run.cpp][133:Run]: Enter command: out
 	Registers:  1 0 0 0 0 0 0 0 0 0
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 1
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 1
 	Data:  -559039810 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][processor/src/run.cpp][282:ProcessingStackCommands]: Enter command: pushr 1
+[2025-02-27 00:42:21][DEBUG][processor/src/run.cpp][304:ProcessingStackCommands]: Enter command: pushr 1
 	Registers:  1 0 0 0 0 0 0 0 0 0
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 1
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 1
 	Data:  -559039810 1 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][processor/src/run.cpp][274:ProcessingStackCommands]: Enter command: push 1
+[2025-02-27 00:42:21][DEBUG][processor/src/run.cpp][296:ProcessingStackCommands]: Enter command: push 1
 	Registers:  1 0 0 0 0 0 0 0 0 0
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 1
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 1
 	Data:  -559039810 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][processor/src/run.cpp][206:TwoElemStackOperation]: Enter command: add
+[2025-02-27 00:42:21][DEBUG][processor/src/run.cpp][222:TwoElemStackOperation]: Enter command: add
 	Registers:  1 0 0 0 0 0 0 0 0 0
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 1
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 1
 	Data:  -559039810 1 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 1
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 1
 	Data:  -559039810 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 2
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 2
 	Data:  -559039810 2 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][processor/src/run.cpp][290:ProcessingStackCommands]: Enter command: popr
+[2025-02-27 00:42:21][DEBUG][processor/src/run.cpp][312:ProcessingStackCommands]: Enter command: popr
 	Registers:  1 0 0 0 0 0 0 0 0 0
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 2
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 2
 	Data:  -559039810 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][processor/src/run.cpp][282:ProcessingStackCommands]: Enter command: pushr 2
+[2025-02-27 00:42:21][DEBUG][processor/src/run.cpp][304:ProcessingStackCommands]: Enter command: pushr 2
 	Registers:  2 0 0 0 0 0 0 0 0 0
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 2
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 2
 	Data:  -559039810 2 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][processor/src/run.cpp][274:ProcessingStackCommands]: Enter command: push 3
+[2025-02-27 00:42:21][DEBUG][processor/src/run.cpp][296:ProcessingStackCommands]: Enter command: push 3
 	Registers:  2 0 0 0 0 0 0 0 0 0
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 3
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 3
 	Data:  -559039810 2 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][processor/src/run.cpp][146:Run]: Enter command: ja
+[2025-02-27 00:42:21][DEBUG][processor/src/run.cpp][162:Run]: Enter command: ja
 	Registers:  2 0 0 0 0 0 0 0 0 0
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 3
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 3
 	Data:  -559039810 2 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 2
+[2025-02-27 00:42:21][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 2
 	Data:  -559039810 195893946 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-02-26 11:53:25][DEBUG][processor/src/run.cpp][117:Run]: Enter command: out
+[2025-02-27 00:42:21][DEBUG][processor/src/run.cpp][133:Run]: Enter command: out
 	Registers:  2 0 0 0 0 0 0 0 0 0
-[2025-02-26 11:53:25][DEBUG][processor/src/run.cpp][185:Run]: Enter command: hlt
+[2025-02-27 00:42:21][DEBUG][processor/src/run.cpp][201:Run]: Enter command: hlt
 	Registers:  2 0 0 0 0 0 0 0 0 0

@@ -42,7 +42,7 @@ errorCode stackCtor(stack *stk, size_t capacity)
     putHash(stk);
     getStackState(LOGL_DEBUG, stk);
     stackAssert(stk);
-    LOG(LOGL_DEBUG, "STACK Ctor:");
+    LOG(LOGL_DEBUG, "STACK Ctor: %p", *stk);
 
     DBG_PRINTF(COLOR_MAGENTA"Start: stk->data = %p\n" COLOR_RESET, stk->data);
 
