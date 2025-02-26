@@ -8,19 +8,31 @@
 #include "CommonProcAssem.h"
 #include "assembler.h"
 
+void CheckLabels(char *cmd, Assem *Asm, int CODE_SIZE);
+int FindFunc(Assem *Asm, char *cmd);
+
 const char* Assembler(Assem *Asm)
 {
     FILE *file_asm = NULL, *file_code = NULL;
     CtorAssembly(&file_asm, &file_code, Asm);
 
+    for (int i = 0; i < LABELS_SIZE; i++)
+    {
+        printf("%s ", Asm->Labels[i].name);
+    }
+    printf("\n");
+
     while (true)
     {
         char cmd[20] = "";
-        ReadingCommand(file_asm, &cmd[0]);
+        int result = ReadingCommand(file_asm, &cmd[0]);
+        if (result == -1)
+        {
+            break;
+        }
 
         size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
         int cmd_code = GetCommandCode(cmd, count_command);
-
         switch (cmd_code)
         {
             case CMD_PUSH:
@@ -42,17 +54,20 @@ const char* Assembler(Assem *Asm)
                 break;
             }
 
+            case CMD_RET:
             case CMD_POP:
             case CMD_ADD:
             case CMD_SUB:
             case CMD_OUT:
             case CMD_DIV:
             case CMD_MUL:
+            case CMD_HLT:
             {
                 fprintf(file_code, "%d\n", cmd_code);
                 break;
             }
 
+            case CMD_FUNC:
             case CMD_JMP:
             case CMD_JA:
             case CMD_JAE:
@@ -71,12 +86,6 @@ const char* Assembler(Assem *Asm)
 
             default:
                 break;
-        }
-
-        if (cmd_code == CMD_HLT)
-        {
-            fprintf(file_code, "%d\n", cmd_code);
-            break;
         }
     }
 
@@ -166,81 +175,95 @@ void CtorAssembly(FILE **file_asm, FILE **file_code, Assem *Asm)
 int ReadingCommand(FILE *file_asm, char *cmd)
 {
     if (fscanf(file_asm, "%19s", cmd) != 1)
+    {
+        if (feof(file_asm))
         {
-            printf("!!!!!!%s\n", cmd);
-            return -5;
+            return -1;
         }
-        return 0;
+
+        printf("!!!!!!%s\n", cmd);
+        return -5;
+    }
+    return 0;
 }
 
 int FirstPassFile(FILE *file_asm, Assem *Asm)
 {
     int CODE_SIZE = 0;
     while(true)
+    {
+        char cmd[20] = "";
+        if (fscanf(file_asm, "%s", cmd) != 1)
         {
-            char cmd[20] = "";
-            if (fscanf(file_asm, "%s", cmd) != 1)
+            if (feof(file_asm))
             {
-                printf("the string incorrectly\n");
-                return -1;
+                break;
             }
 
-            size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
-            int cmd_code = GetCommandCode(cmd, count_command);
+            printf("the string incorrectly\n");
+            return -1;
+        }
 
-            switch (cmd_code)
+        size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
+        int cmd_code = GetCommandCode(cmd, count_command);
+
+        switch (cmd_code)
+        {
+            case CMD_PUSH:
+            case CMD_PUSHR:
+            case CMD_POPR:
+            case CMD_JMP:
             {
-                case CMD_PUSH:
-                case CMD_PUSHR:
-                case CMD_POPR:
-                case CMD_JMP:
-                {
-                    CODE_SIZE += 2;
-                    break;
-                }
-                case CMD_ADD:
-                case CMD_SUB:
-                case CMD_OUT:
-                case CMD_DIV:
-                case CMD_MUL:
-                {
-                    CODE_SIZE += 1;
-                    break;
-                }
-                case CMD_JA:
-                case CMD_JAE:
-                case CMD_JB:
-                case CMD_JBE:
-                case CMD_JE:
-                case CMD_JNE:
-                {
-                    fscanf(file_asm, "%s", cmd);
-                    CODE_SIZE += 2;
-                    break;
-                }
-
-                default:
-                {
-                    if (strcmp(&cmd[strlen(cmd) - 1], ":") == 0)
-                    {
-                        cmd[strlen(cmd) - 1] = '\0';
-                        strcpy(Asm->Labels[Asm->label_count].name, cmd);
-                        Asm->Labels[Asm->label_count].value = CODE_SIZE;
-                        Asm->label_count++;
-                    }
-
-                    break;
-                }
+                CODE_SIZE += 2;
+                break;
             }
-
-            if (cmd_code == CMD_HLT)
+            case CMD_ADD:
+            case CMD_SUB:
+            case CMD_OUT:
+            case CMD_DIV:
+            case CMD_MUL:
+            case CMD_RET:
+            case CMD_HLT:
             {
                 CODE_SIZE += 1;
                 break;
             }
+            case CMD_FUNC:
+            case CMD_JA:
+            case CMD_JAE:
+            case CMD_JB:
+            case CMD_JBE:
+            case CMD_JE:
+            case CMD_JNE:
+            {
+                char label[20] = "";
+                fscanf(file_asm, "%s", label);
+                CODE_SIZE += 2;
+                break;
+            }
+
+            default:
+            {
+                break;
+            }
         }
 
+        CheckLabels(&cmd[0], Asm, CODE_SIZE);
+    }
+
     return CODE_SIZE;
+}
+
+void CheckLabels(char *cmd, Assem *Asm, int CODE_SIZE)
+{
+    if (strcmp(&cmd[strlen(cmd) - 1], ":") == 0)
+    {
+        cmd[strlen(cmd) - 1] = '\0';
+        strcpy(Asm->Labels[Asm->label_count].name, cmd);
+        Asm->Labels[Asm->label_count].value = CODE_SIZE;
+        Asm->label_count++;
+    }
+
 }
 
 int FindLabel(Assem *Asm, char *cmd)
@@ -254,6 +277,18 @@ int FindLabel(Assem *Asm, char *cmd)
         }
     }
 
+    return -10;
+}
+
+int FindFunc(Assem *Asm, char *cmd)
+{
+    for (int i = 0; i < LABELS_SIZE; i++)
+    {
+        if (strcmp(Asm->Labels[i].name, cmd) == 0)
+        {
+            return Asm->Labels[i].value;
+        }
+    }
     return -10;
 }
 

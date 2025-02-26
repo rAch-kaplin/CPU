@@ -14,7 +14,11 @@ const char* Run()
 {
     struct stack stk = {NULL, 0, 0};
     stackCtor(&stk, 8);
+    struct stack retAddrStk = {};
+    stackCtor(&retAddrStk, 8);
     struct CPU proc = {};
+    //FIXME: ctor proc
+
     FillingCodeArray(&proc);
     size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
 
@@ -25,6 +29,21 @@ const char* Run()
 
         switch (cmd)
         {
+            case CMD_FUNC:
+            {
+                stackPush(&retAddrStk, proc.IP + 2);
+                proc.IP = proc.code[proc.IP + 1];
+                break;
+            }
+
+            case CMD_RET:
+            {
+                int retAddr = 0;
+                stackPop(&retAddrStk, &retAddr);
+                proc.IP = retAddr;
+                break;
+            }
+
             case CMD_PUSH:
             {
                 ProcessingStackCommands(&proc, &stk, cmd, true, false, false);
@@ -170,6 +189,7 @@ const char* Run()
 
     free(proc.code);
     stackDtor(&stk);
+    stackDtor(&retAddrStk);
     return NULL;
 }
 

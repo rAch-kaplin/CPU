@@ -1,3 +1,7 @@
+call main:
+hlt
+
+main:
 push 20
 push 80
 add
@@ -8,4 +12,6 @@ div
 push 10
 mul
 out
-hlt
+ret
+
+
