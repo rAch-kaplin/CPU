@@ -16,10 +16,13 @@ ServiceLines* GetServiceLines()
 int main(int argc, char *argv[])
 {
     CheckArgsProc(argc, argv);
-
     loggerInit(LOGL_DEBUG, "logger/logfile.log");
 
-    const char* error_run = Run();
+    struct stack stk = {NULL, 0, 0};
+    struct stack retAddrStk = {};
+    struct CPU proc = {};
+
+    const char* error_run = Run(&stk, &retAddrStk, &proc);
     if (error_run != NULL)
     {
         printf("ERROR! from Run ^, %s\n", error_run);
@@ -40,7 +43,7 @@ void CheckArgsProc(int argc, char *argv[])
     for (int i = 1; i < argc; i++)
     {
 
-        if (strcmp(argv[i], "-mode") == 0 && i + 1 < argc)
+        if ((strcmp(argv[i], "-mode") || strcmp(argv[i], "-m") == 0) && i + 1 < argc)
         {
             color_mode = argv[i + 1];
             if (strcmp(color_mode, "COLOR_MODE") == 0)

@@ -138,13 +138,26 @@ void FillBufferCode(Assem *Asm, FILE *file_code)
 
 int CompileArg(const char *str)
 {
-    if (strcmp(str, "ax") == 0) return 0;
-    if (strcmp(str, "bx") == 0) return 1;
-    if (strcmp(str, "cx") == 0) return 2;
-    if (strcmp(str, "dx") == 0) return 3;
+    // if (strcmp(str, "ax") == 0) return 0;
+    // if (strcmp(str, "bx") == 0) return 1;
+    // if (strcmp(str, "cx") == 0) return 2;
+    // if (strcmp(str, "dx") == 0) return 3;
 
+    Registers ArrayRegs[] = { {"ax", 0},
+                              {"bx", 1},
+                              {"cx", 2},
+                              {"dx", 3}};
+
+    int count_regs = sizeof(ArrayRegs) / sizeof(ArrayRegs[0]);
+    for (int i = 0; i < count_regs; i++)
+    {
+        if (strcmp(str, ArrayRegs[i].reg_name) == 0)
+        {
+            return ArrayRegs[i].number_reg;
+        }
+    }
     return -1;
-}  //FIXME: struct
+}
 
 int GetCommandCode(const char *cmd, size_t count_command)
 {

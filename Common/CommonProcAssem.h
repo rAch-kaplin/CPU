@@ -44,6 +44,12 @@ enum REG_T
 
 typedef struct
 {
+    const char *reg_name;
+    int number_reg;
+} Registers;
+
+typedef struct
+{
     const char *cmd_name;
     const int cmd_code;
     int quantity_args;

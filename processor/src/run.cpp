@@ -10,146 +10,124 @@
 #include "logger.h"
 #include "CommonProcAssem.h"
 
-const char* Run()
+const char* Run(stack *stk, stack *retAddrStk, CPU *proc)
 {
-    struct stack stk = {NULL, 0, 0};
-    stackCtor(&stk, 8);
-    struct stack retAddrStk = {};
-    stackCtor(&retAddrStk, 8);
-    struct CPU proc = {};
-    //FIXME: ctor proc
+    CtorProc(stk, retAddrStk);
 
-    int size_buffer = FillingCodeArray(&proc);
+    int size_buffer = FillingCodeArray(proc);
     size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
 
     for (int i = 0; i < size_buffer; i++)
     {
-        printf(COLOR_MAGENTA "%d " COLOR_RESET, proc.code[i]);
+        printf(COLOR_MAGENTA "%d " COLOR_RESET, proc->code[i]);
     }
     printf("\n");
 
     bool next = true;
     while (next)
     {
-        stackElem cmd = proc.code[proc.IP];
+        stackElem cmd = proc->code[proc->IP];
 
         switch (cmd)
         {
-            case CMD_IN:
-            {
-                GetProcInstruction(cmd, &proc);
-                LOG(LOGL_DEBUG, "");
-
-                stackElem input_value = 0;
-                printf("Enter a value: ");
-                scanf("%d", &input_value);
-                proc.registers[ax] = input_value;
-                proc.IP += 1;
-                break;
-            }
-
             case CMD_FUNC:
             {
-                GetProcInstruction(cmd, &proc);
-                LOG(LOGL_DEBUG, "");
-                stackPush(&retAddrStk, proc.IP + 2);
-                proc.IP = proc.code[proc.IP + 1];
+                GetProcInstruction(cmd, proc);
+                ProcessingFuncs(retAddrStk, proc, true, false);
                 break;
             }
 
             case CMD_RET:
             {
-                GetProcInstruction(cmd, &proc);
-                LOG(LOGL_DEBUG, "");
-                int retAddr = 0;
-                stackPop(&retAddrStk, &retAddr);
-                proc.IP = retAddr;
+                GetProcInstruction(cmd, proc);
+                ProcessingFuncs(retAddrStk, proc, false, true);
                 break;
             }
 
             case CMD_PUSH:
             {
-                ProcessingStackCommands(&proc, &stk, cmd, true, false, false);
+                ProcessingStackCommands(proc, stk, cmd, true, false, false);
                 break;
             }
 
             case CMD_PUSHR:
             {
-                ProcessingStackCommands(&proc, &stk, cmd, false, true, false);
+                ProcessingStackCommands(proc, stk, cmd, false, true, false);
                 break;
             }
 
             case CMD_POPR:
             {
-                ProcessingStackCommands(&proc, &stk, cmd, false, false, true);
+                ProcessingStackCommands(proc, stk, cmd, false, false, true);
                 break;
             }
 
             case CMD_ADD:
             {
-                GetProcInstruction(cmd, &proc);
-                TwoElemStackOperation(&stk, [](stackElem val1, stackElem val2) { return val2 + val1;} );
+                GetProcInstruction(cmd, proc);
+                TwoElemStackOperation(stk, [](stackElem val1, stackElem val2) { return val2 + val1;} );
                 break;
             }
 
             case CMD_SUB:
             {
-                GetProcInstruction(cmd, &proc);
-                TwoElemStackOperation(&stk, [](stackElem val1, stackElem val2) { return val2 - val1;} );
+                GetProcInstruction(cmd, proc);
+                TwoElemStackOperation(stk, [](stackElem val1, stackElem val2) { return val2 - val1;} );
                 break;
             }
 
             case CMD_MUL:
             {
-                GetProcInstruction(cmd, &proc);
-                TwoElemStackOperation(&stk, [](stackElem val1, stackElem val2) { return val2 * val1;} );
+                GetProcInstruction(cmd, proc);
+                TwoElemStackOperation(stk, [](stackElem val1, stackElem val2) { return val2 * val1;} );
                 break;
             }
 
             case CMD_DIV:
             {
-                GetProcInstruction(cmd, &proc);
-                TwoElemStackOperation(&stk, [](stackElem val1, stackElem val2) { return val2 / val1;} );
+                GetProcInstruction(cmd, proc);
+                TwoElemStackOperation(stk, [](stackElem val1, stackElem val2) { return val2 / val1;} );
                 break;
             }
 
             case CMD_SQRT:
             {
-                GetProcInstruction(cmd, &proc);
-                SingleStackOperation(&stk, sqrt);
+                GetProcInstruction(cmd, proc);
+                SingleStackOperation(stk, sqrt);
                 break;
             }
 
             case CMD_SIN:
             {
-                GetProcInstruction(cmd, &proc);
-                SingleStackOperation(&stk, sin);
+                GetProcInstruction(cmd, proc);
+                SingleStackOperation(stk, sin);
                 break;
             }
 
             case CMD_COS:
             {
-                GetProcInstruction(cmd, &proc);
-                SingleStackOperation(&stk, cos);
+                GetProcInstruction(cmd, proc);
+                SingleStackOperation(stk, cos);
+                break;
+            }
+
+            case CMD_IN:
+            {
+                GetProcInstruction(cmd, proc);
+                ProcessingInputOut(stk, proc, true, false);
                 break;
             }
 
             case CMD_OUT:
             {
-                GetProcInstruction(cmd, &proc);
-                LOG(LOGL_DEBUG, "");
-                stackElem val = 0;
-                stackPop(&stk, &val);
-                printf("Out: %d\n", val);
+                GetProcInstruction(cmd, proc);
+                ProcessingInputOut(stk, proc, false, true);
                 break;
             }
 
             case CMD_JMP:
             {
-                proc.IP = proc.code[proc.IP + 1];
-                GetProcInstruction(cmd, &proc, proc.IP);
-                LOG(LOGL_DEBUG, "JMP to %d ", proc.code[proc.IP + 1]);
-
+                DoJmp(proc, cmd);
                 break;
             }
 
@@ -201,19 +179,19 @@ const char* Run()
             }
         }
 
-        IpCounter(&proc, cmd,  (int)count_command);
+        IpCounter(proc, cmd,  (int)count_command);
 
         if (cmd == CMD_HLT)
         {
-            GetProcInstruction(cmd, &proc);
+            GetProcInstruction(cmd, proc);
             LOG(LOGL_DEBUG, "");
             break;
         }
     }
 
-    free(proc.code);
-    stackDtor(&stk);
-    stackDtor(&retAddrStk);
+    free(proc->code);
+    stackDtor(stk);
+    stackDtor(retAddrStk);
     return NULL;
 }
 
@@ -287,7 +265,6 @@ void IpCounter(CPU *proc, stackElem cmd, int count_command)
                 case CMD_JAE:
                 case CMD_JE:
                 case CMD_JNE:
-                case CMD_IN:
                     return;
 
                 default:
@@ -325,5 +302,57 @@ int ProcessingStackCommands(CPU *proc, stack *stk, int cmd, bool IsPush, bool Is
         proc->registers[proc->code[proc->IP + 1]] = value;
     }
 
+    return 0;
+}
+
+void ProcessingInputOut(stack *stk, CPU *proc, bool Input, bool Out)
+{
+    LOG(LOGL_DEBUG, "");
+
+    if (Input)
+    {
+                stackElem input_value = 0;
+                printf("Enter a value: ");
+                scanf("%d", &input_value);
+                proc->registers[ax] = input_value;
+    }
+
+    else if (Out)
+    {
+                stackElem val = 0;
+                stackPop(stk, &val);
+                printf("Out: %d\n", val);
+    }
+}
+
+void DoJmp(CPU *proc, int cmd)
+{
+    proc->IP = proc->code[proc->IP + 1];
+    GetProcInstruction(cmd, proc, proc->IP);
+    LOG(LOGL_DEBUG, "JMP to %d ", proc->code[proc->IP + 1]);
+}
+
+void ProcessingFuncs(stack *retAddrStk, CPU *proc, bool call, bool ret)
+{
+    LOG(LOGL_DEBUG, "");
+
+    if (call)
+    {
+        stackPush(retAddrStk, proc->IP + 2);
+        proc->IP = proc->code[proc->IP + 1];
+    }
+
+    else if (ret)
+    {
+        int retAddr = 0;
+        stackPop(retAddrStk, &retAddr);
+        proc->IP = retAddr;
+    }
+}
+
+int CtorProc(stack *stk, stack *retAddrStk)
+{
+    stackCtor(stk, 8);
+    stackCtor(retAddrStk, 8);
     return 0;
 }
