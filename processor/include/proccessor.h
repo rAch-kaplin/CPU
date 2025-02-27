@@ -26,9 +26,9 @@ typedef struct CPU
         stackPop(&stk, &val_1);                           \
         stackPop(&stk, &val_2);                           \
                                                           \
-        if ((val_1) condition (val_2))                    \
+        if ((val_2) condition (val_1))                    \
         {                                                 \
-            proc.IP += 1;                                 \
+            proc.IP = proc.code[proc.IP + 1];             \
         }                                                 \
         else                                              \
         {                                                 \

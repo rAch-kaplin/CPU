@@ -43,7 +43,7 @@ const char* Run()
                 stackElem input_value = 0;
                 printf("Enter a value: ");
                 scanf("%d", &input_value);
-                proc.registers[0] = input_value;
+                proc.registers[ax] = input_value;
                 proc.IP += 1;
                 break;
             }
@@ -287,6 +287,7 @@ void IpCounter(CPU *proc, stackElem cmd, int count_command)
                 case CMD_JAE:
                 case CMD_JE:
                 case CMD_JNE:
+                case CMD_IN:
                     return;
 
                 default:
