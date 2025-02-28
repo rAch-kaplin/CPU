@@ -45,20 +45,9 @@ const char* Run(stack *stk, stack *retAddrStk, CPU *proc)
             }
 
             case CMD_PUSH:
+            case CMD_POP:
             {
-                ProcessingStackCommands(proc, stk, cmd, true, false, false);
-                break;
-            }
-
-            case CMD_PUSHR:
-            {
-                ProcessingStackCommands(proc, stk, cmd, false, true, false);
-                break;
-            }
-
-            case CMD_POPR:
-            {
-                ProcessingStackCommands(proc, stk, cmd, false, false, true);
+                ProcessingStackCommands(proc, stk, cmd);
                 break;
             }
 
@@ -275,11 +264,29 @@ void IpCounter(CPU *proc, stackElem cmd, int count_command)
     }
 }
 
-int ProcessingStackCommands(CPU *proc, stack *stk, int cmd, bool IsPush, bool IsPushr, bool IsPopr)
+int ProcessingStackCommands(CPU *proc, stack *stk, int cmd)
 {
+    int TypeArgPush = proc->code[proc->IP + 1];
+    bool IsPush = false, IsPushr = false, IsPopr = false;
+
+    if (cmd == CMD_PUSH)
+    {
+        switch (TypeArgPush)
+        {
+            case 1:
+                IsPush = true;
+                break;
+            case 2:
+                IsPushr = true;
+                break;
+            default:
+                break;
+        }
+    }
+
     if (IsPush)
     {
-        stackElem value = proc->code[proc->IP + 1];
+        stackElem value = proc->code[proc->IP + 2];
         GetProcInstruction(cmd, proc, value);
         LOG(LOGL_DEBUG, "");
         stackPush(stk, value);
@@ -287,21 +294,24 @@ int ProcessingStackCommands(CPU *proc, stack *stk, int cmd, bool IsPush, bool Is
 
     else if (IsPushr)
     {
-        stackElem value = proc->registers[proc->code[proc->IP + 1]];
+        stackElem value = proc->registers[proc->code[proc->IP + 2]];
         GetProcInstruction(cmd, proc, value);
         LOG(LOGL_DEBUG, "");
         stackPush(stk, value);
     }
 
-    else if (IsPopr)
+    if (cmd == CMD_POP)
+    {
+        IsPopr = true;
+    }
+    if (IsPopr)
     {
         stackElem value = 0;
         GetProcInstruction(cmd, proc, value);
         LOG(LOGL_DEBUG, "");
         stackPop(stk, &value);
-        proc->registers[proc->code[proc->IP + 1]] = value;
+        proc->registers[proc->code[proc->IP + 2]] = value;
     }
-
     return 0;
 }
 

@@ -4,31 +4,31 @@ hlt
 main:
         in
         call fact:
-        pushr bx
+        push bx
         out
 ret
 
 fact:
-        pushr ax
+        push ax
         push 1
         jbe exit_fact:
 
-        pushr ax
-        pushr ax
+        push ax
+        push ax
         push 1
         sub
-        popr ax
+        pop ax
         call fact:
 
-        pushr bx
+        push bx
         mul
-        popr bx
+        pop bx
 
         reverse_step:
 ret
 
 exit_fact:
         push 1
-        popr bx
+        pop bx
 
         jmp reverse_step:

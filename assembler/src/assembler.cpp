@@ -8,6 +8,7 @@
 #include "CommonProcAssem.h"
 #include "assembler.h"
 
+int AssemlyArgType(FILE *file_asm, FILE *file_code, int cmd_code);
 void CheckLabels(char *cmd, Assem *Asm, int CODE_SIZE);
 int FindFunc(Assem *Asm, char *cmd);
 
@@ -35,27 +36,19 @@ const char* Assembler(Assem *Asm)
         int cmd_code = GetCommandCode(cmd, count_command);
         switch (cmd_code)
         {
-            case CMD_PUSH:
-            {
-                fprintf(file_code, "%d ", cmd_code);
-                int value = 0;
-                fscanf(file_asm, "%d", &value);
-                fprintf(file_code, "%d\n", value);
-                break;
-            }
 
-            case CMD_PUSHR:
-            case CMD_POPR:
+            case CMD_PUSH:
+            case CMD_POP:
             {
-                fprintf(file_code, "%d ", cmd_code);
-                char reg[10] = {0};
-                fscanf(file_asm, "%s", reg);
-                fprintf(file_code, "%d\n", CompileArg(reg));
+                int error = AssemlyArgType(file_asm, file_code, cmd_code);
+                if (error == -100)
+                {
+                    return "not correct arg";
+                }
                 break;
             }
 
             case CMD_RET:
-            case CMD_POP:
             case CMD_ADD:
             case CMD_SUB:
             case CMD_OUT:
@@ -138,11 +131,6 @@ void FillBufferCode(Assem *Asm, FILE *file_code)
 
 int CompileArg(const char *str)
 {
-    // if (strcmp(str, "ax") == 0) return 0;
-    // if (strcmp(str, "bx") == 0) return 1;
-    // if (strcmp(str, "cx") == 0) return 2;
-    // if (strcmp(str, "dx") == 0) return 3;
-
     Registers ArrayRegs[] = { {"ax", 0},
                               {"bx", 1},
                               {"cx", 2},
@@ -224,8 +212,11 @@ int FirstPassFile(FILE *file_asm, Assem *Asm)
         switch (cmd_code)
         {
             case CMD_PUSH:
-            case CMD_PUSHR:
-            case CMD_POPR:
+            case CMD_POP:
+            {
+                CODE_SIZE += 3;
+                break;
+            }
             case CMD_JMP:
             {
                 CODE_SIZE += 2;
@@ -308,3 +299,28 @@ int FindFunc(Assem *Asm, char *cmd)
 }
 
 
+int AssemlyArgType(FILE *file_asm, FILE *file_code, int cmd_code)
+{
+    fprintf(file_code, "%d ", cmd_code);
+
+    char arg[10] = "";
+    fscanf(file_asm, "%9s", arg);
+
+    if (isdigit(arg[0]))
+    {
+        fprintf(file_code, "%d ", 1);
+        fprintf(file_code, "%d\n", atoi(arg));
+    }
+
+    else if (!isdigit(arg[0]))
+    {
+        int reg = CompileArg(arg);
+        if (reg == -1)
+        {
+            return -100;
+        }
+        fprintf(file_code, "%d ", 2);
+        fprintf(file_code, "%d\n", reg);
+    }
+    return 0;
+}

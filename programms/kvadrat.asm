@@ -1,19 +1,19 @@
 push 1
-popr ax
+pop ax
 
 next:
 
-pushr ax
-pushr ax
+push ax
+push ax
 mul
 out
 
-pushr ax
+push ax
 push 1
 add
-popr ax
+pop ax
 
-pushr ax
+push ax
 push 3
 ja next:
 

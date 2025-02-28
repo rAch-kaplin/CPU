@@ -9,10 +9,9 @@ enum command
     CMD_OUT =       4,
     CMD_DIV =       5,
     CMD_MUL =       6,
-    CMD_POP =       7,
 
-    CMD_PUSHR =    11,
-    CMD_POPR =     12,
+    //CMD_PUSHR =    11,
+    CMD_POP =     12,
 
     CMD_JMP =      21,
     CMD_SQRT =     31,
@@ -55,16 +54,14 @@ typedef struct
     int quantity_args;
 } CommandCode;
 
-static const CommandCode command_code[] = { {"push",    CMD_PUSH,  1},
+static const CommandCode command_code[] = { {"push",    CMD_PUSH,  2},
                                             {"add",     CMD_ADD,   0},
                                             {"sub",     CMD_SUB,   0},
                                             {"out",     CMD_OUT,   0},
                                             {"div",     CMD_DIV,   0},
                                             {"mul",     CMD_MUL,   0},
                                             {"hlt",     CMD_HLT,   0},
-                                            {"pop",     CMD_POP,   0},
-                                            {"pushr",   CMD_PUSHR, 1},
-                                            {"popr",    CMD_POPR,  1},
+                                            {"pop",     CMD_POP,   2},
                                             {"jmp",     CMD_JMP,   1},
                                             {"sqrt",    CMD_SQRT,  0},
                                             {"sin",     CMD_SIN,   0},

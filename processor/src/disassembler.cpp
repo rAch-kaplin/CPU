@@ -13,8 +13,8 @@ const char* CommandToString(int cmd)
         case CMD_MUL:     return "mul";
         case CMD_HLT:     return "hlt";
         case CMD_POP:     return "pop";
-        case CMD_PUSHR:   return "pushr";
-        case CMD_POPR:    return "popr";
+        //case CMD_PUSHR:   return "pushr";
+        //case CMD_POPR:    return "popr";
         case CMD_JMP:     return "jmp";
         case CMD_JA:      return "ja";
         case CMD_JB:      return "jb";
