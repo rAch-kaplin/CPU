@@ -25,7 +25,7 @@ const char* Assembler(Assem *Asm)
 
     while (true)
     {
-        char cmd[20] = "";
+        char cmd[30] = "";
         int result = ReadingCommand(file_asm, &cmd[0]);
         if (result == -1)
         {
@@ -192,8 +192,8 @@ int FirstPassFile(FILE *file_asm, Assem *Asm)
     int CODE_SIZE = 0;
     while(true)
     {
-        char cmd[20] = "";
-        if (fscanf(file_asm, "%s", cmd) != 1)
+        char cmd[30] = "";
+        if (fscanf(file_asm, "%29s", cmd) != 1)
         {
             if (feof(file_asm))
             {
@@ -240,7 +240,7 @@ int FirstPassFile(FILE *file_asm, Assem *Asm)
             case CMD_JE:
             case CMD_JNE:
             {
-                char label[20] = "";
+                char label[30] = "";
                 fscanf(file_asm, "%s", label);
                 CODE_SIZE += 2;
                 break;
