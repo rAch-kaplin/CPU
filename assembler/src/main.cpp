@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     if (error_asm != NULL)
     {
         printf("ERROR! from Assembler: %s \n", error_asm);
-        return 1;
+        return ASSEM_ERROR;
     }
 
     WriteBinFile(&Asm);

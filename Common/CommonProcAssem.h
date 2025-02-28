@@ -1,6 +1,17 @@
 #ifndef _HCOMMON_PROC_ASSEM
 #define _HCOMMON_PROC_ASSEM
 
+enum CodeError
+{
+    FILE_NOT_OPEN = 10,
+    UNKNOW_COMMAND = 20,
+    UNKNOW_LABEL = 30,
+    FILE_READ_ERROR = 40,
+    ASSEM_ERROR = 50,
+    ARG_TYPE_ERROR = 60,
+    ITS_OK = 0
+};
+
 enum command
 {
     CMD_PUSH =      1,
@@ -10,8 +21,7 @@ enum command
     CMD_DIV =       5,
     CMD_MUL =       6,
 
-    //CMD_PUSHR =    11,
-    CMD_POP =     12,
+    CMD_POP =      12,
 
     CMD_JMP =      21,
     CMD_SQRT =     31,
@@ -28,7 +38,7 @@ enum command
     CMD_FUNC =     50,
     CMD_RET =      51,
 
-    CMD_IN = 60,
+    CMD_IN =       60,
 
     CMD_HLT =      -1
 };

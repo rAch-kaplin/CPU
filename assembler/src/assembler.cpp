@@ -8,7 +8,7 @@
 #include "CommonProcAssem.h"
 #include "assembler.h"
 
-int AssemlyArgType(FILE *file_asm, FILE *file_code, int cmd_code);
+CodeError AssemblyArgType(FILE *file_asm, FILE *file_code, int cmd_code);
 void CheckLabels(char *cmd, Assem *Asm, int CODE_SIZE);
 int FindFunc(Assem *Asm, char *cmd);
 
@@ -36,12 +36,11 @@ const char* Assembler(Assem *Asm)
         int cmd_code = GetCommandCode(cmd, count_command);
         switch (cmd_code)
         {
-
             case CMD_PUSH:
             case CMD_POP:
             {
-                int error = AssemlyArgType(file_asm, file_code, cmd_code);
-                if (error == -100)
+                CodeError error = AssemblyArgType(file_asm, file_code, cmd_code);
+                if (error == ARG_TYPE_ERROR)
                 {
                     return "not correct arg";
                 }
@@ -96,7 +95,7 @@ CodeError AssemblyLabels(FILE *file_asm, FILE *file_code, Assem *Asm, int cmd_co
     char label[20] = "";
     fscanf(file_asm, "%s", label);
     int label_index = FindLabel(Asm, label);
-    if (label_index != -10)
+    if (label_index != -1)
     {
         fprintf(file_code, "%d\n", label_index);
     }
@@ -183,10 +182,9 @@ int ReadingCommand(FILE *file_asm, char *cmd)
             return -1;
         }
 
-        printf("!!!!!!%s\n", cmd);
-        return -5;
+        return FILE_READ_ERROR;
     }
-    return 0;
+    return ITS_OK;
 }
 
 int FirstPassFile(FILE *file_asm, Assem *Asm)
@@ -282,8 +280,7 @@ int FindLabel(Assem *Asm, char *cmd)
             return Asm->Labels[i].value;
         }
     }
-
-    return -10;
+    return -1;
 }
 
 int FindFunc(Assem *Asm, char *cmd)
@@ -299,7 +296,7 @@ int FindFunc(Assem *Asm, char *cmd)
 }
 
 
-int AssemlyArgType(FILE *file_asm, FILE *file_code, int cmd_code)
+CodeError AssemblyArgType(FILE *file_asm, FILE *file_code, int cmd_code)
 {
     fprintf(file_code, "%d ", cmd_code);
 
@@ -317,10 +314,10 @@ int AssemlyArgType(FILE *file_asm, FILE *file_code, int cmd_code)
         int reg = CompileArg(arg);
         if (reg == -1)
         {
-            return -100;
+            return ARG_TYPE_ERROR;
         }
         fprintf(file_code, "%d ", 2);
         fprintf(file_code, "%d\n", reg);
     }
-    return 0;
+    return ITS_OK;
 }
