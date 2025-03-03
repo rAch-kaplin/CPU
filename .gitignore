@@ -3,3 +3,5 @@ asm
 proc
 *.o
 programms/bin_code.txt
+logger/logfile.log
+

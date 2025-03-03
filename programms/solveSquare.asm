@@ -14,8 +14,8 @@ ret
 
 input_coef:
         push 1
-        push 4
-        push 3
+        push 2
+        push -3
         pop cx
         pop bx
         pop ax

@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <ctype.h>
+#include "logger.h"
 #include "color.h"
 #include "common.h"
 #include "CommonProcAssem.h"
@@ -306,13 +307,19 @@ CodeError AssemblyArgType(FILE *file_asm, FILE *file_code, int cmd_code)
     char arg[10] = "";
     fscanf(file_asm, "%9s", arg);
 
-    if (isdigit(arg[0]))
+    size_t size_arg = strlen(arg);
+
+    if (arg[0] == '-' && size_arg > 1 && isdigit(arg[1]))
     {
         fprintf(file_code, "%d ", 1);
         fprintf(file_code, "%d\n", atoi(arg));
     }
-
-    else if (!isdigit(arg[0]))
+    else if (isdigit(arg[0]))
+    {
+        fprintf(file_code, "%d ", 1);
+        fprintf(file_code, "%d\n", atoi(arg));
+    }
+    else if (!isdigit(arg[0]) && !isdigit(arg[1]))
     {
         int reg = CompileArg(arg);
         if (reg == -1)
@@ -322,5 +329,6 @@ CodeError AssemblyArgType(FILE *file_asm, FILE *file_code, int cmd_code)
         fprintf(file_code, "%d ", 2);
         fprintf(file_code, "%d\n", reg);
     }
+
     return ITS_OK;
 }
