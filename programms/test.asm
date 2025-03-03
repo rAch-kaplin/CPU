@@ -1,4 +1,7 @@
-push 9
-sqrt
-out
+
+
+push [ax + 5]
+push [5   + bx]
+
+
 hlt

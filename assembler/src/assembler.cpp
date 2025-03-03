@@ -9,9 +9,11 @@
 #include "CommonProcAssem.h"
 #include "assembler.h"
 
+CodeError HandleMemoryAccess(FILE* file_code, char* arg);
 CodeError AssemblyArgType(FILE *file_asm, FILE *file_code, int cmd_code);
 void CheckLabels(char *cmd, Assem *Asm, int CODE_SIZE);
 int FindFunc(Assem *Asm, char *cmd);
+void RemoveSpaces(char* str);
 
 const char* Assembler(Assem *Asm)
 {
@@ -132,6 +134,7 @@ void FillBufferCode(Assem *Asm, FILE *file_code)
 
 int CompileArg(const char *str)
 {
+    printf("CompileArg: <%s>\n", str);
     Registers ArrayRegs[] = { {"ax", 0},
                               {"bx", 1},
                               {"cx", 2},
@@ -217,11 +220,7 @@ int FirstPassFile(FILE *file_asm, Assem *Asm)
                 CODE_SIZE += 3;
                 break;
             }
-            // case CMD_JMP:
-            // {
-            //     CODE_SIZE += 2;
-            //     break;
-            // }
+
             case CMD_SQRT:
             case CMD_ADD:
             case CMD_SUB:
@@ -246,7 +245,6 @@ int FirstPassFile(FILE *file_asm, Assem *Asm)
             {
                 char label[30] = "";
                 fscanf(file_asm, "%s", label);
-                //fscanf(file_asm, "%s", label);
                 CODE_SIZE += 2;
                 break;
             }
@@ -304,8 +302,18 @@ CodeError AssemblyArgType(FILE *file_asm, FILE *file_code, int cmd_code)
 {
     fprintf(file_code, "%d ", cmd_code);
 
-    char arg[10] = "";
-    fscanf(file_asm, "%9s", arg);
+    char arg[20] = "";
+    //fscanf(file_asm, "%19s", arg);
+    if (fgets(arg, sizeof(arg), file_asm) != NULL)
+    {
+        size_t len = strlen(arg);
+        if (len > 0 && arg[len - 1] == '\n')
+        {
+            arg[len - 1] = '\0';
+        }
+    }
+
+    printf("Processed argument: @@@ %s\n", arg);
 
     size_t size_arg = strlen(arg);
 
@@ -319,6 +327,17 @@ CodeError AssemblyArgType(FILE *file_asm, FILE *file_code, int cmd_code)
         fprintf(file_code, "%d ", 1);
         fprintf(file_code, "%d\n", atoi(arg));
     }
+
+    else if ((arg[0] == '[' || arg[size_arg - 1] == ']'))
+    {
+        printf("===============================\n");
+        CodeError error = HandleMemoryAccess(file_code, &arg[0]);
+        if (error != ITS_OK)
+        {
+            return ARG_TYPE_ERROR;
+        }
+    }
+
     else if (!isdigit(arg[0]) && !isdigit(arg[1]))
     {
         int reg = CompileArg(arg);
@@ -330,5 +349,98 @@ CodeError AssemblyArgType(FILE *file_asm, FILE *file_code, int cmd_code)
         fprintf(file_code, "%d\n", reg);
     }
 
+    else
+    {
+        return ARG_TYPE_ERROR;
+    }
+
     return ITS_OK;
+}
+
+CodeError HandleMemoryAccess(FILE* file_code, char* arg)
+{
+    size_t size_arg = strlen(arg);
+
+    arg[size_arg - 1] = '\0';
+    printf("Processed argument arg: %s\n", arg);
+    char inner_arg[20];
+    strncpy(inner_arg, arg + 2, size_arg - 2);
+    inner_arg[size_arg - 2] = '\0';
+    RemoveSpaces(inner_arg);
+    printf("Processed argument: %s\n", inner_arg);
+
+    char* plus_pos = strchr(inner_arg, '+');
+    if (plus_pos)
+    {
+        printf("^^^^HELLO!\n");
+        *plus_pos = '\0';
+        char* left_part = inner_arg;
+        char* right_part = plus_pos + 1;
+
+        // while (*left_part == ' ') left_part++;
+        // while (*right_part == ' ') right_part++;
+
+        printf("left_part = %s\n", left_part);
+        printf("right_part = %s\n", right_part);
+
+        int reg = CompileArg(left_part);
+        int num = atoi(right_part);
+
+        printf("reg = %d\n", reg);
+
+        if (reg != -1)
+        {
+            printf("^^^^HELLO!^^^^^\n");
+            fprintf(file_code, "%d ", 6);
+            int index = reg + num;
+            fprintf(file_code, "%d\n", index);
+            return ITS_OK;
+        }
+
+        reg = CompileArg(right_part);
+        num = atoi(left_part);
+
+        printf("reg = %d\n", reg);
+
+        if (reg != -1)
+        {
+            fprintf(file_code, "%d ", 6);
+            int index = reg + num;
+            fprintf(file_code, "%d\n", index);
+            return ITS_OK;
+        }
+    }
+
+    else
+    {
+        int reg = CompileArg(inner_arg);
+        printf("HELLO!\n");
+        printf("%d\n", reg);
+        if (reg != -1)
+        {
+            fprintf(file_code, "%d ", 6);
+            fprintf(file_code, "%d\n", reg);
+            return ITS_OK;
+        }
+
+        int num = atoi(inner_arg);
+        fprintf(file_code, "%d ", 6);
+        fprintf(file_code, "%d\n", num);
+        return ITS_OK;
+
+    }
+    printf("NONONOO\n");
+    return ARG_TYPE_ERROR;
+}
+
+void RemoveSpaces(char* str)
+{
+    char* dest = str;  // Указатель на результат, в том же месте, где и исходная строка
+    for (char* src = str; *src != '\0'; src++) {
+        if (*src != ' ') {  // Если текущий символ не пробел
+            *dest = *src;    // Копируем символ в результат
+            dest++;          // Удвигаем указатель на следующий символ
+        }
+    }
+    *dest = '\0';  // Завершаем строку нулевым символом
 }
