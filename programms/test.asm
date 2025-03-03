@@ -1,5 +1,4 @@
 push 9
-pop ax
-push ax
+sqrt
 out
 hlt

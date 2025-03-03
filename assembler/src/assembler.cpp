@@ -32,7 +32,7 @@ const char* Assembler(Assem *Asm)
             break;
         }
 
-        size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
+        size_t count_command = sizeof(command_code) / sizeof(command_code[0]); //TODO: to header const
         int cmd_code = GetCommandCode(cmd, count_command);
         switch (cmd_code)
         {
@@ -55,6 +55,7 @@ const char* Assembler(Assem *Asm)
             case CMD_MUL:
             case CMD_HLT:
             case CMD_IN:
+            case CMD_SQRT:
             {
                 fprintf(file_code, "%d\n", cmd_code);
                 break;
@@ -215,11 +216,12 @@ int FirstPassFile(FILE *file_asm, Assem *Asm)
                 CODE_SIZE += 3;
                 break;
             }
-            case CMD_JMP:
-            {
-                CODE_SIZE += 2;
-                break;
-            }
+            // case CMD_JMP:
+            // {
+            //     CODE_SIZE += 2;
+            //     break;
+            // }
+            case CMD_SQRT:
             case CMD_ADD:
             case CMD_SUB:
             case CMD_OUT:
@@ -239,9 +241,11 @@ int FirstPassFile(FILE *file_asm, Assem *Asm)
             case CMD_JBE:
             case CMD_JE:
             case CMD_JNE:
+            case CMD_JMP:
             {
                 char label[30] = "";
                 fscanf(file_asm, "%s", label);
+                //fscanf(file_asm, "%s", label);
                 CODE_SIZE += 2;
                 break;
             }
@@ -267,7 +271,6 @@ void CheckLabels(char *cmd, Assem *Asm, int CODE_SIZE)
         Asm->Labels[Asm->label_count].value = CODE_SIZE;
         Asm->label_count++;
     }
-
 }
 
 int FindLabel(Assem *Asm, char *cmd)

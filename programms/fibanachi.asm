@@ -1,6 +1,5 @@
 call main:
 hlt
-;------------------------------------------
 
 main:
         in
@@ -8,7 +7,6 @@ main:
         push bx
         out
 ret
-;-------------------------------------------
 
 fib:
         push ax
@@ -31,39 +29,34 @@ fib:
         start_iteration:
         jmp start_cycle:
 
-
         exit_in_main:
 ret
-;-------------------------------------------
 
-start cycle:
+start_cycle:
         push ax
         push bx
         add
         push bx
         pop ax
         pop bx
-        
+
         push cx
         push 1
         add
         pop cx
         jmp new_iteration:
 
-;-------------------------------------------
 
 basic_fib:
         push 1
         pop bx
-        jmp exit_in_main:
+ret
 
-;-------------------------------------------
 
 new_iteration:
         push dx
         push cx
-        ja exit_in_main:
-        jmp start_iteration:
-;---------------------------------
+        jae start_iteration:
+        jmp exit_in_main:
 
 

@@ -42,7 +42,7 @@ proccessor/obj/%.o: proccessor/src/%.cpp
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 all: build
-	@echo "\033[33mCompilation complete. Run the programs using './asm' and './proc'.\033[0m"
+	@echo -e "\033[33mCompilation complete. Run the programs using './asm' and './proc'.\033[0m"
 
 clean:
 	rm -rf assembler/obj/*.o processor/obj/*.o asm proc

@@ -77,6 +77,7 @@ const char* Run(stack *stk, stack *retAddrStk, CPU *proc)
                 GetProcInstruction(cmd, proc);
                 TwoElemStackOperation(stk, [](stackElem val1, stackElem val2) { return val2 / val1;} );
                 break;
+                //TODO: lamda
             }
 
             case CMD_SQRT:
@@ -189,7 +190,9 @@ void SingleStackOperation(stack *stk, double (*operation)(double))
     stackElem value = 0;
     LOG(LOGL_DEBUG, "");
     stackPop(stk, &value);
-    stackPush(stk, (stackElem)operation(value));
+    double result = operation((double)value);
+    LOG(LOGL_DEBUG, "sqrt = %d\n", (int)result);
+    stackPush(stk, (stackElem)result);
 }
 
 void TwoElemStackOperation(stack *stk, stackElem (*operation)(stackElem val1, stackElem val2))
@@ -339,7 +342,7 @@ void DoJmp(CPU *proc, int cmd)
 {
     proc->IP = proc->code[proc->IP + 1];
     GetProcInstruction(cmd, proc, proc->IP);
-    LOG(LOGL_DEBUG, "JMP to %d ", proc->code[proc->IP + 1]);
+    LOG(LOGL_DEBUG, "JMP to %d ", proc->IP);
 }
 
 void ProcessingFuncs(stack *retAddrStk, CPU *proc, bool call, bool ret)
