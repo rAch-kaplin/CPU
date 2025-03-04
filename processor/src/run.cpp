@@ -270,7 +270,8 @@ void IpCounter(CPU *proc, stackElem cmd, int count_command)
 int ProcessingStackCommands(CPU *proc, stack *stk, int cmd)
 {
     int TypeArg = proc->code[proc->IP + 1];
-    bool IsPush = false, IsPushr = false, IsPopr = false, IsPushm = false, IsPopm = false;
+    bool IsPush = false, IsPushr = false, IsPopr = false, IsPushm = false, \
+         IsPopm = false, IsPushmComplex = false, IsPopmComplex = false;
 
     if (cmd == CMD_PUSH)
     {
@@ -284,6 +285,9 @@ int ProcessingStackCommands(CPU *proc, stack *stk, int cmd)
                 break;
             case 6:
                 IsPushm = true;
+                break;
+            case 7:
+                IsPushmComplex = true;
                 break;
             default:
                 break;
@@ -314,6 +318,17 @@ int ProcessingStackCommands(CPU *proc, stack *stk, int cmd)
         stackPush(stk, value);
     }
 
+    else if (IsPushmComplex)
+    {
+        int reg = proc->registers[proc->code[proc->IP + 2]];
+        int val_ram = proc->RAM[proc->code[proc->IP + 3]];
+        int value = reg + val_ram;
+        GetProcInstruction(cmd, proc, value);
+        LOG(LOGL_DEBUG, "Pushm ");
+        stackPush(stk, value);
+        proc->IP += 1;
+    }
+
     if (cmd == CMD_POP)
     {
         switch (TypeArg)
@@ -323,6 +338,9 @@ int ProcessingStackCommands(CPU *proc, stack *stk, int cmd)
                 break;
             case 6:
                 IsPopm = true;
+                break;
+            case 7:
+                IsPopmComplex = true;
                 break;
             default:
                 break;
@@ -345,6 +363,17 @@ int ProcessingStackCommands(CPU *proc, stack *stk, int cmd)
         LOG(LOGL_DEBUG, "Popm ");
         stackPop(stk, &value);
         proc->RAM[proc->code[proc->IP + 2]] = value;
+    }
+
+    else if (IsPopmComplex)
+    {
+        stackElem value = 0;
+        int reg = proc->registers[proc->code[proc->IP + 2]];
+        int val_ram = proc->RAM[proc->code[proc->IP + 3]];
+        LOG(LOGL_DEBUG, "Popm ");
+        stackPop(stk, &value);
+        proc->RAM[reg + val_ram] = value;
+        proc->IP += 2;
     }
 
     // for (int i = 0; i < 10; i++)

@@ -218,7 +218,7 @@ int FirstPassFile(FILE *file_asm, Assem *Asm)
             case CMD_PUSH:
             case CMD_POP:
             {
-                CODE_SIZE += 3;
+                CODE_SIZE += 4;
                 break;
             }
 
@@ -379,9 +379,8 @@ CodeError HandleMemoryAccess(FILE* file_code, char* arg)
 
         if (reg != -1)
         {
-            fprintf(file_code, "%d ", 6);
-            int index = reg + num;
-            fprintf(file_code, "%d\n", index);
+            fprintf(file_code, "%d ", 7);
+            fprintf(file_code, "%d %d\n", reg, num);
             return ITS_OK;
         }
 
@@ -390,9 +389,8 @@ CodeError HandleMemoryAccess(FILE* file_code, char* arg)
 
         if (reg != -1)
         {
-            fprintf(file_code, "%d ", 6);
-            int index = reg + num;
-            fprintf(file_code, "%d\n", index);
+            fprintf(file_code, "%d ", 7);
+            fprintf(file_code, "%d %d\n", reg, num);
             return ITS_OK;
         }
     }
