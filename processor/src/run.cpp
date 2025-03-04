@@ -269,18 +269,21 @@ void IpCounter(CPU *proc, stackElem cmd, int count_command)
 
 int ProcessingStackCommands(CPU *proc, stack *stk, int cmd)
 {
-    int TypeArgPush = proc->code[proc->IP + 1];
-    bool IsPush = false, IsPushr = false, IsPopr = false;
+    int TypeArg = proc->code[proc->IP + 1];
+    bool IsPush = false, IsPushr = false, IsPopr = false, IsPushm = false, IsPopm = false;
 
     if (cmd == CMD_PUSH)
     {
-        switch (TypeArgPush)
+        switch (TypeArg)
         {
             case 1:
                 IsPush = true;
                 break;
             case 2:
                 IsPushr = true;
+                break;
+            case 6:
+                IsPushm = true;
                 break;
             default:
                 break;
@@ -303,10 +306,29 @@ int ProcessingStackCommands(CPU *proc, stack *stk, int cmd)
         stackPush(stk, value);
     }
 
+    else if (IsPushm)
+    {
+        stackElem value = proc->RAM[proc->code[proc->IP + 2]];
+        GetProcInstruction(cmd, proc, value);
+        LOG(LOGL_DEBUG, "Pushm ");
+        stackPush(stk, value);
+    }
+
     if (cmd == CMD_POP)
     {
-        IsPopr = true;
+        switch (TypeArg)
+        {
+            case 2:
+                IsPopr = true;
+                break;
+            case 6:
+                IsPopm = true;
+                break;
+            default:
+                break;
+        }
     }
+
     if (IsPopr)
     {
         stackElem value = 0;
@@ -315,6 +337,22 @@ int ProcessingStackCommands(CPU *proc, stack *stk, int cmd)
         stackPop(stk, &value);
         proc->registers[proc->code[proc->IP + 2]] = value;
     }
+
+    else if (IsPopm)
+    {
+        stackElem value = 0;
+        GetProcInstruction(cmd, proc, value);
+        LOG(LOGL_DEBUG, "Popm ");
+        stackPop(stk, &value);
+        proc->RAM[proc->code[proc->IP + 2]] = value;
+    }
+
+    // for (int i = 0; i < 10; i++)
+    // {
+    //     printf("%d ", proc->RAM[i]);
+    // }
+    // printf("\n");
+
     return 0;
 }
 

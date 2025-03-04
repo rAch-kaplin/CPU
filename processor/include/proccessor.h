@@ -7,12 +7,14 @@
 #include "common.h"
 
 const int SIZE_REGISTERS = 10;
+const int SIZE_RAM = 1024;
 
 typedef struct CPU
 {
     stackElem *code;
     int IP = 0;
     stackElem registers[SIZE_REGISTERS] = {0};
+    stackElem RAM[SIZE_RAM] = {0};
 } CPU;
 
 #define CONDITIONAL_JMP(condition)                        \

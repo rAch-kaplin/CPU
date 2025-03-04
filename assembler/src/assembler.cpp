@@ -135,7 +135,7 @@ void FillBufferCode(Assem *Asm, FILE *file_code)
 
 int CompileArg(const char *str)
 {
-    printf("CompileArg: <%s>\n", str);
+    //printf("CompileArg: <%s>\n", str);
     Registers ArrayRegs[] = { {"ax", 0},
                               {"bx", 1},
                               {"cx", 2},
@@ -305,10 +305,21 @@ CodeError AssemblyArgType(FILE *file_asm, FILE *file_code, int cmd_code)
 
     char arg[20] = "";
     ReadingArg(file_asm, arg, sizeof(arg));
-
     size_t size_arg = strlen(arg);
+    RemoveSpaces(arg);
 
-    if ((arg[0] == '-' && size_arg > 1 && isdigit(arg[1])) || isdigit(arg[0]))
+    // if ((arg[0] == '-' && size_arg > 1 && isdigit(arg[1])) || (isdigit(arg[0])))
+    // {
+    //     printf("HI\n");
+    //     fprintf(file_code, "%d ", 1);
+    //     fprintf(file_code, "%d\n", atoi(arg));
+    // }
+    if (arg[0] == '-' && size_arg > 1 && isdigit(arg[1]))
+    {
+        fprintf(file_code, "%d ", 1);
+        fprintf(file_code, "%d\n", atoi(arg));
+    }
+    else if (isdigit(arg[0]))
     {
         fprintf(file_code, "%d ", 1);
         fprintf(file_code, "%d\n", atoi(arg));
@@ -316,7 +327,7 @@ CodeError AssemblyArgType(FILE *file_asm, FILE *file_code, int cmd_code)
 
     else if ((arg[0] == '[' || arg[size_arg - 1] == ']'))
     {
-        printf("===============================\n");
+        //printf("===============================\n");
         CodeError error = HandleMemoryAccess(file_code, &arg[0]);
         if (error != ITS_OK)
         {
@@ -349,29 +360,25 @@ CodeError HandleMemoryAccess(FILE* file_code, char* arg)
 
     arg[size_arg - 1] = '\0';
     char inner_arg[20];
-    strncpy(inner_arg, arg + 2, size_arg - 2);
+    strncpy(inner_arg, arg + 1, size_arg - 2);
     inner_arg[size_arg - 2] = '\0';
     RemoveSpaces(inner_arg);
 
     char* plus_pos = strchr(inner_arg, '+');
     if (plus_pos)
     {
-        printf("^^^^HELLO!\n");
         *plus_pos = '\0';
         char* left_part = inner_arg;
         char* right_part = plus_pos + 1;
 
-        printf("left_part = %s\n", left_part);
-        printf("right_part = %s\n", right_part);
+        // printf("left_part = %s\n", left_part);
+        // printf("right_part = %s\n", right_part);
 
         int reg = CompileArg(left_part);
         int num = atoi(right_part);
 
-        printf("reg = %d\n", reg);
-
         if (reg != -1)
         {
-            printf("^^^^HELLO!^^^^^\n");
             fprintf(file_code, "%d ", 6);
             int index = reg + num;
             fprintf(file_code, "%d\n", index);
@@ -380,8 +387,6 @@ CodeError HandleMemoryAccess(FILE* file_code, char* arg)
 
         reg = CompileArg(right_part);
         num = atoi(left_part);
-
-        printf("reg = %d\n", reg);
 
         if (reg != -1)
         {
