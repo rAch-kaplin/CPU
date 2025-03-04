@@ -14,6 +14,7 @@ CodeError AssemblyArgType(FILE *file_asm, FILE *file_code, int cmd_code);
 void CheckLabels(char *cmd, Assem *Asm, int CODE_SIZE);
 int FindFunc(Assem *Asm, char *cmd);
 void RemoveSpaces(char* str);
+void ReadingArg(FILE *file_asm, char *arg, size_t arg_size);
 
 const char* Assembler(Assem *Asm)
 {
@@ -303,26 +304,11 @@ CodeError AssemblyArgType(FILE *file_asm, FILE *file_code, int cmd_code)
     fprintf(file_code, "%d ", cmd_code);
 
     char arg[20] = "";
-    //fscanf(file_asm, "%19s", arg);
-    if (fgets(arg, sizeof(arg), file_asm) != NULL)
-    {
-        size_t len = strlen(arg);
-        if (len > 0 && arg[len - 1] == '\n')
-        {
-            arg[len - 1] = '\0';
-        }
-    }
-
-    printf("Processed argument: @@@ %s\n", arg);
+    ReadingArg(file_asm, arg, sizeof(arg));
 
     size_t size_arg = strlen(arg);
 
-    if (arg[0] == '-' && size_arg > 1 && isdigit(arg[1]))
-    {
-        fprintf(file_code, "%d ", 1);
-        fprintf(file_code, "%d\n", atoi(arg));
-    }
-    else if (isdigit(arg[0]))
+    if ((arg[0] == '-' && size_arg > 1 && isdigit(arg[1])) || isdigit(arg[0]))
     {
         fprintf(file_code, "%d ", 1);
         fprintf(file_code, "%d\n", atoi(arg));
@@ -362,12 +348,10 @@ CodeError HandleMemoryAccess(FILE* file_code, char* arg)
     size_t size_arg = strlen(arg);
 
     arg[size_arg - 1] = '\0';
-    printf("Processed argument arg: %s\n", arg);
     char inner_arg[20];
     strncpy(inner_arg, arg + 2, size_arg - 2);
     inner_arg[size_arg - 2] = '\0';
     RemoveSpaces(inner_arg);
-    printf("Processed argument: %s\n", inner_arg);
 
     char* plus_pos = strchr(inner_arg, '+');
     if (plus_pos)
@@ -376,9 +360,6 @@ CodeError HandleMemoryAccess(FILE* file_code, char* arg)
         *plus_pos = '\0';
         char* left_part = inner_arg;
         char* right_part = plus_pos + 1;
-
-        // while (*left_part == ' ') left_part++;
-        // while (*right_part == ' ') right_part++;
 
         printf("left_part = %s\n", left_part);
         printf("right_part = %s\n", right_part);
@@ -414,8 +395,6 @@ CodeError HandleMemoryAccess(FILE* file_code, char* arg)
     else
     {
         int reg = CompileArg(inner_arg);
-        printf("HELLO!\n");
-        printf("%d\n", reg);
         if (reg != -1)
         {
             fprintf(file_code, "%d ", 6);
@@ -429,18 +408,32 @@ CodeError HandleMemoryAccess(FILE* file_code, char* arg)
         return ITS_OK;
 
     }
-    printf("NONONOO\n");
     return ARG_TYPE_ERROR;
 }
 
 void RemoveSpaces(char* str)
 {
-    char* dest = str;  // Указатель на результат, в том же месте, где и исходная строка
-    for (char* src = str; *src != '\0'; src++) {
-        if (*src != ' ') {  // Если текущий символ не пробел
-            *dest = *src;    // Копируем символ в результат
-            dest++;          // Удвигаем указатель на следующий символ
+    char* dest = str;
+    for (char* src = str; *src != '\0'; src++)
+    {
+        if (*src != ' ')
+        {
+            *dest = *src;
+            dest++;
         }
     }
-    *dest = '\0';  // Завершаем строку нулевым символом
+    *dest = '\0';
 }
+
+void ReadingArg(FILE *file_asm, char *arg, size_t arg_size)
+{
+    if (fgets(arg, (int)arg_size, file_asm) != NULL)
+    {
+        size_t len = strlen(arg);
+        if (len > 0 && arg[len - 1] == '\n')
+        {
+            arg[len - 1] = '\0';
+        }
+    }
+}
+
