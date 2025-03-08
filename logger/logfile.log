@@ -1,23 +1,23 @@
-[2025-03-04 20:04:01][DEBUG][stack/src/stack.cpp][45:stackCtor]: STACK Ctor: 0xfffffff6
+[2025-03-08 19:16:41][DEBUG][stack/src/stack.cpp][45:stackCtor]: STACK Ctor: 0xfffffff6
 	Data:  -559039810 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-03-04 20:04:01][DEBUG][stack/src/stack.cpp][45:stackCtor]: STACK Ctor: 0xfffffff6
+[2025-03-08 19:16:41][DEBUG][stack/src/stack.cpp][45:stackCtor]: STACK Ctor: 0xfffffff6
 	Data:  -559039810 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-03-04 20:04:01][DEBUG][processor/src/run.cpp][297:ProcessingStackCommands]: Enter command: push 2
+[2025-03-08 19:16:41][DEBUG][processor/src/run.cpp][417:ProcessingFuncs]: Enter command: call
 	Registers:  0 0 0 0 0 0 0 0 0 0
-[2025-03-04 20:04:01][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 2
+[2025-03-08 19:16:41][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 2
 	Data:  -559039810 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-03-04 20:04:01][DEBUG][processor/src/run.cpp][345:ProcessingStackCommands]: Popm Enter command: pop
+[2025-03-08 19:16:41][DEBUG][processor/src/run.cpp][390:ProcessingInputOut]: Enter command: in
 	Registers:  0 0 0 0 0 0 0 0 0 0
-[2025-03-04 20:04:01][DEBUG][stack/src/stack.cpp][130:stackPop]: STACK POP: 2
-	Data:  -559039810 195893946 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2025-03-08 19:16:49][DEBUG][processor/src/run.cpp][417:ProcessingFuncs]: Enter command: call
+	Registers:  5 0 0 0 0 0 0 0 0 0
+[2025-03-08 19:16:49][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 6
+	Data:  -559039810 2 6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-03-04 20:04:01][DEBUG][processor/src/run.cpp][313:ProcessingStackCommands]: Pushm Enter command: push 2
-	Registers:  0 0 0 0 0 0 0 0 0 0
-[2025-03-04 20:04:01][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 2
-	Data:  -559039810 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
+[2025-03-08 19:16:49][DEBUG][processor/src/run.cpp][200:TwoElemStackOperation]: Enter command: add
+	Registers:  5 0 0 0 0 0 0 0 0 0
+[2025-03-08 19:16:49][DEBUG][stack/src/stack.cpp][91:stackPush]: STACK PUSH: 0
+	Data:  -559039810 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -559039810
 
-[2025-03-04 20:04:01][DEBUG][processor/src/run.cpp][177:Run]: Enter command: hlt
-	Registers:  0 0 0 0 0 0 0 0 0 0

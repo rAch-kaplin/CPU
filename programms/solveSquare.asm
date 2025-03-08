@@ -68,7 +68,7 @@ one_root:
 ret
 
 no_roots:
-        push 9999;
+        push 9999
         out
 ret
 
@@ -87,7 +87,6 @@ two_root:
     mul
     div
     out
-
 
     push 0
     push bx

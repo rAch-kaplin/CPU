@@ -371,9 +371,6 @@ CodeError HandleMemoryAccess(FILE* file_code, char* arg)
         char* left_part = inner_arg;
         char* right_part = plus_pos + 1;
 
-        // printf("left_part = %s\n", left_part);
-        // printf("right_part = %s\n", right_part);
-
         int reg = CompileArg(left_part);
         int num = atoi(right_part);
 
@@ -428,7 +425,7 @@ void RemoveSpaces(char* str)
     *dest = '\0';
 }
 
-void ReadingArg(FILE *file_asm, char *arg, size_t arg_size)
+void ReadingArg(FILE *file_asm, char *arg, size_t arg_size) //ReadArg
 {
     if (fgets(arg, (int)arg_size, file_asm) != NULL)
     {
