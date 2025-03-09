@@ -13,9 +13,8 @@
 CodeError AssemblyArgType(char *buffer, FILE *file_code, int cmd_code);
 void CheckLabels(char *cmd, Assem *Asm, int CODE_SIZE);
 int FindFunc(Assem *Asm, char *cmd);
-
-
 void ReadFileToBuffer(FILE *file_asm, char **buffer, size_t *file_size);
+char* SkipSpace(char* current_pos);
 
 const char* Assembler(Assem *Asm)
 {
@@ -28,18 +27,12 @@ const char* Assembler(Assem *Asm)
     char *current_pos = buffer;
     while (true)
     {
-
-        while (*current_pos == ' ' || *current_pos == '\t' || *current_pos == '\n')
-        {
-            current_pos++;
-        }
+        current_pos = SkipSpace(current_pos);
 
         if (*current_pos == '\0')
         {
             break;
         }
-
-        printf("HELLO\n");
 
         char cmd[30] = "";
         if (sscanf(current_pos, "%29s", cmd) != 1)
@@ -47,8 +40,6 @@ const char* Assembler(Assem *Asm)
             printf("the string incorrectly\n");
             return NULL;
         }
-        printf( COLOR_MAGENTA "%s " COLOR_RESET, cmd);
-        printf("\n");
 
         current_pos += strlen(cmd);
 
@@ -118,12 +109,7 @@ CodeError AssemblyLabels(char *buffer, FILE *file_code, Assem *Asm, int cmd_code
 
     char *current_pos = buffer;
 
-    while (*current_pos == ' ' || *current_pos == '\t' || *current_pos == '\n')
-    {
-        current_pos++;
-    }
-
-    printf("HELLO\n");
+    current_pos = SkipSpace(current_pos);
 
     char label[30] = "";
     if (sscanf(current_pos, "%29s", label) != 1)
@@ -215,11 +201,9 @@ void CtorAssembly(FILE **file_asm, FILE **file_code, Assem *Asm, char **buffer, 
     // {
     //     printf("%s ", buffer[i]);
     // }
-    printf("\n");
-    printf("start\n");
+
     Asm->CODE_SIZE = FirstPassFile(*buffer, Asm);
 
-    printf("HI\n");
     Asm->code = (int*)calloc((size_t)Asm->CODE_SIZE + 1, sizeof(int));
 }
 
@@ -243,13 +227,7 @@ int FirstPassFile(char *buffer, Assem *Asm)
     char *current_pos = buffer;
     while(true)
     {
-        if (*current_pos == '\0')
-            break;
-
-        while (*current_pos == ' ' || *current_pos == '\t' || *current_pos == '\n')
-        {
-            current_pos++;
-        }
+        current_pos = SkipSpace(current_pos);
 
         if (*current_pos == '\0')
         {
@@ -262,8 +240,6 @@ int FirstPassFile(char *buffer, Assem *Asm)
             printf("the string incorrectly\n");
             return -1;
         }
-        printf( COLOR_BLUE "%s " COLOR_RESET, cmd);
-        printf("\n");
 
         current_pos += strlen(cmd);
 
@@ -303,7 +279,6 @@ int FirstPassFile(char *buffer, Assem *Asm)
             {
                 char label[30] = "";
                 sscanf(current_pos, "%s", label);
-                printf(COLOR_CYAN "%s\n" COLOR_RESET, label);
                 current_pos += strlen(label) + 1;
                 CODE_SIZE += 2;
                 break;
@@ -334,7 +309,6 @@ void CheckLabels(char *cmd, Assem *Asm, int CODE_SIZE)
 
 int FindLabel(Assem *Asm, char *cmd)
 {
-    printf(COLOR_YELLOW "%s|\n" COLOR_RESET, cmd);
     cmd[strlen(cmd) - 1] = '\0';
     for (int i = 0; i < LABELS_SIZE; i++)
     {
@@ -362,14 +336,9 @@ int FindFunc(Assem *Asm, char *cmd)
 CodeError AssemblyArgType(char *buffer, FILE *file_code, int cmd_code)
 {
     fprintf(file_code, "%d ", cmd_code);
-    printf("%d\n", cmd_code);
 
     char *current_pos = buffer;
-
-    while (*current_pos == ' ' || *current_pos == '\t' || *current_pos == '\n')
-    {
-        current_pos++;
-    }
+    current_pos = SkipSpace(current_pos);
 
     char arg[30] = "";
     if (sscanf(current_pos, "%29s", arg) != 1)
@@ -422,5 +391,10 @@ void ReadFileToBuffer(FILE *file_asm, char **buffer, size_t *file_size)
     fclose(file_asm);
 }
 
-
-
+char* SkipSpace(char* current_pos)
+{
+    while (*current_pos == ' ' || *current_pos == '\t' || *current_pos == '\n') {
+        current_pos++;
+    }
+    return current_pos;
+}
