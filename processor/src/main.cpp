@@ -26,6 +26,9 @@ int main(int argc, char *argv[])
     if (error_run != NULL)
     {
         printf("ERROR! from Run ^, %s\n", error_run);
+        free(proc.code);
+        stackDtor(&stk);
+        stackDtor(&retAddrStk);
         return 1;
     }
 

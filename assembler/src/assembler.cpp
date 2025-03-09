@@ -1,3 +1,4 @@
+//------------------------------------------------------------------------------------------------------------------------
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
@@ -9,44 +10,61 @@
 #include "CommonProcAssem.h"
 #include "assembler.h"
 
-CodeError HandleMemoryAccess(FILE* file_code, char* arg);
-CodeError AssemblyArgType(FILE *file_asm, FILE *file_code, int cmd_code);
+CodeError AssemblyArgType(char *buffer, FILE *file_code, int cmd_code);
 void CheckLabels(char *cmd, Assem *Asm, int CODE_SIZE);
 int FindFunc(Assem *Asm, char *cmd);
-void RemoveSpaces(char* str);
-void ReadingArg(FILE *file_asm, char *arg, size_t arg_size);
+
+
+void ReadFileToBuffer(FILE *file_asm, char **buffer, size_t *file_size);
 
 const char* Assembler(Assem *Asm)
 {
+    char *buffer = NULL;
+    size_t file_size = 0;
+
     FILE *file_asm = NULL, *file_code = NULL;
-    CtorAssembly(&file_asm, &file_code, Asm);
+    CtorAssembly(&file_asm, &file_code, Asm, &buffer, &file_size);
 
-    for (int i = 0; i < LABELS_SIZE; i++)
-    {
-        printf("%s ", Asm->Labels[i].name);
-    }
-    printf("\n");
-
+    char *current_pos = buffer;
     while (true)
     {
-        char cmd[30] = "";
-        int result = ReadingCommand(file_asm, &cmd[0]);
-        if (result == -1)
+
+        while (*current_pos == ' ' || *current_pos == '\t' || *current_pos == '\n')
+        {
+            current_pos++;
+        }
+
+        if (*current_pos == '\0')
         {
             break;
         }
 
+        printf("HELLO\n");
+
+        char cmd[30] = "";
+        if (sscanf(current_pos, "%29s", cmd) != 1)
+        {
+            printf("the string incorrectly\n");
+            return NULL;
+        }
+        printf( COLOR_MAGENTA "%s " COLOR_RESET, cmd);
+        printf("\n");
+
+        current_pos += strlen(cmd);
+
         size_t count_command = sizeof(command_code) / sizeof(command_code[0]); //TODO: to header const
         int cmd_code = GetCommandCode(cmd, count_command);
+
         switch (cmd_code)
         {
             case CMD_PUSH:
             case CMD_POP:
             {
-                CodeError error = AssemblyArgType(file_asm, file_code, cmd_code);
+                CodeError error = AssemblyArgType(current_pos, file_code, cmd_code);
                 if (error == ARG_TYPE_ERROR)
                 {
-                    return "not correct arg";
+                    free(buffer);
+                    return COLOR_RED "not correct arg" COLOR_RESET;
                 }
                 break;
             }
@@ -74,7 +92,7 @@ const char* Assembler(Assem *Asm)
             case CMD_JE:
             case CMD_JNE:
             {
-                CodeError error = AssemblyLabels(file_asm, file_code, Asm, cmd_code);
+                CodeError error = AssemblyLabels(current_pos, file_code, Asm, cmd_code);
                 if (error)
                 {
                     return "LABEL ERROR!";
@@ -89,16 +107,33 @@ const char* Assembler(Assem *Asm)
 
     fseek(file_code, 0, SEEK_SET);
     FillBufferCode(Asm, file_code);
-
-    DtorAssembly(file_asm, file_code);
+    free(buffer);
+    DtorAssembly(file_code);
     return NULL;
 }
 
-CodeError AssemblyLabels(FILE *file_asm, FILE *file_code, Assem *Asm, int cmd_code)
+CodeError AssemblyLabels(char *buffer, FILE *file_code, Assem *Asm, int cmd_code)
 {
     fprintf(file_code, "%d ", cmd_code);
-    char label[20] = "";
-    fscanf(file_asm, "%s", label);
+
+    char *current_pos = buffer;
+
+    while (*current_pos == ' ' || *current_pos == '\t' || *current_pos == '\n')
+    {
+        current_pos++;
+    }
+
+    printf("HELLO\n");
+
+    char label[30] = "";
+    if (sscanf(current_pos, "%29s", label) != 1)
+    {
+        printf("the string incorrectly\n");
+        return ARG_TYPE_ERROR;
+    }
+
+    printf(COLOR_GREEN "%s\n" COLOR_RESET, label);
+
     int label_index = FindLabel(Asm, label);
     if (label_index != -1)
     {
@@ -106,15 +141,18 @@ CodeError AssemblyLabels(FILE *file_asm, FILE *file_code, Assem *Asm, int cmd_co
     }
     else
     {
-        fprintf(file_code, "Error: Label not found\n");
+        printf(COLOR_RED "Error: Label not found\n" COLOR_RESET);
         return UNKNOW_LABEL;
     }
+
+    current_pos += strlen(label);
+
     return ITS_OK;
 }
 
-void DtorAssembly(FILE *file_asm, FILE *file_code)
+void DtorAssembly(FILE *file_code)
 {
-    fclose(file_asm);
+    // fclose(file_asm);
     fclose(file_code);
 }
 
@@ -135,7 +173,6 @@ void FillBufferCode(Assem *Asm, FILE *file_code)
 
 int CompileArg(const char *str)
 {
-    //printf("CompileArg: <%s>\n", str);
     Registers ArrayRegs[] = { {"ax", 0},
                               {"bx", 1},
                               {"cx", 2},
@@ -165,17 +202,24 @@ int GetCommandCode(const char *cmd, size_t count_command)
     return 0;
 }
 
-void CtorAssembly(FILE **file_asm, FILE **file_code, Assem *Asm)
+void CtorAssembly(FILE **file_asm, FILE **file_code, Assem *Asm, char **buffer, size_t *file_size)
 {
     *file_asm = fopen(Asm->file_name, "r");
     assert(*file_asm != nullptr);
 
     *file_code = fopen("programms/code.txt", "w+");
     assert(*file_code != nullptr);
+    ReadFileToBuffer(*file_asm, buffer, file_size);
 
-    Asm->CODE_SIZE = FirstPassFile(*file_asm, Asm);
-    fseek(*file_asm, 0, SEEK_SET);
+    // for (size_t i = 0; i < *file_size; i++)
+    // {
+    //     printf("%s ", buffer[i]);
+    // }
+    printf("\n");
+    printf("start\n");
+    Asm->CODE_SIZE = FirstPassFile(*buffer, Asm);
 
+    printf("HI\n");
     Asm->code = (int*)calloc((size_t)Asm->CODE_SIZE + 1, sizeof(int));
 }
 
@@ -193,22 +237,35 @@ int ReadingCommand(FILE *file_asm, char *cmd)
     return ITS_OK;
 }
 
-int FirstPassFile(FILE *file_asm, Assem *Asm)
+int FirstPassFile(char *buffer, Assem *Asm)
 {
     int CODE_SIZE = 0;
+    char *current_pos = buffer;
     while(true)
     {
-        char cmd[30] = "";
-        if (fscanf(file_asm, "%29s", cmd) != 1)
-        {
-            if (feof(file_asm))
-            {
-                break;
-            }
+        if (*current_pos == '\0')
+            break;
 
+        while (*current_pos == ' ' || *current_pos == '\t' || *current_pos == '\n')
+        {
+            current_pos++;
+        }
+
+        if (*current_pos == '\0')
+        {
+            break;
+        }
+
+        char cmd[30] = "";
+        if (sscanf(current_pos, "%29s", cmd) != 1)
+        {
             printf("the string incorrectly\n");
             return -1;
         }
+        printf( COLOR_BLUE "%s " COLOR_RESET, cmd);
+        printf("\n");
+
+        current_pos += strlen(cmd);
 
         size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
         int cmd_code = GetCommandCode(cmd, count_command);
@@ -218,7 +275,7 @@ int FirstPassFile(FILE *file_asm, Assem *Asm)
             case CMD_PUSH:
             case CMD_POP:
             {
-                CODE_SIZE += 4;
+                CODE_SIZE += 3;
                 break;
             }
 
@@ -245,7 +302,9 @@ int FirstPassFile(FILE *file_asm, Assem *Asm)
             case CMD_JMP:
             {
                 char label[30] = "";
-                fscanf(file_asm, "%s", label);
+                sscanf(current_pos, "%s", label);
+                printf(COLOR_CYAN "%s\n" COLOR_RESET, label);
+                current_pos += strlen(label) + 1;
                 CODE_SIZE += 2;
                 break;
             }
@@ -275,6 +334,7 @@ void CheckLabels(char *cmd, Assem *Asm, int CODE_SIZE)
 
 int FindLabel(Assem *Asm, char *cmd)
 {
+    printf(COLOR_YELLOW "%s|\n" COLOR_RESET, cmd);
     cmd[strlen(cmd) - 1] = '\0';
     for (int i = 0; i < LABELS_SIZE; i++)
     {
@@ -299,21 +359,28 @@ int FindFunc(Assem *Asm, char *cmd)
 }
 
 
-CodeError AssemblyArgType(FILE *file_asm, FILE *file_code, int cmd_code)
+CodeError AssemblyArgType(char *buffer, FILE *file_code, int cmd_code)
 {
     fprintf(file_code, "%d ", cmd_code);
+    printf("%d\n", cmd_code);
 
-    char arg[20] = "";
-    ReadingArg(file_asm, arg, sizeof(arg));
+    char *current_pos = buffer;
+
+    while (*current_pos == ' ' || *current_pos == '\t' || *current_pos == '\n')
+    {
+        current_pos++;
+    }
+
+    char arg[30] = "";
+    if (sscanf(current_pos, "%29s", arg) != 1)
+    {
+        printf("the string incorrectly\n");
+        return ARG_TYPE_ERROR;
+    }
+    current_pos += strlen(arg);
+
     size_t size_arg = strlen(arg);
-    RemoveSpaces(arg);
 
-    // if ((arg[0] == '-' && size_arg > 1 && isdigit(arg[1])) || (isdigit(arg[0])))
-    // {
-    //     printf("HI\n");
-    //     fprintf(file_code, "%d ", 1);
-    //     fprintf(file_code, "%d\n", atoi(arg));
-    // }
     if (arg[0] == '-' && size_arg > 1 && isdigit(arg[1]))
     {
         fprintf(file_code, "%d ", 1);
@@ -324,17 +391,6 @@ CodeError AssemblyArgType(FILE *file_asm, FILE *file_code, int cmd_code)
         fprintf(file_code, "%d ", 1);
         fprintf(file_code, "%d\n", atoi(arg));
     }
-
-    else if ((arg[0] == '[' || arg[size_arg - 1] == ']'))
-    {
-        //printf("===============================\n");
-        CodeError error = HandleMemoryAccess(file_code, &arg[0]);
-        if (error != ITS_OK)
-        {
-            return ARG_TYPE_ERROR;
-        }
-    }
-
     else if (!isdigit(arg[0]) && !isdigit(arg[1]))
     {
         int reg = CompileArg(arg);
@@ -346,94 +402,25 @@ CodeError AssemblyArgType(FILE *file_asm, FILE *file_code, int cmd_code)
         fprintf(file_code, "%d\n", reg);
     }
 
-    else
-    {
-        return ARG_TYPE_ERROR;
-    }
-
     return ITS_OK;
 }
 
-CodeError HandleMemoryAccess(FILE* file_code, char* arg)
+void ReadFileToBuffer(FILE *file_asm, char **buffer, size_t *file_size)
 {
-    size_t size_arg = strlen(arg);
+    fseek(file_asm, 0, SEEK_END);
+    *file_size = (size_t)ftell(file_asm);
+    fseek(file_asm, 0, SEEK_SET);
 
-    arg[size_arg - 1] = '\0';
-    char inner_arg[20];
-    strncpy(inner_arg, arg + 1, size_arg - 2);
-    inner_arg[size_arg - 2] = '\0';
-    RemoveSpaces(inner_arg);
-
-    char* plus_pos = strchr(inner_arg, '+');
-    if (plus_pos)
+    *buffer = (char*)calloc(*file_size + 1, sizeof(char));
+    if (*buffer == NULL)
     {
-        *plus_pos = '\0';
-        char* left_part = inner_arg;
-        char* right_part = plus_pos + 1;
-
-        int reg = CompileArg(left_part);
-        int num = atoi(right_part);
-
-        if (reg != -1)
-        {
-            fprintf(file_code, "%d ", 7);
-            fprintf(file_code, "%d %d\n", reg, num);
-            return ITS_OK;
-        }
-
-        reg = CompileArg(right_part);
-        num = atoi(left_part);
-
-        if (reg != -1)
-        {
-            fprintf(file_code, "%d ", 7);
-            fprintf(file_code, "%d %d\n", reg, num);
-            return ITS_OK;
-        }
+        fprintf(stderr, "Failed to allocate memory for file buffer.\n");
+        exit(1);
     }
 
-    else
-    {
-        int reg = CompileArg(inner_arg);
-        if (reg != -1)
-        {
-            fprintf(file_code, "%d ", 6);
-            fprintf(file_code, "%d\n", reg);
-            return ITS_OK;
-        }
-
-        int num = atoi(inner_arg);
-        fprintf(file_code, "%d ", 6);
-        fprintf(file_code, "%d\n", num);
-        return ITS_OK;
-
-    }
-    return ARG_TYPE_ERROR;
+    fread(*buffer, 1, *file_size, file_asm);
+    fclose(file_asm);
 }
 
-void RemoveSpaces(char* str)
-{
-    char* dest = str;
-    for (char* src = str; *src != '\0'; src++)
-    {
-        if (*src != ' ')
-        {
-            *dest = *src;
-            dest++;
-        }
-    }
-    *dest = '\0';
-}
 
-void ReadingArg(FILE *file_asm, char *arg, size_t arg_size) //ReadArg
-{
-    if (fgets(arg, (int)arg_size, file_asm) != NULL)
-    {
-        size_t len = strlen(arg);
-        if (len > 0 && arg[len - 1] == '\n')
-        {
-            arg[len - 1] = '\0';
-        }
-    }
-}
 
