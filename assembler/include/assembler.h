@@ -25,11 +25,10 @@ typedef struct Assem
     Label Labels[LABELS_SIZE];
 } Assem;
 
-
 CodeError AssemblyLabels(char *buffer, FILE *file_code, Assem *Asm, int cmd_code);
 void CtorAssembly(FILE **file_asm, FILE **file_code, Assem *Asm, char **buffer, size_t *file_size);
 void DtorAssembly(FILE *file_code);
-int ReadingCommand(FILE *file_asm, char *cmd);
+int ReadCommand(FILE *file_asm, char *cmd);
 int GetCommandCode(const char *cmd, size_t count_command);
 void CheckArgsAsm(int argc, char *argv[], Assem *Asm);
 int FirstPassFile(char *buffer, Assem *Asm);
@@ -37,5 +36,10 @@ int FindLabel(Assem *Asm, char *cmd);
 const char* Assembler(Assem *Asm);
 void FillBufferCode(Assem *Asm, FILE *file_code);
 void WriteBinFile(Assem *Asm);
+CodeError AssemblyArgType(char *buffer, FILE *file_code, int cmd_code);
+void CheckLabels(char *cmd, Assem *Asm, int CODE_SIZE);
+int FindFunc(Assem *Asm, char *cmd);
+void ReadFileToBuffer(FILE *file_asm, char **buffer, size_t *file_size);
+char* SkipSpace(char* current_pos);
 
 #endif //HASSEMBLER

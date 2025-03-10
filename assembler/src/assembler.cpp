@@ -10,11 +10,8 @@
 #include "CommonProcAssem.h"
 #include "assembler.h"
 
-CodeError AssemblyArgType(char *buffer, FILE *file_code, int cmd_code);
-void CheckLabels(char *cmd, Assem *Asm, int CODE_SIZE);
-int FindFunc(Assem *Asm, char *cmd);
-void ReadFileToBuffer(FILE *file_asm, char **buffer, size_t *file_size);
-char* SkipSpace(char* current_pos);
+void RemoveSpaces(char* str);
+CodeError HandleMemoryAccess(FILE* file_code, char* arg);
 
 const char* Assembler(Assem *Asm)
 {
@@ -24,6 +21,7 @@ const char* Assembler(Assem *Asm)
     FILE *file_asm = NULL, *file_code = NULL;
     CtorAssembly(&file_asm, &file_code, Asm, &buffer, &file_size);
 
+    const size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
     char *current_pos = buffer;
     while (true)
     {
@@ -43,7 +41,6 @@ const char* Assembler(Assem *Asm)
 
         current_pos += strlen(cmd);
 
-        size_t count_command = sizeof(command_code) / sizeof(command_code[0]); //TODO: to header const
         int cmd_code = GetCommandCode(cmd, count_command);
 
         switch (cmd_code)
@@ -138,7 +135,6 @@ CodeError AssemblyLabels(char *buffer, FILE *file_code, Assem *Asm, int cmd_code
 
 void DtorAssembly(FILE *file_code)
 {
-    // fclose(file_asm);
     fclose(file_code);
 }
 
@@ -207,7 +203,7 @@ void CtorAssembly(FILE **file_asm, FILE **file_code, Assem *Asm, char **buffer, 
     Asm->code = (int*)calloc((size_t)Asm->CODE_SIZE + 1, sizeof(int));
 }
 
-int ReadingCommand(FILE *file_asm, char *cmd)
+int ReadCommand(FILE *file_asm, char *cmd)
 {
     if (fscanf(file_asm, "%19s", cmd) != 1)
     {
@@ -251,7 +247,7 @@ int FirstPassFile(char *buffer, Assem *Asm)
             case CMD_PUSH:
             case CMD_POP:
             {
-                CODE_SIZE += 3;
+                CODE_SIZE += 4;
                 break;
             }
 
@@ -341,11 +337,32 @@ CodeError AssemblyArgType(char *buffer, FILE *file_code, int cmd_code)
     current_pos = SkipSpace(current_pos);
 
     char arg[30] = "";
-    if (sscanf(current_pos, "%29s", arg) != 1)
+    char type_arg[30] = "";
+    // if (sscanf(current_pos, "%29s", arg) != 1)
+    // {
+    //     printf("the string incorrectly\n");
+    //     return ARG_TYPE_ERROR;
+    // }
+    sscanf(current_pos, "%29s", type_arg);
+
+    if (strchr(type_arg, '['))
     {
-        printf("the string incorrectly\n");
-        return ARG_TYPE_ERROR;
+        if (sscanf(current_pos, "%29[^\n]", arg) != 1)
+        {
+            printf("the string incorrectly\n");
+            return ARG_TYPE_ERROR;
+        }
     }
+
+    else
+    {
+        if (sscanf(current_pos, "%29s", arg) != 1)
+        {
+            printf("the string incorrectly\n");
+            return ARG_TYPE_ERROR;
+        }
+    }
+
     current_pos += strlen(arg);
 
     size_t size_arg = strlen(arg);
@@ -355,11 +372,23 @@ CodeError AssemblyArgType(char *buffer, FILE *file_code, int cmd_code)
         fprintf(file_code, "%d ", 1);
         fprintf(file_code, "%d\n", atoi(arg));
     }
+
     else if (isdigit(arg[0]))
     {
         fprintf(file_code, "%d ", 1);
         fprintf(file_code, "%d\n", atoi(arg));
     }
+
+    else if ((arg[0] == '[' || arg[size_arg - 1] == ']'))
+    {
+        printf("<<%s>>\n", arg);
+        CodeError error = HandleMemoryAccess(file_code, &arg[0]);
+        if (error != ITS_OK)
+        {
+            return ARG_TYPE_ERROR;
+        }
+    }
+
     else if (!isdigit(arg[0]) && !isdigit(arg[1]))
     {
         int reg = CompileArg(arg);
@@ -398,3 +427,78 @@ char* SkipSpace(char* current_pos)
     }
     return current_pos;
 }
+
+CodeError HandleMemoryAccess(FILE* file_code, char* arg)
+{
+    size_t size_arg = strlen(arg);
+    printf(COLOR_BLUE "<%s>\n" COLOR_RESET, arg);
+
+    arg[size_arg - 1] = '\0';
+    char inner_arg[20];
+    strncpy(inner_arg, arg + 1, size_arg - 2);
+    inner_arg[size_arg - 2] = '\0';
+    RemoveSpaces(inner_arg);
+
+    printf(COLOR_YELLOW "<%s>\n" COLOR_RESET, inner_arg);
+
+    char* plus_pos = strchr(inner_arg, '+');
+    if (plus_pos)
+    {
+        *plus_pos = '\0';
+        char* left_part = inner_arg;
+        char* right_part = plus_pos + 1;
+
+        int reg = CompileArg(left_part);
+        int num = atoi(right_part);
+
+        if (reg != -1)
+        {
+            fprintf(file_code, "%d ", 7);
+            fprintf(file_code, "%d %d\n", reg, num);
+            return ITS_OK;
+        }
+
+        reg = CompileArg(right_part);
+        num = atoi(left_part);
+
+        if (reg != -1)
+        {
+            fprintf(file_code, "%d ", 7);
+            fprintf(file_code, "%d %d\n", reg, num);
+            return ITS_OK;
+        }
+    }
+
+    else
+    {
+        int reg = CompileArg(inner_arg);
+        if (reg != -1)
+        {
+            fprintf(file_code, "%d ", 6);
+            fprintf(file_code, "%d\n", reg);
+            return ITS_OK;
+        }
+
+        int num = atoi(inner_arg);
+        fprintf(file_code, "%d ", 6);
+        fprintf(file_code, "%d\n", num);
+        return ITS_OK;
+
+    }
+    return ARG_TYPE_ERROR;
+}
+
+void RemoveSpaces(char* str)
+{
+    char* dest = str;
+    for (char* src = str; *src != '\0'; src++)
+    {
+        if (*src != ' ')
+        {
+            *dest = *src;
+            dest++;
+        }
+    }
+    *dest = '\0';
+}
+
