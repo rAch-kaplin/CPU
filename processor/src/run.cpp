@@ -312,7 +312,7 @@ int ProcessingStackCommands(CPU *proc, stack *stk, int cmd)
 
     else if (IsPushm)
     {
-        stackElem value = proc->RAM[proc->code[proc->IP + 2]];
+        stackElem value = proc->code[proc->IP + 2];
         GetProcInstruction(cmd, proc, value);
         LOG(LOGL_DEBUG, "Pushm ");
         stackPush(stk, value);
@@ -320,8 +320,8 @@ int ProcessingStackCommands(CPU *proc, stack *stk, int cmd)
 
     else if (IsPushmComplex)
     {
-        int reg = proc->registers[proc->code[proc->IP + 2]];
-        int val_ram = proc->RAM[proc->code[proc->IP + 3]];
+        int reg = proc->code[proc->IP + 2];
+        int val_ram = proc->code[proc->IP + 3];
         int value = reg + val_ram;
         GetProcInstruction(cmd, proc, value);
         LOG(LOGL_DEBUG, "Pushm ");
@@ -368,12 +368,12 @@ int ProcessingStackCommands(CPU *proc, stack *stk, int cmd)
     else if (IsPopmComplex)
     {
         stackElem value = 0;
-        int reg = proc->registers[proc->code[proc->IP + 2]];
-        int val_ram = proc->RAM[proc->code[proc->IP + 3]];
+        int reg = proc->code[proc->IP + 2];
+        int val_ram = proc->code[proc->IP + 3];
         LOG(LOGL_DEBUG, "Popm ");
         stackPop(stk, &value);
         proc->RAM[reg + val_ram] = value;
-        proc->IP += 2;
+        proc->IP += 1;
     }
 
     // for (int i = 0; i < 10; i++)

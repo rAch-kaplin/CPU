@@ -453,6 +453,7 @@ CodeError HandleMemoryAccess(FILE* file_code, char* arg)
 
         if (reg != -1)
         {
+            printf("<<<%d|%d\n", reg, num);
             fprintf(file_code, "%d ", 7);
             fprintf(file_code, "%d %d\n", reg, num);
             return ITS_OK;
@@ -463,6 +464,7 @@ CodeError HandleMemoryAccess(FILE* file_code, char* arg)
 
         if (reg != -1)
         {
+            printf("<<<%d|%d\n", reg, num);
             fprintf(file_code, "%d ", 7);
             fprintf(file_code, "%d %d\n", reg, num);
             return ITS_OK;
