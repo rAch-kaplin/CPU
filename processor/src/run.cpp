@@ -164,6 +164,8 @@ const char* Run(stack *stk, stack *retAddrStk, CPU *proc)
 
             default:
             {
+                printf(COLOR_RED "%d " COLOR_RESET, cmd);
+                printf("\n");
                 return "Unknow command:(";
                 break;
             }

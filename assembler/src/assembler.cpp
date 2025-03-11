@@ -1,4 +1,3 @@
-//------------------------------------------------------------------------------------------------------------------------
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
@@ -12,6 +11,7 @@
 
 void RemoveSpaces(char* str);
 CodeError HandleMemoryAccess(FILE* file_code, char* arg);
+bool IsComplexArgument(const char *arg);
 
 const char* Assembler(Assem *Asm)
 {
@@ -38,6 +38,9 @@ const char* Assembler(Assem *Asm)
             printf("the string incorrectly\n");
             return NULL;
         }
+
+        printf(COLOR_RED "%s " COLOR_RESET, cmd);
+        printf("\n");
 
         current_pos += strlen(cmd);
 
@@ -140,6 +143,7 @@ void DtorAssembly(FILE *file_code)
 
 void FillBufferCode(Assem *Asm, FILE *file_code)
 {
+    printf("CODE_SIZE: %d\n", Asm->CODE_SIZE);
     for (int i = 0; i < Asm->CODE_SIZE; i++)
     {
         fscanf(file_code, "%d", &Asm->code[i]);
@@ -247,7 +251,17 @@ int FirstPassFile(char *buffer, Assem *Asm)
             case CMD_PUSH:
             case CMD_POP:
             {
-                CODE_SIZE += 4;
+                char arg[30] = "";
+                sscanf(current_pos, "%29[^\n]", arg);
+                if (IsComplexArgument(arg))
+                {
+                    CODE_SIZE += 4;
+                }
+                else
+                {
+                    CODE_SIZE += 3;
+                }
+
                 break;
             }
 
@@ -292,6 +306,11 @@ int FirstPassFile(char *buffer, Assem *Asm)
     return CODE_SIZE;
 }
 
+bool IsComplexArgument(const char *arg)
+{
+    return (strchr(arg, '+') != NULL);
+}
+
 void CheckLabels(char *cmd, Assem *Asm, int CODE_SIZE)
 {
     if (strcmp(&cmd[strlen(cmd) - 1], ":") == 0)
@@ -327,7 +346,6 @@ int FindFunc(Assem *Asm, char *cmd)
     }
     return -10;
 }
-
 
 CodeError AssemblyArgType(char *buffer, FILE *file_code, int cmd_code)
 {
