@@ -41,5 +41,8 @@ void CheckLabels(char *cmd, Assem *Asm, int CODE_SIZE);
 int FindFunc(Assem *Asm, char *cmd);
 void ReadFileToBuffer(FILE *file_asm, char **buffer, size_t *file_size);
 char* SkipSpace(char* current_pos);
+void RemoveSpaces(char* str);
+CodeError HandleMemoryAccess(FILE* file_code, char* arg);
+bool IsComplexArgument(const char *arg);
 
 #endif //HASSEMBLER

@@ -1,17 +1,16 @@
-#include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
 #include <assert.h>
 #include <ctype.h>
 #include "logger.h"
 #include "color.h"
-#include "common.h"
 #include "CommonProcAssem.h"
 #include "assembler.h"
 
-void RemoveSpaces(char* str);
-CodeError HandleMemoryAccess(FILE* file_code, char* arg);
-bool IsComplexArgument(const char *arg);
+//TODO: разбить на функции
+//TODO: реализовать норм листинг
+
+void HandlSizeArg(int *CODE_SIZE, char **current_pos);
 
 const char* Assembler(Assem *Asm)
 {
@@ -21,8 +20,9 @@ const char* Assembler(Assem *Asm)
     FILE *file_asm = NULL, *file_code = NULL;
     CtorAssembly(&file_asm, &file_code, Asm, &buffer, &file_size);
 
-    const size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
     char *current_pos = buffer;
+    const size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
+
     while (true)
     {
         current_pos = SkipSpace(current_pos);
@@ -38,9 +38,6 @@ const char* Assembler(Assem *Asm)
             printf("the string incorrectly\n");
             return NULL;
         }
-
-        printf(COLOR_RED "%s " COLOR_RESET, cmd);
-        printf("\n");
 
         current_pos += strlen(cmd);
 
@@ -143,7 +140,6 @@ void DtorAssembly(FILE *file_code)
 
 void FillBufferCode(Assem *Asm, FILE *file_code)
 {
-    printf("CODE_SIZE: %d\n", Asm->CODE_SIZE);
     for (int i = 0; i < Asm->CODE_SIZE; i++)
     {
         fscanf(file_code, "%d", &Asm->code[i]);
@@ -197,11 +193,6 @@ void CtorAssembly(FILE **file_asm, FILE **file_code, Assem *Asm, char **buffer, 
     assert(*file_code != nullptr);
     ReadFileToBuffer(*file_asm, buffer, file_size);
 
-    // for (size_t i = 0; i < *file_size; i++)
-    // {
-    //     printf("%s ", buffer[i]);
-    // }
-
     Asm->CODE_SIZE = FirstPassFile(*buffer, Asm);
 
     Asm->code = (int*)calloc((size_t)Asm->CODE_SIZE + 1, sizeof(int));
@@ -251,17 +242,7 @@ int FirstPassFile(char *buffer, Assem *Asm)
             case CMD_PUSH:
             case CMD_POP:
             {
-                char arg[30] = "";
-                sscanf(current_pos, "%29[^\n]", arg);
-                if (IsComplexArgument(arg))
-                {
-                    CODE_SIZE += 4;
-                }
-                else
-                {
-                    CODE_SIZE += 3;
-                }
-
+                HandlSizeArg(&CODE_SIZE, &current_pos);
                 break;
             }
 
@@ -304,6 +285,20 @@ int FirstPassFile(char *buffer, Assem *Asm)
     }
 
     return CODE_SIZE;
+}
+
+void HandlSizeArg(int *CODE_SIZE, char **current_pos)
+{
+    char arg[30] = "";
+    sscanf(*current_pos, "%29[^\n]", arg);
+    if (IsComplexArgument(arg))
+    {
+        *CODE_SIZE += 4;
+    }
+    else
+    {
+        *CODE_SIZE += 3;
+    }
 }
 
 bool IsComplexArgument(const char *arg)
@@ -356,11 +351,7 @@ CodeError AssemblyArgType(char *buffer, FILE *file_code, int cmd_code)
 
     char arg[30] = "";
     char type_arg[30] = "";
-    // if (sscanf(current_pos, "%29s", arg) != 1)
-    // {
-    //     printf("the string incorrectly\n");
-    //     return ARG_TYPE_ERROR;
-    // }
+
     sscanf(current_pos, "%29s", type_arg);
 
     if (strchr(type_arg, '['))
@@ -399,7 +390,6 @@ CodeError AssemblyArgType(char *buffer, FILE *file_code, int cmd_code)
 
     else if ((arg[0] == '[' || arg[size_arg - 1] == ']'))
     {
-        printf("<<%s>>\n", arg);
         CodeError error = HandleMemoryAccess(file_code, &arg[0]);
         if (error != ITS_OK)
         {
@@ -449,15 +439,12 @@ char* SkipSpace(char* current_pos)
 CodeError HandleMemoryAccess(FILE* file_code, char* arg)
 {
     size_t size_arg = strlen(arg);
-    printf(COLOR_BLUE "<%s>\n" COLOR_RESET, arg);
 
     arg[size_arg - 1] = '\0';
     char inner_arg[20];
     strncpy(inner_arg, arg + 1, size_arg - 2);
     inner_arg[size_arg - 2] = '\0';
     RemoveSpaces(inner_arg);
-
-    printf(COLOR_YELLOW "<%s>\n" COLOR_RESET, inner_arg);
 
     char* plus_pos = strchr(inner_arg, '+');
     if (plus_pos)
@@ -471,7 +458,6 @@ CodeError HandleMemoryAccess(FILE* file_code, char* arg)
 
         if (reg != -1)
         {
-            printf("<<<%d|%d\n", reg, num);
             fprintf(file_code, "%d ", 7);
             fprintf(file_code, "%d %d\n", reg, num);
             return ITS_OK;
@@ -482,7 +468,6 @@ CodeError HandleMemoryAccess(FILE* file_code, char* arg)
 
         if (reg != -1)
         {
-            printf("<<<%d|%d\n", reg, num);
             fprintf(file_code, "%d ", 7);
             fprintf(file_code, "%d %d\n", reg, num);
             return ITS_OK;
