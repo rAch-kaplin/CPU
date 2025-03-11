@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "stack.h"
 #include "common.h"
+#include "proccessor.h"
 
 
 const int LABELS_SIZE = 128;
@@ -18,10 +19,12 @@ typedef struct
 
 typedef struct Assem
 {
-    int *code;
+    int *code = NULL;
     int CODE_SIZE;
     const char *file_name;
     int label_count = 0;
+    char *listing = NULL;
+
     Label Labels[LABELS_SIZE];
 } Assem;
 

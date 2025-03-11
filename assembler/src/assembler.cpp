@@ -23,8 +23,13 @@ const char* Assembler(Assem *Asm)
     char *current_pos = buffer;
     const size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
 
+    Asm->listing = (char*)calloc(Asm->CODE_SIZE * 30, sizeof(char));
+    char *initial_listing = Asm->listing;
+    Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "\n\t\t Number \t\t\ Code \t\t\t Text\n\n");
+
     while (true)
     {
+        int i = 1;
         current_pos = SkipSpace(current_pos);
 
         if (*current_pos == '\0')
@@ -42,6 +47,8 @@ const char* Assembler(Assem *Asm)
         current_pos += strlen(cmd);
 
         int cmd_code = GetCommandCode(cmd, count_command);
+
+        Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "\t\t %03d \t\t %03d \t\t\t %s\n", i, cmd_code, cmd);
 
         switch (cmd_code)
         {
@@ -93,9 +100,14 @@ const char* Assembler(Assem *Asm)
         }
     }
 
+    FILE *file_list = fopen("listing.txt", "w");
+    fprintf(file_list, "%s", initial_listing);
+    fclose(file_list);
+
     fseek(file_code, 0, SEEK_SET);
     FillBufferCode(Asm, file_code);
     free(buffer);
+    free(initial_listing);
     DtorAssembly(file_code);
     return NULL;
 }
