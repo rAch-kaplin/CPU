@@ -25,11 +25,10 @@ const char* Assembler(Assem *Asm)
 
     Asm->listing = (char*)calloc(Asm->CODE_SIZE * 30, sizeof(char));
     char *initial_listing = Asm->listing;
-    Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "\n\t\t Number \t\t\ Code \t\t\t Text\n\n");
+    Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "\n\t  Number \t\tCode \t\t Text\n");
 
-    while (true)
+    for (int i = 1;;i++)
     {
-        int i = 1;
         current_pos = SkipSpace(current_pos);
 
         if (*current_pos == '\0')
@@ -48,14 +47,15 @@ const char* Assembler(Assem *Asm)
 
         int cmd_code = GetCommandCode(cmd, count_command);
 
-        Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "\t\t %03d \t\t %03d \t\t\t %s\n", i, cmd_code, cmd);
+        Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "\n\t\t %03d \t\t %03d \t\t %s ", i, cmd_code, cmd);
 
         switch (cmd_code)
         {
             case CMD_PUSH:
             case CMD_POP:
             {
-                CodeError error = AssemblyArgType(current_pos, file_code, cmd_code);
+                //Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "\t\t %03d \t\t %03d \t\t\t %s\n", i, cmd_code, cmd);
+                CodeError error = AssemblyArgType(Asm, &current_pos, file_code, cmd_code);
                 if (error == ARG_TYPE_ERROR)
                 {
                     free(buffer);
@@ -74,6 +74,7 @@ const char* Assembler(Assem *Asm)
             case CMD_IN:
             case CMD_SQRT:
             {
+                //Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "\n");
                 fprintf(file_code, "%d\n", cmd_code);
                 break;
             }
@@ -87,7 +88,8 @@ const char* Assembler(Assem *Asm)
             case CMD_JE:
             case CMD_JNE:
             {
-                CodeError error = AssemblyLabels(current_pos, file_code, Asm, cmd_code);
+                //Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "\t\t %03d \t\t %03d \t\t\t %s\n", i, cmd_code, cmd);
+                CodeError error = AssemblyLabels(&current_pos, file_code, Asm, cmd_code);
                 if (error)
                 {
                     return "LABEL ERROR!";
@@ -112,11 +114,11 @@ const char* Assembler(Assem *Asm)
     return NULL;
 }
 
-CodeError AssemblyLabels(char *buffer, FILE *file_code, Assem *Asm, int cmd_code)
+CodeError AssemblyLabels(char **buffer, FILE *file_code, Assem *Asm, int cmd_code)
 {
     fprintf(file_code, "%d ", cmd_code);
 
-    char *current_pos = buffer;
+    char *current_pos = *buffer;
 
     current_pos = SkipSpace(current_pos);
 
@@ -140,7 +142,9 @@ CodeError AssemblyLabels(char *buffer, FILE *file_code, Assem *Asm, int cmd_code
         return UNKNOW_LABEL;
     }
 
+    Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "%s:", label);
     current_pos += strlen(label);
+    *buffer = current_pos + 1;
 
     return ITS_OK;
 }
@@ -354,11 +358,11 @@ int FindFunc(Assem *Asm, char *cmd)
     return -10;
 }
 
-CodeError AssemblyArgType(char *buffer, FILE *file_code, int cmd_code)
+CodeError AssemblyArgType(Assem *Asm, char **buffer, FILE *file_code, int cmd_code)
 {
     fprintf(file_code, "%d ", cmd_code);
 
-    char *current_pos = buffer;
+    char *current_pos = *buffer;
     current_pos = SkipSpace(current_pos);
 
     char arg[30] = "";
@@ -383,8 +387,9 @@ CodeError AssemblyArgType(char *buffer, FILE *file_code, int cmd_code)
             return ARG_TYPE_ERROR;
         }
     }
-
+    Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "%s", arg);
     current_pos += strlen(arg);
+    *buffer = current_pos;
 
     size_t size_arg = strlen(arg);
 
