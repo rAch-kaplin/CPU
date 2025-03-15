@@ -78,7 +78,7 @@ const char* Assembler(Assem *Asm)
                 fprintf(file_code, "%d\n", cmd_code);
                 break;
             }
-
+            //FIXME: делать запись сразу в массив
             case CMD_FUNC:
             case CMD_JMP:
             case CMD_JA:
@@ -97,7 +97,7 @@ const char* Assembler(Assem *Asm)
                 break;
             }
 
-            default:
+            default: //FIXME: обработать неизвестную команду
                 break;
         }
     }
@@ -114,7 +114,7 @@ const char* Assembler(Assem *Asm)
     return NULL;
 }
 
-CodeError AssemblyLabels(char **buffer, FILE *file_code, Assem *Asm, int cmd_code)
+CodeError AssemblyLabels(char **buffer, FILE *file_code, Assem *Asm, int cmd_code) //FIXME: assert()
 {
     fprintf(file_code, "%d ", cmd_code);
 
@@ -160,12 +160,13 @@ void FillBufferCode(Assem *Asm, FILE *file_code)
     {
         fscanf(file_code, "%d", &Asm->code[i]);
     }
-
+#if 0
     for (int i = 0; i < Asm->CODE_SIZE + 1; i++)
     {
         printf("%d ", Asm->code[i]);
     }
         printf("\n");
+#endif
 }
 
 
@@ -285,7 +286,7 @@ int FirstPassFile(char *buffer, Assem *Asm)
             case CMD_JMP:
             {
                 char label[30] = "";
-                sscanf(current_pos, "%s", label);
+                sscanf(current_pos, "%29s", label);
                 current_pos += strlen(label) + 1;
                 CODE_SIZE += 2;
                 break;
@@ -355,7 +356,7 @@ int FindFunc(Assem *Asm, char *cmd)
             return Asm->Labels[i].value;
         }
     }
-    return -10;
+    return 1;
 }
 
 CodeError AssemblyArgType(Assem *Asm, char **buffer, FILE *file_code, int cmd_code)
@@ -438,8 +439,8 @@ void ReadFileToBuffer(FILE *file_asm, char **buffer, size_t *file_size)
     if (*buffer == NULL)
     {
         fprintf(stderr, "Failed to allocate memory for file buffer.\n");
-        exit(1);
-    }
+        return;
+    } //FIXME: char *buffer
 
     fread(*buffer, 1, *file_size, file_asm);
     fclose(file_asm);
@@ -447,7 +448,8 @@ void ReadFileToBuffer(FILE *file_asm, char **buffer, size_t *file_size)
 
 char* SkipSpace(char* current_pos)
 {
-    while (*current_pos == ' ' || *current_pos == '\t' || *current_pos == '\n') {
+    while (isspace(*current_pos))
+    {
         current_pos++;
     }
     return current_pos;

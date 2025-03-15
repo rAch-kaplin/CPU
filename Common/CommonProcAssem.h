@@ -50,6 +50,7 @@ enum REG_T
     cx = 2,
     dx = 3
 };
+//FIXME: enum uppercase
 
 typedef struct
 {
@@ -64,7 +65,7 @@ typedef struct
     int quantity_args;
 } CommandCode;
 
-static const CommandCode command_code[] = { {"push",    CMD_PUSH,  2},
+static const CommandCode command_code[] = { {"push",    CMD_PUSH,  2},  //FIXME: enum
                                             {"add",     CMD_ADD,   0},
                                             {"sub",     CMD_SUB,   0},
                                             {"out",     CMD_OUT,   0},

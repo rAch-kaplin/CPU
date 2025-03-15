@@ -28,12 +28,14 @@ typedef struct Assem
     Label Labels[LABELS_SIZE];
 } Assem;
 
+//FIXME: вынести функции
+
 CodeError AssemblyLabels(char **buffer, FILE *file_code, Assem *Asm, int cmd_code);
 void CtorAssembly(FILE **file_asm, FILE **file_code, Assem *Asm, char **buffer, size_t *file_size);
 void DtorAssembly(FILE *file_code);
 int ReadCommand(FILE *file_asm, char *cmd);
 int GetCommandCode(const char *cmd, size_t count_command);
-void CheckArgsAsm(int argc, char *argv[], Assem *Asm);
+void CheckArgsAsm(const int argc, const char *argv[], Assem *Asm);
 int FirstPassFile(char *buffer, Assem *Asm);
 int FindLabel(Assem *Asm, char *cmd);
 const char* Assembler(Assem *Asm);

@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdbool.h>
 #include <math.h>
+
 #include "color.h"
 #include "proccessor.h"
 #include "stack.h"
@@ -10,21 +11,19 @@
 #include "logger.h"
 #include "CommonProcAssem.h"
 
-//TODO: сделать правильную обработку с RAM
-
 const char* Run(stack *stk, stack *retAddrStk, CPU *proc)
 {
     CtorProc(stk, retAddrStk);
 
     int size_buffer = FillingCodeArray(proc);
     size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
-
+#if 0
     for (int i = 0; i < size_buffer; i++)
     {
         printf(COLOR_MAGENTA "%d " COLOR_RESET, proc->code[i]);
     }
     printf("\n");
-
+#endif
     bool next = true;
     while (next)
     {
@@ -161,6 +160,9 @@ const char* Run(stack *stk, stack *retAddrStk, CPU *proc)
 
             case CMD_HLT:
             {
+                GetProcInstruction(cmd, proc);
+                LOG(LOGL_DEBUG, "");
+                next = false;
                 break;
             }
 
@@ -174,18 +176,11 @@ const char* Run(stack *stk, stack *retAddrStk, CPU *proc)
         }
 
         IpCounter(proc, cmd,  (int)count_command);
-
-        if (cmd == CMD_HLT)
-        {
-            GetProcInstruction(cmd, proc);
-            LOG(LOGL_DEBUG, "");
-            break;
-        }
     }
 
     free(proc->code);
     stackDtor(stk);
-    stackDtor(retAddrStk);
+    stackDtor(retAddrStk); //FIXME: вынести из функции
     return NULL;
 }
 
@@ -274,7 +269,7 @@ void IpCounter(CPU *proc, stackElem cmd, int count_command)
 int ProcessingStackCommands(CPU *proc, stack *stk, int cmd)
 {
     int TypeArg = proc->code[proc->IP + 1];
-    bool IsPush = false, IsPushr = false, IsPopr = false, IsPushm = false, \
+    bool IsPush = false, IsPushr = false, IsPopr = false, IsPushm = false,
          IsPopm = false, IsPushmComplex = false, IsPopmComplex = false;
 
     if (cmd == CMD_PUSH)
