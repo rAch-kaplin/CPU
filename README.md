@@ -23,7 +23,7 @@ make all
 ./asm -f "file_asm.asm"
 ```
 
-8) To calculate:
+5) To calculate:
 ```
 ./proc
 ```
@@ -31,7 +31,7 @@ or
 ```
 ./proc -m COLOR_MODE        // An option for displaying a color logo in the terminal
 ```
-<img src="img/color-log.png" hight="300">
+<img src="img/color-log.png" height="300">
 
 
 ## Main features
