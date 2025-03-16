@@ -2,13 +2,12 @@
 #include <stdbool.h>
 #include <assert.h>
 #include <ctype.h>
+
 #include "logger.h"
 #include "color.h"
 #include "CommonProcAssem.h"
 #include "assembler.h"
 
-//TODO: разбить на функции
-//TODO: реализовать норм листинг
 
 void HandlSizeArg(int *CODE_SIZE, char **current_pos);
 
@@ -17,15 +16,15 @@ const char* Assembler(Assem *Asm)
     char *buffer = NULL;
     size_t file_size = 0;
 
-    FILE *file_asm = NULL, *file_code = NULL;
-    CtorAssembly(&file_asm, &file_code, Asm, &buffer, &file_size);
+    FILE *file_asm = NULL;
+    CtorAssembly(&file_asm, Asm, &buffer, &file_size);
 
     char *current_pos = buffer;
     const size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
 
-    Asm->listing = (char*)calloc(Asm->CODE_SIZE * 30, sizeof(char));
+    //Asm->listing = (char*)calloc(Asm->CODE_SIZE * 30, sizeof(char));
     char *initial_listing = Asm->listing;
-    Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "\n\t  Number \t\tCode \t\t Text\n");
+    //Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "\n\t  Number \t\tCode \t\t Text\n");
 
     for (int i = 1;;i++)
     {
@@ -47,7 +46,7 @@ const char* Assembler(Assem *Asm)
 
         int cmd_code = GetCommandCode(cmd, count_command);
 
-        Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "\n\t\t %03d \t\t %03d \t\t %s ", i, cmd_code, cmd);
+        //Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "\n\t\t %03d \t\t %03d \t\t %s ", i, cmd_code, cmd);
 
         switch (cmd_code)
         {
@@ -55,7 +54,7 @@ const char* Assembler(Assem *Asm)
             case CMD_POP:
             {
                 //Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "\t\t %03d \t\t %03d \t\t\t %s\n", i, cmd_code, cmd);
-                CodeError error = AssemblyArgType(Asm, &current_pos, file_code, cmd_code);
+                CodeError error = AssemblyArgType(Asm, &current_pos, cmd_code);
                 if (error == ARG_TYPE_ERROR)
                 {
                     free(buffer);
@@ -75,7 +74,7 @@ const char* Assembler(Assem *Asm)
             case CMD_SQRT:
             {
                 //Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "\n");
-                fprintf(file_code, "%d\n", cmd_code);
+                Asm->code[Asm->offset++] = cmd_code;
                 break;
             }
             //FIXME: делать запись сразу в массив
@@ -89,7 +88,7 @@ const char* Assembler(Assem *Asm)
             case CMD_JNE:
             {
                 //Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "\t\t %03d \t\t %03d \t\t\t %s\n", i, cmd_code, cmd);
-                CodeError error = AssemblyLabels(&current_pos, file_code, Asm, cmd_code);
+                CodeError error = AssemblyLabels(&current_pos, Asm, cmd_code);
                 if (error)
                 {
                     return "LABEL ERROR!";
@@ -106,18 +105,21 @@ const char* Assembler(Assem *Asm)
     fprintf(file_list, "%s", initial_listing);
     fclose(file_list);
 
-    fseek(file_code, 0, SEEK_SET);
-    FillBufferCode(Asm, file_code);
+    for (int i = 0; i < Asm->CODE_SIZE + 1; i++)
+    {
+        printf("%d ", Asm->code[i]);
+    }
+    printf("\n");
+
+    //FillBufferCode(Asm, file_code);
     free(buffer);
     free(initial_listing);
-    DtorAssembly(file_code);
     return NULL;
 }
 
-CodeError AssemblyLabels(char **buffer, FILE *file_code, Assem *Asm, int cmd_code) //FIXME: assert()
+CodeError AssemblyLabels(char **buffer, Assem *Asm, int cmd_code) //FIXME: assert()
 {
-    fprintf(file_code, "%d ", cmd_code);
-
+    Asm->code[Asm->offset++] = cmd_code;
     char *current_pos = *buffer;
 
     current_pos = SkipSpace(current_pos);
@@ -134,7 +136,7 @@ CodeError AssemblyLabels(char **buffer, FILE *file_code, Assem *Asm, int cmd_cod
     int label_index = FindLabel(Asm, label);
     if (label_index != -1)
     {
-        fprintf(file_code, "%d\n", label_index);
+        Asm->code[Asm->offset++] = label_index;
     }
     else
     {
@@ -142,16 +144,11 @@ CodeError AssemblyLabels(char **buffer, FILE *file_code, Assem *Asm, int cmd_cod
         return UNKNOW_LABEL;
     }
 
-    Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "%s:", label);
+    //Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "%s:", label);
     current_pos += strlen(label);
     *buffer = current_pos + 1;
 
     return ITS_OK;
-}
-
-void DtorAssembly(FILE *file_code)
-{
-    fclose(file_code);
 }
 
 void FillBufferCode(Assem *Asm, FILE *file_code)
@@ -201,13 +198,11 @@ int GetCommandCode(const char *cmd, size_t count_command)
     return 0;
 }
 
-void CtorAssembly(FILE **file_asm, FILE **file_code, Assem *Asm, char **buffer, size_t *file_size)
+void CtorAssembly(FILE **file_asm, Assem *Asm, char **buffer, size_t *file_size)
 {
     *file_asm = fopen(Asm->file_name, "r");
-    assert(*file_asm != nullptr);
+    assert(*file_asm != nullptr); //FIXME:
 
-    *file_code = fopen("programms/code.txt", "w+");
-    assert(*file_code != nullptr);
     ReadFileToBuffer(*file_asm, buffer, file_size);
 
     Asm->CODE_SIZE = FirstPassFile(*buffer, Asm);
@@ -359,9 +354,9 @@ int FindFunc(Assem *Asm, char *cmd)
     return 1;
 }
 
-CodeError AssemblyArgType(Assem *Asm, char **buffer, FILE *file_code, int cmd_code)
+CodeError AssemblyArgType(Assem *Asm, char **buffer, int cmd_code)
 {
-    fprintf(file_code, "%d ", cmd_code);
+    Asm->code[Asm->offset++] = cmd_code;
 
     char *current_pos = *buffer;
     current_pos = SkipSpace(current_pos);
@@ -388,7 +383,7 @@ CodeError AssemblyArgType(Assem *Asm, char **buffer, FILE *file_code, int cmd_co
             return ARG_TYPE_ERROR;
         }
     }
-    Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "%s", arg);
+    //Asm->listing += snprintf(Asm->listing, Asm->CODE_SIZE, "%s", arg);
     current_pos += strlen(arg);
     *buffer = current_pos;
 
@@ -396,19 +391,19 @@ CodeError AssemblyArgType(Assem *Asm, char **buffer, FILE *file_code, int cmd_co
 
     if (arg[0] == '-' && size_arg > 1 && isdigit(arg[1]))
     {
-        fprintf(file_code, "%d ", 1);
-        fprintf(file_code, "%d\n", atoi(arg));
+        Asm->code[Asm->offset++] = 1;
+        Asm->code[Asm->offset++] = atoi(arg);
     }
 
     else if (isdigit(arg[0]))
     {
-        fprintf(file_code, "%d ", 1);
-        fprintf(file_code, "%d\n", atoi(arg));
+        Asm->code[Asm->offset++] = 1;
+        Asm->code[Asm->offset++] = atoi(arg);
     }
 
     else if ((arg[0] == '[' || arg[size_arg - 1] == ']'))
     {
-        CodeError error = HandleMemoryAccess(file_code, &arg[0]);
+        CodeError error = HandleMemoryAccess(&arg[0], Asm);
         if (error != ITS_OK)
         {
             return ARG_TYPE_ERROR;
@@ -422,8 +417,8 @@ CodeError AssemblyArgType(Assem *Asm, char **buffer, FILE *file_code, int cmd_co
         {
             return ARG_TYPE_ERROR;
         }
-        fprintf(file_code, "%d ", 2);
-        fprintf(file_code, "%d\n", reg);
+        Asm->code[Asm->offset++] = 2;
+        Asm->code[Asm->offset++] = reg;
     }
 
     return ITS_OK;
@@ -455,7 +450,7 @@ char* SkipSpace(char* current_pos)
     return current_pos;
 }
 
-CodeError HandleMemoryAccess(FILE* file_code, char* arg)
+CodeError HandleMemoryAccess(char* arg, Assem *Asm)
 {
     size_t size_arg = strlen(arg);
 
@@ -477,8 +472,9 @@ CodeError HandleMemoryAccess(FILE* file_code, char* arg)
 
         if (reg != -1)
         {
-            fprintf(file_code, "%d ", 7);
-            fprintf(file_code, "%d %d\n", reg, num);
+            Asm->code[Asm->offset++] = 7;
+            Asm->code[Asm->offset++] = reg;
+            Asm->code[Asm->offset++] = num;
             return ITS_OK;
         }
 
@@ -487,8 +483,9 @@ CodeError HandleMemoryAccess(FILE* file_code, char* arg)
 
         if (reg != -1)
         {
-            fprintf(file_code, "%d ", 7);
-            fprintf(file_code, "%d %d\n", reg, num);
+            Asm->code[Asm->offset++] = 7;
+            Asm->code[Asm->offset++] = reg;
+            Asm->code[Asm->offset++] = num;
             return ITS_OK;
         }
     }
@@ -498,16 +495,16 @@ CodeError HandleMemoryAccess(FILE* file_code, char* arg)
         int reg = CompileArg(inner_arg);
         if (reg != -1)
         {
-            fprintf(file_code, "%d ", 6);
-            fprintf(file_code, "%d\n", reg);
+            Asm->code[Asm->offset++] = 6;
+            Asm->code[Asm->offset++] = reg;
             return ITS_OK;
         }
 
         int num = atoi(inner_arg);
-        fprintf(file_code, "%d ", 6);
-        fprintf(file_code, "%d\n", num);
-        return ITS_OK;
+        Asm->code[Asm->offset++] = 6;
+        Asm->code[Asm->offset++] = num;
 
+        return ITS_OK;
     }
     return ARG_TYPE_ERROR;
 }
