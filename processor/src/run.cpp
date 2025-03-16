@@ -13,10 +13,9 @@
 
 const char* Run(stack *stk, stack *retAddrStk, CPU *proc)
 {
-    CtorProc(stk, retAddrStk);
-
     int size_buffer = FillingCodeArray(proc);
     size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
+
 #if 0
     for (int i = 0; i < size_buffer; i++)
     {
@@ -24,6 +23,7 @@ const char* Run(stack *stk, stack *retAddrStk, CPU *proc)
     }
     printf("\n");
 #endif
+
     bool next = true;
     while (next)
     {
@@ -179,8 +179,6 @@ const char* Run(stack *stk, stack *retAddrStk, CPU *proc)
     }
 
     free(proc->code);
-    stackDtor(stk);
-    stackDtor(retAddrStk); //FIXME: вынести из функции
     return NULL;
 }
 
@@ -206,7 +204,11 @@ void TwoElemStackOperation(stack *stk, stackElem (*operation)(stackElem val1, st
 int FillingCodeArray(CPU *proc)
 {
     FILE* bin_file = fopen("programms/bin_code.txt", "rb");
-    assert(bin_file != NULL);
+    if (bin_file == nullptr)
+    {
+        fprintf(stderr, "bin_code can't open\n");
+        return 1;
+    }
 
     size_t file_size = GetBinFileSize(bin_file);
     size_t num_elements = file_size / sizeof(int);
@@ -219,12 +221,6 @@ int FillingCodeArray(CPU *proc)
     {
         fprintf(stderr, "Error: read %zu elements, expected %zu\n", elements_read, num_elements);
     }
-
-    // for (size_t i = 0; i < num_elements; i++)
-    // {
-    //     printf(COLOR_BLUE "%d " COLOR_RESET, proc->code[i]);
-    // }
-    // printf("\n");
 
     fclose(bin_file);
     return (int)num_elements;
@@ -276,16 +272,16 @@ int ProcessingStackCommands(CPU *proc, stack *stk, int cmd)
     {
         switch (TypeArg)
         {
-            case 1:
+            case digit:
                 IsPush = true;
                 break;
-            case 2:
+            case regist:
                 IsPushr = true;
                 break;
-            case 6:
+            case memory:
                 IsPushm = true;
                 break;
-            case 7:
+            case complex_memory:
                 IsPushmComplex = true;
                 break;
             default:
@@ -332,13 +328,13 @@ int ProcessingStackCommands(CPU *proc, stack *stk, int cmd)
     {
         switch (TypeArg)
         {
-            case 2:
+            case regist:
                 IsPopr = true;
                 break;
-            case 6:
+            case memory:
                 IsPopm = true;
                 break;
-            case 7:
+            case complex_memory:
                 IsPopmComplex = true;
                 break;
             default:

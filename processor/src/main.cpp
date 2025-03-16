@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+
 #include "color.h"
 #include "stack.h"
 #include "logger.h"
@@ -15,12 +16,15 @@ ServiceLines* GetServiceLines()
 
 int main(int argc, char *argv[])
 {
+    printf(COLOR_GREEN "Start main!\n" COLOR_RESET);
     CheckArgsProc(argc, argv);
     loggerInit(LOGL_DEBUG, "logger/logfile.log");
 
     struct stack stk = {NULL, 0, 0};
     struct stack retAddrStk = {};
     struct CPU proc = {};
+
+    CtorProc(&stk, &retAddrStk);
 
     const char* error_run = Run(&stk, &retAddrStk, &proc);
     if (error_run != NULL)
@@ -31,6 +35,9 @@ int main(int argc, char *argv[])
         stackDtor(&retAddrStk);
         return 1;
     }
+
+    stackDtor(&stk);
+    stackDtor(&retAddrStk);
 
     loggerDeinit();
     printf(COLOR_GREEN "End of main!\n" COLOR_RESET);

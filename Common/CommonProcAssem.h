@@ -43,7 +43,7 @@ enum command
     CMD_HLT =      -1
 };
 
-enum REG_T
+enum reg_t
 {
     ax = 0,
     bx = 1,
@@ -51,6 +51,14 @@ enum REG_T
     dx = 3
 };
 //FIXME: enum uppercase
+
+enum type_arg
+{
+    digit =          1,
+    regist =         2,
+    memory =         6,
+    complex_memory = 7,
+};
 
 typedef struct
 {

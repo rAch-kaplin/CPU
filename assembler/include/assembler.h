@@ -10,6 +10,7 @@
 
 const int LABELS_SIZE = 128;
 const size_t LABEL_NAME = 20;
+const size_t SIZE_ARG = 30;
 
 typedef struct
 {
@@ -23,6 +24,7 @@ typedef struct Assem
     int offset = 0;
     int CODE_SIZE;
     const char *file_name;
+    FILE *file_asm = NULL;
     int label_count = 0;
     char *listing = NULL;
 
@@ -32,19 +34,18 @@ typedef struct Assem
 //FIXME: вынести функции
 
 CodeError AssemblyLabels(char **buffer, Assem *Asm, int cmd_code);
-void CtorAssembly(FILE **file_asm, Assem *Asm, char **buffer, size_t *file_size);
-int ReadCommand(FILE *file_asm, char *cmd);
+void CtorAssembly(Assem *Asm, char **buffer, size_t *file_size);
+int ReadCommand(Assem *Asm,  char *cmd);
 int GetCommandCode(const char *cmd, size_t count_command);
 void CheckArgsAsm(const int argc, const char *argv[], Assem *Asm);
 int FirstPassFile(char *buffer, Assem *Asm);
 int FindLabel(Assem *Asm, char *cmd);
 const char* Assembler(Assem *Asm);
-void FillBufferCode(Assem *Asm, FILE *file_code);
 void WriteBinFile(Assem *Asm);
 CodeError AssemblyArgType(Assem *Asm, char **buffer, int cmd_code);
 void CheckLabels(char *cmd, Assem *Asm, int CODE_SIZE);
 int FindFunc(Assem *Asm, char *cmd);
-void ReadFileToBuffer(FILE *file_asm, char **buffer, size_t *file_size);
+void ReadFileToBuffer(Assem *Asm, char **buffer, size_t *file_size);
 char* SkipSpace(char* current_pos);
 void RemoveSpaces(char* str);
 CodeError HandleMemoryAccess(char* arg, Assem *Asm);

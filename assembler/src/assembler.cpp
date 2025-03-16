@@ -8,16 +8,15 @@
 #include "CommonProcAssem.h"
 #include "assembler.h"
 
-
 void HandlSizeArg(int *CODE_SIZE, char **current_pos);
+bool IfEndFile(char *current_pos);
 
 const char* Assembler(Assem *Asm)
 {
     char *buffer = NULL;
     size_t file_size = 0;
 
-    FILE *file_asm = NULL;
-    CtorAssembly(&file_asm, Asm, &buffer, &file_size);
+    CtorAssembly(Asm, &buffer, &file_size);
 
     char *current_pos = buffer;
     const size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
@@ -30,15 +29,12 @@ const char* Assembler(Assem *Asm)
     {
         current_pos = SkipSpace(current_pos);
 
-        if (*current_pos == '\0')
-        {
-            break;
-        }
+        if (IfEndFile(current_pos)) break;
 
-        char cmd[30] = "";
+        char cmd[SIZE_ARG] = "";
         if (sscanf(current_pos, "%29s", cmd) != 1)
         {
-            printf("the string incorrectly\n");
+            printf("the string incorrect\n");
             return NULL;
         }
 
@@ -77,7 +73,6 @@ const char* Assembler(Assem *Asm)
                 Asm->code[Asm->offset++] = cmd_code;
                 break;
             }
-            //FIXME: делать запись сразу в массив
             case CMD_FUNC:
             case CMD_JMP:
             case CMD_JA:
@@ -96,38 +91,49 @@ const char* Assembler(Assem *Asm)
                 break;
             }
 
-            default: //FIXME: обработать неизвестную команду
+            default:
+            {
+                if (FindLabel(Asm, cmd) == -1)
+                {
+                    fprintf(stderr, "Unknow command: %s\n", cmd);
+                    return NULL;
+                }
+                //FIXME: 
                 break;
+            }
         }
     }
 
-    FILE *file_list = fopen("listing.txt", "w");
-    fprintf(file_list, "%s", initial_listing);
-    fclose(file_list);
-
+    //FILE *file_list = fopen("listing.txt", "w");
+    //fprintf(file_list, "%s", initial_listing);
+    //fclose(file_list);
+#if 0
     for (int i = 0; i < Asm->CODE_SIZE + 1; i++)
     {
         printf("%d ", Asm->code[i]);
     }
     printf("\n");
+#endif
 
-    //FillBufferCode(Asm, file_code);
     free(buffer);
     free(initial_listing);
     return NULL;
 }
 
-CodeError AssemblyLabels(char **buffer, Assem *Asm, int cmd_code) //FIXME: assert()
+CodeError AssemblyLabels(char **buffer, Assem *Asm, int cmd_code)
 {
+    assert(buffer != nullptr);
+    assert(Asm != nullptr);
+
     Asm->code[Asm->offset++] = cmd_code;
     char *current_pos = *buffer;
 
     current_pos = SkipSpace(current_pos);
 
-    char label[30] = "";
+    char label[SIZE_ARG] = "";
     if (sscanf(current_pos, "%29s", label) != 1)
     {
-        printf("the string incorrectly\n");
+        printf("the string incorrect\n");
         return ARG_TYPE_ERROR;
     }
 
@@ -150,22 +156,6 @@ CodeError AssemblyLabels(char **buffer, Assem *Asm, int cmd_code) //FIXME: asser
 
     return ITS_OK;
 }
-
-void FillBufferCode(Assem *Asm, FILE *file_code)
-{
-    for (int i = 0; i < Asm->CODE_SIZE; i++)
-    {
-        fscanf(file_code, "%d", &Asm->code[i]);
-    }
-#if 0
-    for (int i = 0; i < Asm->CODE_SIZE + 1; i++)
-    {
-        printf("%d ", Asm->code[i]);
-    }
-        printf("\n");
-#endif
-}
-
 
 int CompileArg(const char *str)
 {
@@ -198,23 +188,28 @@ int GetCommandCode(const char *cmd, size_t count_command)
     return 0;
 }
 
-void CtorAssembly(FILE **file_asm, Assem *Asm, char **buffer, size_t *file_size)
+void CtorAssembly(Assem *Asm, char **buffer, size_t *file_size)
 {
-    *file_asm = fopen(Asm->file_name, "r");
-    assert(*file_asm != nullptr); //FIXME:
+    Asm->file_asm = fopen(Asm->file_name, "r");
+    if (Asm->file_asm == nullptr)
+    {
+        fprintf(stderr, "file_asm can't open\n");
+        return;
+    }
 
-    ReadFileToBuffer(*file_asm, buffer, file_size);
+    ReadFileToBuffer(Asm, buffer, file_size);
+    fclose(Asm->file_asm);
 
     Asm->CODE_SIZE = FirstPassFile(*buffer, Asm);
 
     Asm->code = (int*)calloc((size_t)Asm->CODE_SIZE + 1, sizeof(int));
 }
 
-int ReadCommand(FILE *file_asm, char *cmd)
+int ReadCommand(Assem *Asm, char *cmd)
 {
-    if (fscanf(file_asm, "%19s", cmd) != 1)
+    if (fscanf(Asm->file_asm, "%19s", cmd) != 1)
     {
-        if (feof(file_asm))
+        if (feof(Asm->file_asm))
         {
             return -1;
         }
@@ -237,10 +232,10 @@ int FirstPassFile(char *buffer, Assem *Asm)
             break;
         }
 
-        char cmd[30] = "";
+        char cmd[SIZE_ARG] = "";
         if (sscanf(current_pos, "%29s", cmd) != 1)
         {
-            printf("the string incorrectly\n");
+            printf("the string incorrect\n");
             return -1;
         }
 
@@ -280,7 +275,7 @@ int FirstPassFile(char *buffer, Assem *Asm)
             case CMD_JNE:
             case CMD_JMP:
             {
-                char label[30] = "";
+                char label[SIZE_ARG] = "";
                 sscanf(current_pos, "%29s", label);
                 current_pos += strlen(label) + 1;
                 CODE_SIZE += 2;
@@ -301,7 +296,7 @@ int FirstPassFile(char *buffer, Assem *Asm)
 
 void HandlSizeArg(int *CODE_SIZE, char **current_pos)
 {
-    char arg[30] = "";
+    char arg[SIZE_ARG] = "";
     sscanf(*current_pos, "%29[^\n]", arg);
     if (IsComplexArgument(arg))
     {
@@ -361,8 +356,8 @@ CodeError AssemblyArgType(Assem *Asm, char **buffer, int cmd_code)
     char *current_pos = *buffer;
     current_pos = SkipSpace(current_pos);
 
-    char arg[30] = "";
-    char type_arg[30] = "";
+    char arg[SIZE_ARG] = "";
+    char type_arg[SIZE_ARG] = "";
 
     sscanf(current_pos, "%29s", type_arg);
 
@@ -370,7 +365,7 @@ CodeError AssemblyArgType(Assem *Asm, char **buffer, int cmd_code)
     {
         if (sscanf(current_pos, "%29[^\n]", arg) != 1)
         {
-            printf("the string incorrectly\n");
+            printf("the string incorrect\n");
             return ARG_TYPE_ERROR;
         }
     }
@@ -379,7 +374,7 @@ CodeError AssemblyArgType(Assem *Asm, char **buffer, int cmd_code)
     {
         if (sscanf(current_pos, "%29s", arg) != 1)
         {
-            printf("the string incorrectly\n");
+            printf("the string incorrect\n");
             return ARG_TYPE_ERROR;
         }
     }
@@ -391,13 +386,13 @@ CodeError AssemblyArgType(Assem *Asm, char **buffer, int cmd_code)
 
     if (arg[0] == '-' && size_arg > 1 && isdigit(arg[1]))
     {
-        Asm->code[Asm->offset++] = 1;
+        Asm->code[Asm->offset++] = digit;
         Asm->code[Asm->offset++] = atoi(arg);
     }
 
     else if (isdigit(arg[0]))
     {
-        Asm->code[Asm->offset++] = 1;
+        Asm->code[Asm->offset++] = digit;
         Asm->code[Asm->offset++] = atoi(arg);
     }
 
@@ -417,28 +412,24 @@ CodeError AssemblyArgType(Assem *Asm, char **buffer, int cmd_code)
         {
             return ARG_TYPE_ERROR;
         }
-        Asm->code[Asm->offset++] = 2;
+        Asm->code[Asm->offset++] = regist;
         Asm->code[Asm->offset++] = reg;
     }
 
     return ITS_OK;
 }
 
-void ReadFileToBuffer(FILE *file_asm, char **buffer, size_t *file_size)
+void ReadFileToBuffer(Assem *Asm, char **buffer, size_t *file_size)
 {
-    fseek(file_asm, 0, SEEK_END);
-    *file_size = (size_t)ftell(file_asm);
-    fseek(file_asm, 0, SEEK_SET);
+    fseek(Asm->file_asm, 0, SEEK_END);
+    *file_size = (size_t)ftell(Asm->file_asm);
+    fseek(Asm->file_asm, 0, SEEK_SET);
 
     *buffer = (char*)calloc(*file_size + 1, sizeof(char));
-    if (*buffer == NULL)
-    {
-        fprintf(stderr, "Failed to allocate memory for file buffer.\n");
-        return;
-    } //FIXME: char *buffer
+    assert(buffer);
 
-    fread(*buffer, 1, *file_size, file_asm);
-    fclose(file_asm);
+    fread(*buffer, 1, *file_size, Asm->file_asm);
+    //fclose(Asm->file_asm);
 }
 
 char* SkipSpace(char* current_pos)
@@ -455,7 +446,7 @@ CodeError HandleMemoryAccess(char* arg, Assem *Asm)
     size_t size_arg = strlen(arg);
 
     arg[size_arg - 1] = '\0';
-    char inner_arg[20];
+    char inner_arg[SIZE_ARG];
     strncpy(inner_arg, arg + 1, size_arg - 2);
     inner_arg[size_arg - 2] = '\0';
     RemoveSpaces(inner_arg);
@@ -472,7 +463,7 @@ CodeError HandleMemoryAccess(char* arg, Assem *Asm)
 
         if (reg != -1)
         {
-            Asm->code[Asm->offset++] = 7;
+            Asm->code[Asm->offset++] = complex_memory;
             Asm->code[Asm->offset++] = reg;
             Asm->code[Asm->offset++] = num;
             return ITS_OK;
@@ -483,7 +474,7 @@ CodeError HandleMemoryAccess(char* arg, Assem *Asm)
 
         if (reg != -1)
         {
-            Asm->code[Asm->offset++] = 7;
+            Asm->code[Asm->offset++] = complex_memory;
             Asm->code[Asm->offset++] = reg;
             Asm->code[Asm->offset++] = num;
             return ITS_OK;
@@ -495,13 +486,13 @@ CodeError HandleMemoryAccess(char* arg, Assem *Asm)
         int reg = CompileArg(inner_arg);
         if (reg != -1)
         {
-            Asm->code[Asm->offset++] = 6;
+            Asm->code[Asm->offset++] = memory;
             Asm->code[Asm->offset++] = reg;
             return ITS_OK;
         }
 
         int num = atoi(inner_arg);
-        Asm->code[Asm->offset++] = 6;
+        Asm->code[Asm->offset++] = memory;
         Asm->code[Asm->offset++] = num;
 
         return ITS_OK;
@@ -514,7 +505,7 @@ void RemoveSpaces(char* str)
     char* dest = str;
     for (char* src = str; *src != '\0'; src++)
     {
-        if (*src != ' ')
+        if (!isspace(*src))
         {
             *dest = *src;
             dest++;
@@ -523,3 +514,9 @@ void RemoveSpaces(char* str)
     *dest = '\0';
 }
 
+bool IfEndFile(char *current_pos)
+{
+    if (*current_pos == '\0')
+        return true;
+    return false;
+}
