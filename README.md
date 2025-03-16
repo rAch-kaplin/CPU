@@ -31,7 +31,7 @@ or
 ```
 ./proc -m COLOR_MODE        // An option for displaying a color logo in the terminal
 ```
-![Example of a color log](img/color-log.png)
+<img src="img/color-log.png" hight="300">
 
 
 ## Main features
