@@ -73,27 +73,35 @@ typedef struct
     int quantity_args;
 } CommandCode;
 
-static const CommandCode command_code[] = { {"push",    CMD_PUSH,  2},  //FIXME: enum
-                                            {"add",     CMD_ADD,   0},
-                                            {"sub",     CMD_SUB,   0},
-                                            {"out",     CMD_OUT,   0},
-                                            {"div",     CMD_DIV,   0},
-                                            {"mul",     CMD_MUL,   0},
-                                            {"hlt",     CMD_HLT,   0},
-                                            {"pop",     CMD_POP,   2},
-                                            {"jmp",     CMD_JMP,   1},
-                                            {"sqrt",    CMD_SQRT,  0},
-                                            {"sin",     CMD_SIN,   0},
-                                            {"cos",     CMD_COS,   0},
-                                            {"jb",      CMD_JB,    1},
-                                            {"jbe",     CMD_JBE,   1},
-                                            {"ja",      CMD_JA,    1},
-                                            {"jae",     CMD_JAE,   1},
-                                            {"je",      CMD_JE,    1},
-                                            {"jne",     CMD_JNE,   1},
-                                            {"call",    CMD_FUNC,  1},
-                                            {"ret",     CMD_RET,   0},
-                                            {"in",      CMD_IN,    0}};
+enum num_of_args
+{
+    ZERO_ARG  = 0,
+    ONE_ARG   = 1,
+    TWO_ARG   = 2,
+    THREE_ARG = 3,
+};
+
+static const CommandCode command_code[] = { {"push",    CMD_PUSH,  TWO_ARG },
+                                            {"add",     CMD_ADD,   ZERO_ARG},
+                                            {"sub",     CMD_SUB,   ZERO_ARG},
+                                            {"out",     CMD_OUT,   ZERO_ARG},
+                                            {"div",     CMD_DIV,   ZERO_ARG},
+                                            {"mul",     CMD_MUL,   ZERO_ARG},
+                                            {"hlt",     CMD_HLT,   ZERO_ARG},
+                                            {"pop",     CMD_POP,   TWO_ARG },
+                                            {"jmp",     CMD_JMP,   ONE_ARG },
+                                            {"sqrt",    CMD_SQRT,  ZERO_ARG},
+                                            {"sin",     CMD_SIN,   ZERO_ARG},
+                                            {"cos",     CMD_COS,   ZERO_ARG},
+                                            {"jb",      CMD_JB,    ONE_ARG },
+                                            {"jbe",     CMD_JBE,   ONE_ARG },
+                                            {"ja",      CMD_JA,    ONE_ARG },
+                                            {"jae",     CMD_JAE,   ONE_ARG },
+                                            {"je",      CMD_JE,    ONE_ARG },
+                                            {"jne",     CMD_JNE,   ONE_ARG },
+                                            {"call",    CMD_FUNC,  ONE_ARG },
+                                            {"ret",     CMD_RET,   ZERO_ARG},
+                                            {"in",      CMD_IN,    ZERO_ARG}};
 
 int CompileArg(const char *str);
 

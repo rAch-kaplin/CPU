@@ -13,7 +13,7 @@
 
 const char* Run(stack *stk, stack *retAddrStk, CPU *proc)
 {
-    int size_buffer = FillingCodeArray(proc);
+    FillingCodeArray(proc);
     size_t count_command = sizeof(command_code) / sizeof(command_code[0]);
 
 #if 0
