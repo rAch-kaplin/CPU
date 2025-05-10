@@ -99,7 +99,6 @@ const char* Assembler(Assem *assem)
                     fprintf(stderr, "Unknow command: %s\n", cmd);
                     return NULL;
                 }
-                //FIXME:
                 break;
             }
         }
@@ -199,6 +198,7 @@ void CtorAssembly(Assem *assem, char **buffer, size_t *file_size)
     }
 
     *buffer = ReadFileToBuffer(assem, *buffer, file_size);
+    assert(buffer != nullptr);
     fclose(assem->file_asm);
 
     assem->CODE_SIZE = FirstPassFile(*buffer, assem);
@@ -454,7 +454,7 @@ CodeError HandleMemoryAccess(char* arg, Assem *assem)
     size_t size_arg = strlen(arg);
 
     arg[size_arg - 1] = '\0';
-    char inner_arg[SIZE_ARG];
+    char inner_arg[SIZE_ARG] = {};
     strncpy(inner_arg, arg + 1, size_arg - 2);
     inner_arg[size_arg - 2] = '\0';
     RemoveSpaces(inner_arg);

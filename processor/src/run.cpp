@@ -105,14 +105,14 @@ const char* Run(stack *stk, stack *retAddrStk, CPU *proc)
             case CMD_IN:
             {
                 GetProcInstruction(cmd, proc);
-                ProcessingInputOut(stk, proc, true, false);
+                ProcessingInputOut(stk, true, false);
                 break;
             }
 
             case CMD_OUT:
             {
                 GetProcInstruction(cmd, proc);
-                ProcessingInputOut(stk, proc, false, true);
+                ProcessingInputOut(stk, false, true);
                 break;
             }
 
@@ -374,7 +374,7 @@ int ProcessingStackCommands(CPU *proc, stack *stk, int cmd)
     return 0;
 }
 
-void ProcessingInputOut(stack *stk, CPU *proc, bool Input, bool Out)
+void ProcessingInputOut(stack *stk, bool Input, bool Out)
 {
     LOG(LOGL_DEBUG, "");
 
@@ -383,7 +383,7 @@ void ProcessingInputOut(stack *stk, CPU *proc, bool Input, bool Out)
                 stackElem input_value = 0;
                 printf("Enter a value: ");
                 scanf("%d", &input_value);
-                proc->registers[ax] = input_value;
+                stackPush(stk, input_value);
     }
 
     else if (Out)

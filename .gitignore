@@ -5,4 +5,7 @@ proc
 programms/bin_code.txt
 logger/logfile.log
 assem.cpp
-
+logfile.log
+.vscode
+build
+listing.txt

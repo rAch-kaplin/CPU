@@ -3,6 +3,7 @@ hlt
 
 main:
         in
+        pop ax
         call fib:
         push bx
         out

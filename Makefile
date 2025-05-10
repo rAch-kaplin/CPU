@@ -10,40 +10,43 @@ CFLAGS = -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ -Waggressive-loo
          -flto-odr-type-merging -fno-omit-frame-pointer -Wstack-usage=8192 -pie -fPIE -Werror=vla \
          -fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,integer-divide-by-zero,leak,nonnull-attribute,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr
 
-ASSEMBLER_SOURCES = assembler/src/main.cpp               \
+ASSEMBLER_SOURCES = assembler/src/main.cpp \
                     assembler/src/assembler.cpp
 
-PROCESSOR_SOURCES = processor/src/main.cpp               \
-                    processor/src/disassembler.cpp       \
-                    processor/src/run.cpp                \
-                    processor/src/debug_proc.cpp         \
-                    stack/src/stack.cpp                  \
-                    stack/src/debug.cpp                  \
+PROCESSOR_SOURCES = processor/src/main.cpp \
+                    processor/src/disassembler.cpp \
+                    processor/src/run.cpp \
+                    processor/src/debug_proc.cpp \
+                    stack/src/stack.cpp \
+                    stack/src/debug.cpp \
                     logger/logger.cpp
 
-ASSEMBLER_OBJECTS = $(ASSEMBLER_SOURCES:assembler/src/%.cpp=assembler/obj/%.o)
+ASSEMBLER_OBJECTS = $(ASSEMBLER_SOURCES:assembler/src/%.cpp=build/assembler/%.o)
 
-PROCESSOR_OBJECTS = $(PROCESSOR_SOURCES:proccessor/src/%.cpp=proccessor/obj/%.o)
+PROCESSOR_OBJECTS = $(PROCESSOR_SOURCES:%.cpp=build/processor/%.o)
 
 INCLUDES = -I./stack/include -I./processor/include -I./Common -I./logger -I./assembler/include
 
-build: asm proc
+$(shell mkdir -p build/assembler build/processor build/bin)
 
-asm: $(ASSEMBLER_OBJECTS)
-	@$(CC) $(CFLAGS) $(INCLUDES) $^ -o asm
+build: build/bin/asm build/bin/proc
 
-proc: $(PROCESSOR_OBJECTS)
-	@$(CC) $(CFLAGS) $(INCLUDES) $^ -o proc
+build/bin/asm: $(ASSEMBLER_OBJECTS)
+	@$(CC) $(CFLAGS) $(INCLUDES) $^ -o build/bin/asm
 
-assembler/obj/%.o: assembler/src/%.cpp
+build/bin/proc: $(PROCESSOR_OBJECTS)
+	@$(CC) $(CFLAGS) $(INCLUDES) $^ -o build/bin/proc
+
+build/assembler/%.o: assembler/src/%.cpp
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-proccessor/obj/%.o: proccessor/src/%.cpp
+build/processor/%.o: %.cpp
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 all: build
-	@echo -e "\033[33mCompilation complete. Run the programs using './asm' and './proc'.\033[0m"
+	@echo -e "\033[33mCompilation complete. Run the programs using './build/bin/asm' and './build/bin/proc'.\033[0m"
 
 clean:
-	rm -rf assembler/obj/*.o processor/obj/*.o asm proc
-
+	rm -rf build/*

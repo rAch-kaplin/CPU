@@ -46,7 +46,7 @@ void IpCounter(CPU *proc, stackElem cmd, int count_command);
 void SingleStackOperation(stack *stk, double (*operation)(double));
 void TwoElemStackOperation(stack *stk, stackElem (*operation)(stackElem a, stackElem b));
 int ProcessingStackCommands(CPU *proc, stack *stk, int cmd);
-void ProcessingInputOut(stack *stk, CPU *proc, bool Input, bool Out);
+void ProcessingInputOut(stack *stk, bool Input, bool Out);
 void DoJmp(CPU *proc, int cmd);
 void ProcessingFuncs(stack *retAddrStk, CPU *proc, bool call, bool ret);
 int CtorProc(stack *stk, stack *retAddrStk);

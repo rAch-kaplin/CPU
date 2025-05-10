@@ -13,9 +13,9 @@ main:
 ret
 
 input_coef:
-        push 1
-        push 2
-        push -3
+        in
+        in
+        in
         pop cx
         pop bx
         pop ax

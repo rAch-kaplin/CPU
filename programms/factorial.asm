@@ -3,6 +3,8 @@ hlt
 
 main:
         in
+        pop ax
+
         call fact:
         push bx
         out
