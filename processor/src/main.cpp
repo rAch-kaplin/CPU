@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 {
     printf(COLOR_GREEN "Start main!\n" COLOR_RESET);
     CheckArgsProc(argc, argv);
-    loggerInit(LOGL_DEBUG, "logger/logfile.log");
+    loggerInit(LOGL_DEBUG, "../logfile.log");
 
     struct stack stk = {NULL, 0, 0};
     struct stack retAddrStk = {};

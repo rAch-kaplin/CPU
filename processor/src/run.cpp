@@ -203,7 +203,7 @@ void TwoElemStackOperation(stack *stk, stackElem (*operation)(stackElem val1, st
 
 int FillingCodeArray(CPU *proc)
 {
-    FILE* bin_file = fopen("programms/bin_code.txt", "rb");
+    FILE* bin_file = fopen("../CPU/assembler/bin_code.txt", "rb");
     if (bin_file == nullptr)
     {
         fprintf(stderr, "bin_code can't open\n");

@@ -27,7 +27,7 @@ int main(const int argc, const char *argv[])
 
 CodeError WriteBinFile(Assem *assem)
 {
-    FILE *bin_file = fopen("programms/bin_code.txt", "wb"); // FIXME: передавай через argv
+    FILE *bin_file = fopen("../CPU/assembler/bin_code.txt", "wb"); // FIXME: передавай через argv
     if (bin_file == NULL)
     {
         fprintf(stderr, "Error bin_file not open\n");
