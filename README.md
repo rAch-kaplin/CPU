@@ -194,7 +194,7 @@ two_root:
 ```
 </details>
 
-</details><details> <summary>Recursive factorial</summary>
+<details> <summary>Recursive factorial</summary>
 ```
 call main:
 hlt
@@ -233,7 +233,7 @@ exit_fact:
 ```
 </details>
 
-</details><details> <summary>Fibonacci</summary>
+<details> <summary>Fibonacci</summary>
 ```
 call main:
 hlt
