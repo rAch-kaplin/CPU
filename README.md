@@ -98,6 +98,7 @@ ret
 
 ## Sample programs
 <details> <summary>Quadratic equation solver</summary>
+```
 call main:
 hlt
 
@@ -190,9 +191,11 @@ two_root:
     div
     out
     ret
+```
 </details>
 
 </details><details> <summary>Recursive factorial</summary>
+```
 call main:
 hlt
 
@@ -227,10 +230,11 @@ exit_fact:
         push 1
         pop bx
         jmp reverse_step:
-
+```
 </details>
 
 </details><details> <summary>Fibonacci</summary>
+```
 call main:
 hlt
 
@@ -293,5 +297,5 @@ new_iteration:
         jae start_iteration:
         jmp exit_in_main:
 
-
+```
 </details>
