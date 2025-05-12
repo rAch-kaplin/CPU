@@ -100,7 +100,7 @@ ret
 <details>
 <summary>Quadratic equation solver</summary>
 
-<pre><code>
+```
 call main:
 hlt
 
@@ -193,11 +193,11 @@ two_root:
     div
     out
 ret
-</code></pre>
+```
 </details>
 
 <details> <summary>Recursive factorial</summary>
-<pre><code>
+```
 call main:
 hlt
 
@@ -232,11 +232,11 @@ exit_fact:
         push 1
         pop bx
         jmp reverse_step:
-</code></pre>
+```
 </details>
 
 <details> <summary>Fibonacci</summary>
-<pre><code>
+```
 call main:
 hlt
 
@@ -299,5 +299,5 @@ new_iteration:
         jae start_iteration:
         jmp exit_in_main:
 
-</code></pre>
+```
 </details>
