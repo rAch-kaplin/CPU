@@ -97,57 +97,59 @@ ret
 ```
 
 ## Sample programs
-<details> <summary>Quadratic equation solver</summary>
-```
+<details>
+<summary>Quadratic equation solver</summary>
+
+<pre><code>
 call main:
 hlt
 
 main:
-        call input_coef:
-        push ax
-        push 0
-        je linear_square:
+    call input_coef:
+    push ax
+    push 0
+    je linear_square:
 
-        call count_discr:
-        call check_discr:
+    call count_discr:
+    call check_discr:
 ret
 
 input_coef:
-        in
-        in
-        in
-        pop cx
-        pop bx
-        pop ax
+    in
+    in
+    in
+    pop cx
+    pop bx
+    pop ax
 ret
 
 count_discr:
-        push bx
-        push bx
-        mul
-        push 4
-        push ax
-        mul
-        push cx
-        mul
-        sub
-        pop dx
+    push bx
+    push bx
+    mul
+    push 4
+    push ax
+    mul
+    push cx
+    mul
+    sub
+    pop dx
 ret
 
 check_discr:
-        push dx
-        push 0
-        je one_root:
-        push dx
-        push 0
-        jb no_roots:
-        jmp two_root:
+    push dx
+    push 0
+    je one_root:
+    push dx
+    push 0
+    jb no_roots:
+    jmp two_root:
 
 linear_square:
-        push cx
-        push bx
-        div
-        out
+    push cx
+    push bx
+    div
+    out
 ret
 
 one_root:
@@ -162,8 +164,8 @@ one_root:
 ret
 
 no_roots:
-        push 9999
-        out
+    push 9999
+    out
 ret
 
 two_root:
@@ -190,12 +192,12 @@ two_root:
     mul
     div
     out
-    ret
-```
+ret
+</code></pre>
 </details>
 
 <details> <summary>Recursive factorial</summary>
-```
+<pre><code>
 call main:
 hlt
 
@@ -230,11 +232,11 @@ exit_fact:
         push 1
         pop bx
         jmp reverse_step:
-```
+</code></pre>
 </details>
 
 <details> <summary>Fibonacci</summary>
-```
+<pre><code>
 call main:
 hlt
 
@@ -297,5 +299,5 @@ new_iteration:
         jae start_iteration:
         jmp exit_in_main:
 
-```
+</code></pre>
 </details>
