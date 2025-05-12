@@ -194,9 +194,11 @@ two_root:
     out
 ret
 ```
+
 </details>
 
 <details> <summary>Recursive factorial</summary>
+  
 ```
 call main:
 hlt
@@ -233,9 +235,11 @@ exit_fact:
         pop bx
         jmp reverse_step:
 ```
+
 </details>
 
 <details> <summary>Fibonacci</summary>
+  
 ```
 call main:
 hlt
@@ -300,4 +304,5 @@ new_iteration:
         jmp exit_in_main:
 
 ```
+
 </details>
