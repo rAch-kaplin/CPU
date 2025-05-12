@@ -7,6 +7,7 @@ It is a stack-based processor emulator with its own assembler supported.
 - [Features](#features)
 - [Commands](#commands)
 - [Build and Run](#build-and-run)
+- [Syntax examples](#syntax-examples)
 - [Examples](#examples)
 
 ## Overview
@@ -70,6 +71,29 @@ make all
 
 For colored output:
 ./build/bin/proc -m COLOR_MODE
+```
+### Syntax example
+```
+push ax           ; push value from ax register to stack
+pop [bx + 1]      ; pop value from stack to RAM to address from register bx + 1
+jmp label:        ; jump to label named "label"
+jbe label:        ; jump if the condition <= is true
+```
+#### Jumps
+
+You need to specify label in code. Then you can give it to jump function, and it will jump on this label.
+P.S.
+```
+jmp next:
+...
+next:
+```
+```
+call main:
+
+main:
+...
+ret
 ```
 
 ## Sample programs
